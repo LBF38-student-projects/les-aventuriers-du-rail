@@ -1,7 +1,3 @@
-
-
-
-
 # Code codé par notre chère Zazou :
 destination_tickets = {"LA to NYC" : 21,
                        "Dulah to Houston" : 8,
