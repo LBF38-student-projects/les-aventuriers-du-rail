@@ -4,7 +4,7 @@ Bonjour, vous trouverez ici les codes sources de notre projet informatique réal
 Nous avons choisi le sujet : Les aventuriers du rail.
 Ce jeu repose sur le principe de conquêtes des lignes de trains et reproduit l'époque du grand développement des trains en Amérique comme en Europe.
 
-Ainsi, nous vous présentons brièvement le jeu et son interface grâce à plusieurs captures écran, ci-dessous.
+Ainsi, nous vous présentons brièvement le jeu et son interface grâce à plusieurs captures écran, ci-dessous. \
 [insérer des captures d'écrans]
 
 Bonne lecture et bon jeu !
