@@ -1,3 +1,7 @@
+"""Projet Informatique
+@authors: Mathis URIEN, Kenza BELAID"""
+
+"""Pour l'instant, ce code est un brouillon, on verra son utilité plus tard. Peut-être le lanceur du jeu ?"""
 # Code codé par notre chère Zazou :
 destination_tickets = {
     "LA to NYC" : 21,
