@@ -61,5 +61,51 @@ class Jeu():
             "Sault Ste Marie to Oklahoma City": 9,
             "Seattle to Los Angeles": 9
         }
+        self.villes={
+            "Los Angeles":(5,3),
+            "San Francisco":(3,5),
+            "Portland":(4,8),
+            "Seatle":(4.5,9),
+            "Vancouver":(4.5,10),
+            "Calcary":(7.5,10),
+            "Helena":(10,12),
+            "Salt Lake City":(9,12),
+            "Las Vegas":(12,5),
+            "Phoenix":(14,12),
+            "El Paso":(10,3),
+            "Santa Fe":(25,15),
+            "Denver":(9,17),
+            "Oklahoma City":(23,20),
+            "Kansas City":(12,23),
+            "Omaha":(16,15),
+            "Duluth":(13,5),
+            "Winnipeg":(6,14),
+            "Dallas":(8,20),
+            "Houston":(22,10),
+            "New Orleans":(12,26),
+            "Little Rock":(24,13),
+            "Saint Louis":(17,2),
+            "Chicago":(5,23),
+            "Nashville":(8,14),
+            "Atlanta":(6,13),
+            "Miami":(16,24),
+            "Charleston":(21,12),
+            "Pittsburg":(13,23),
+            "Toronto":(9,19),
+            "Montreal":(22,17),
+            "Boston":(7,15),
+            "New York":(16,13),
+            "Washington":(12,20),
+            "Raleigh":(21,19)
+        }
+
+    def plateau(self):
+        """Définit le plateau du jeu
+        => Construit le graphe des villes
+        Affiche un point pour chaque ville avec le nom en dessous
+        Relie chaque ville par un trait gris quand non occupé
+        """
+
+
 
         # A compléter
