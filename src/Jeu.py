@@ -229,12 +229,12 @@ class Jeu():
                            ["Atlanta", "grey"],
                            ["Raleigh", "grey"]],
             "Pittsburgh": [["Washington", "grey"],
-                          ["Raleigh", "grey"],
-                          ["Nashville", "yellow"],
-                          ["Saint Louis", "orange"],
-                          ["Chicago", "black"],
-                          ["Toronto", "grey"],
-                          ["New York", "orange"]],
+                           ["Raleigh", "grey"],
+                           ["Nashville", "yellow"],
+                           ["Saint Louis", "orange"],
+                           ["Chicago", "black"],
+                           ["Toronto", "grey"],
+                           ["New York", "orange"]],
             "Toronto": [["Pittsburgh", "grey"],
                         ["Chicago", "white"],
                         ["Duluth", "grey"],
@@ -243,7 +243,7 @@ class Jeu():
             "Montreal": [["Boston", "grey"],
                          ["New York", "blue"],
                          ["Toronto", "grey"],
-                         ["Sault Ste Marie","black"]],
+                         ["Sault Ste Marie", "black"]],
             "Boston": [["Montreal", "grey"],
                        ["New York", "yellow"]],
             "New York": [["Boston", "yellow"],
@@ -279,8 +279,24 @@ class Jeu():
             for liste in self.liens_villes[keys]:
                 nom_lien, couleur_lien = liste
                 x_liens, y_liens = self.villes[nom_lien]
-                plt.plot((x_ville, x_liens), (y_ville, y_liens), couleur_lien)
+                plt.plot((x_ville, x_liens), (y_ville, y_liens), couleur_lien, linewidth=5)
         return plateau
+
+    def melange_cartes(self, cartes):
+        """
+        Mélange des cartes.
+        Renvoie un paquet totalement mélangé aléatoirement.
+        :param cartes:
+        :return:
+        """
+        return "A implémenter"
+
+    def capture_route(self):
+        """
+        Capture la route si le joueur a suffisamment de cartes wagon selon la couleur de la route.
+        :return:
+        """
+        return "A implémenter"
 
 
 if __name__ == '__main__':
