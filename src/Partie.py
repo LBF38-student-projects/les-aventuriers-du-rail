@@ -15,6 +15,7 @@ class Partie():
         self.les_joueurs = []
         self.nb_joueurs: int = 0
 
+
     def debut_partie(self):
         """
         Définition des joueurs
@@ -91,8 +92,9 @@ class Partie():
         Il existe 8 types de wagons différents en plus de la locomotive. Les couleurs de chaque carte Wagon 
         correspondent aux couleurs présentes sur le plateau afin de relier les villes : bleu, violet, orange, blanc, 
         vert, jaune, noir et rouge. Les locomotives sont multicolores et, comme des cartes joker, peuvent remplacer 
-        n’importe quelle couleur lors de la prise de possession d’une route. 
-        
+        n’importe quelle couleur lors de la prise de possession d’une route."""
+
+        """"
         Il est possible de ne jouer que des cartes Locomotive pour prendre une route. Si une carte Locomotive figure 
         parmi les 5 cartes visibles, le joueur peut la prendre, mais son tour s’arrête alors. La locomotive compte 
         comme si l’on avait pris 2 cartes. Si, après avoir pris une carte visible (qui n’est pas une locomotive), 
@@ -122,6 +124,33 @@ class Partie():
         décompte des points.
         :return:
         """
+
+        """Indication:
+        Prendre possession des routes
+        Pour prendre possession d’une route, un joueur doit jouer une série de cartes égale au
+        nombre d’espaces composant la route. La série de cartes doit être composée de cartes du
+        même type. La plupart des routes nécessitent une série de cartes de couleur spécifique. Par
+        exemple, les routes bleues sont capturées en posant des cartes Wagon bleues. Certaines
+        routes – en gris sur le plateau - peuvent être capturées en utilisant n’importe quelle série
+        d’une même couleur.
+        Lorsqu’une route a été capturée, le joueur pose ses wagons en plastique sur chacun des
+        espaces qui constituent la route. Toutes les cartes utilisées pour s’approprier cette route
+        sont défaussées.
+        Un joueur peut prendre possession de n’importe quelle route sur le plateau de jeu. Il n’est
+        pas obligé de se connecter avec les routes déjà à son actif. Un joueur ne peut jamais prendre
+        plus d’une route par tour de jeu.
+        Une route prise par un joueur devient sa propriété exclusive. Aucun
+        autre joueur ne peut plus revendiquer son
+        usage ou son occupation.
+        Certaines villes sont reliées par des routes
+        doubles. Un même joueur ne peut pas prendre
+        2 routes reliant les 2 mêmes villes.
+        Note importante : Dans une configuration
+        à 2 ou 3 joueurs, seule l’une des routes constituant la double
+        connexion peut être utilisée. Un joueur peut donc prendre
+        possession de l’une des 2 routes disponibles, la route restante
+        demeurant fermée jusqu’à la fin de la partie.
+        """
         print("Je prends une route")
         print("A implémenter")
         return None
@@ -134,6 +163,24 @@ class Partie():
         des cartes Destination.
         :return:
         """
+
+        """Indication
+        Prendre des cartes
+        Destination
+        Un joueur peut utiliser son tour de jeu pour récupérer des cartes
+        Destination supplémentaires. Pour cela, il doit prendre 3 cartes
+        sur le dessus de la pile des cartes Destination. Il doit conserver
+        au moins l’une des trois cartes, mais peut bien sûr en garder 2
+        ou même 3. S’il reste moins de 3 cartes Destination dans la pile,
+        le joueur ne peut prendre que le nombre de cartes disponibles. Chaque carte qui n’est pas conservée par le joueur est remise face cachée sous la pile.
+        Chaque carte Destination fait référence à deux villes de la carte et un nombre de points y est associé. Si le joueur réalise la connexion entre les deux
+        villes d’une carte Destination, il remporte le nombre de points indiqué sur la carte et l’additionne, en fin de partie, aux points déjà acquis. La route
+        reliant ces deux villes doit être formée uniquement par les trains de ce joueur. Si la connexion n’est pas réalisée, le joueur déduit de son nombre de
+        points déjà acquis le nombre indiqué sur la carte.
+        Les cartes Destination sont gardées secrètes tout au long de la partie. Elles sont rendues publiques à la fin de la partie et chaque joueur calcule son
+        score. Au cours du jeu, un joueur peut avoir autant de cartes Destination qu’il le souhaite.
+        """
+
         print("Je prends une carte Destination")
         print("A implémenter")
         return None
