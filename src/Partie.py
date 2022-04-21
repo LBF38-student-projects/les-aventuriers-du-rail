@@ -12,9 +12,9 @@ class Partie():
     Fait appel à la classe Jeu pour accéder à toutes les cartes et informations sur le plateau de jeu."""
 
     def __init__(self):
-        self.les_joueurs = []
+        self.les_joueurs = {} # Dictionnaire contenant tous les noms + objet Joueur de la partie.
+        self.ordre=[] # Liste de l'ordre dans lequel joue les joueurs. Contient le nom de chaque joueur dans l'ordre.
         self.nb_joueurs: int = 0
-
 
     def debut_partie(self):
         """
@@ -23,8 +23,25 @@ class Partie():
         """
         self.nb_joueurs = int(input('Nombre de joueurs pour la partie'))
         for k in range(self.nb_joueurs):
-            self.les_joueurs.append(Joueur(input('Nom du Joueur ' + str(k + 1)), input(
-                'Choisir sa couleur de Joueur parmi les suivantes : \n - blue \n - red \n - black \n - random'), 0))
+            nom = input('Nom du Joueur ' + str(k + 1))
+            couleur = input('Choisir sa couleur de Joueur parmi les suivantes :\n- blue\n- red\n - black \n - random')
+            self.les_joueurs[nom] = Joueur(nom, couleur, 0)
+            self.ordre.append(nom)
+
+    def rotation_joueur(self,index):
+        """
+        Réalise la rotation des joueurs selon l'indice fourni dans le sens horaire.
+        :return:
+        L'ordre des joueurs
+        """
+        if index != 0:
+            temp_joueur = []
+            while len(self.ordre) > index:
+                temp_joueur.append(self.ordre.pop(index))
+            while len(self.ordre) > 0:
+                temp_joueur.append(self.ordre.pop(0))
+            self.ordre = temp_joueur
+        return "L'ordre des joueurs est établi comme suit : \n" + self.liste_joueurs()
 
     def choix_tour_joueur(self):
         """
@@ -33,21 +50,7 @@ class Partie():
         L'ordre des joueurs de la partie
         """
         joueur_voyageur = input("Qui a le plus voyagé entre ces joueurs ? \n" + self.liste_joueurs())
-        index_premier = 0
-        j = self.les_joueurs[0]
-        while j.nom_joueur != joueur_voyageur:
-            index_premier += 1
-            j = self.les_joueurs[index_premier]
-        if index_premier == 0:
-            return "L'ordre des joueurs est établi comme suit : \n" + self.liste_joueurs()
-        else:
-            temp_joueur = []
-            while len(self.les_joueurs) > index_premier:
-                temp_joueur.append(self.les_joueurs.pop(index_premier))
-            while len(self.les_joueurs) > 0:
-                temp_joueur.append(self.les_joueurs.pop(0))
-            self.les_joueurs = temp_joueur
-            return "L'ordre des joueurs est établi comme suit : \n" + self.liste_joueurs()
+        self.rotation_joueur(self.ordre.index(joueur_voyageur))
 
     def liste_joueurs(self):
         """
@@ -55,13 +58,13 @@ class Partie():
         :return:
         """
         liste_joueurs = ""
-        for joueur in self.les_joueurs:
-            liste_joueurs += joueur.nom_joueur + "\n"
+        for joueur in self.ordre:
+            liste_joueurs += joueur + "\n"
         return liste_joueurs
 
     def tour(self, joueur):
         """
-        Réalise 1 tour pour 1 joueur de toutes les actions possibles.
+        Réalise 1 tour de tous les joueurs où chacun joue leur tour de jeu en fonction de toutes les actions possibles.
         :return:
         """
         print("C'est le tour de " + joueur.nom_joueur)
@@ -191,7 +194,6 @@ class Partie():
         :return:
         """
         self.debut_partie()
-
         """
         # Règle du jeu :
         ## Tour de jeu
@@ -199,29 +201,34 @@ class Partie():
         self.choix_tour_joueur()
         """Par la suite, on joue dans le sens des aiguilles d’une montre. 
         À son tour, le joueur doit faire une et une seule des trois actions suivantes : 
-        1. Prendre des cartes Wagon : 
-        – le joueur peut prendre 2 cartes Wagon. 
-        Il peut prendre n’importe quelle carte visible parmi les 5 posées sur la table ou tirer une carte du dessus de 
-        la pioche (tirage en aveugle). Si le joueur prend une carte visible, il la remplace immédiatement par une 
-        autre du dessus de la pioche. Il peut ensuite prendre une deuxième carte, soit visible, soit en aveugle (voir 
-        section Cartes Wagon pour les cartes Locomotive). 
-        
-        2. Prendre possession d’une route : 
-        – Le joueur peut s’emparer d’une route sur le plateau en posant autant de cartes Wagon de la couleur 
-        de la route que d’espaces composant la route. Après avoir défaussé ses cartes, le joueur pose alors ses wagons 
-        sur chaque espace constituant la route. Enfin, il déplace son marqueur de score en se référant au tableau de 
-        décompte des points.
-        
-        3. Prendre des cartes Destination supplémentaires :
-        – Le joueur prend 3 cartes Destination du dessus de la pioche. Il doit en conserver au moins une, 
-        mais peut aussi garder 2 ou 3 cartes. Chaque carte qui n’est pas conservée est posée face cachée sous la pioche 
-        des cartes Destination.
+        1. Prendre des cartes Wagon
+        2. Prendre possession d’une route
+        3. Prendre des cartes Destination supplémentaires
         """
-        for joueur in self.les_joueurs:
-            print(self.tour(joueur))  # Tour à implémenter avec chaque action possible.
+        i=0
+        nom=self.ordre[i]
+        joueur=self.les_joueurs[nom]
+        while joueur.wagons >2:
+            self.tour(joueur)
+            if i==len(self.ordre):
+                i=0
+            else:
+                i+=1
+            nom=self.ordre[i]
+            joueur=self.les_joueurs[nom]
+        self.rotation_joueur(i)
+        for nom in self.ordre:
+            self.tour(self.les_joueurs[nom])
+        print("Fin de partie\nAffichage du score bientôt disponible")
+        """
+        Fin du jeu
+        Lorsque la réserve de wagons d’un joueur est de 0, 1 ou 2 wagons après avoir joué son tour, 
+        chaque joueur, en incluant celui-ci, joue encore un tour. À l’issue de ce dernier tour, le jeu s’arrête et 
+        chacun compte ses points """
+
+
 
 
 if __name__ == '__main__':
     p = Partie()
     p.partie()
-    # test=input('test de input')
