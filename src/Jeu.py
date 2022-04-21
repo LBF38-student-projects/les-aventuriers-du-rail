@@ -102,237 +102,237 @@ class Jeu():
             "Raleigh": (31.5, 10.5)
         }
         self.liens_villes = {
-            # Penser à mettre les nombres de segments par liens.
+            # Penser à mettre les nombres de segments par lien.
             # "test":{
             #     "nom":["cou",5],
             # }
             "Los Angeles": {
-                "San Francisco": ["yellow"],
-                "Las Vegas": ["grey"],
-                "Phoenix": ["grey"],
-                "El Paso": ["black"]
+                "San Francisco": ["yellow", 3],
+                "Las Vegas": ["grey", 2],
+                "Phoenix": ["grey", 3],
+                "El Paso": ["black", 6]
             },
             "San Francisco": {
-                "Portland": ["orange"],
-                "Salt Lake City": ["orange"],
-                "Los Angeles": ["grey"]
+                "Portland": ["orange", 5],
+                "Salt Lake City": ["orange", 5],
+                "Los Angeles": ["yellow", 3]
             },
             "Portland": {
-                "Seattle": ["grey"],
-                "Salt Lake City": ["blue"],
-                "San Francisco": ["orange"]
+                "Seattle": ["grey", 1],
+                "Salt Lake City": ["blue", 6],
+                "San Francisco": ["orange", 5]
             },
             "Seattle": {
-                "Portland": ["grey"],
-                "Helena": ["yellow"],
-                "Vancouver": ["grey"],
-                "Calgary": ["grey"]
+                "Portland": ["grey", 1],
+                "Helena": ["yellow", 6],
+                "Vancouver": ["grey", 1],
+                "Calgary": ["grey", 4]
             },
             "Vancouver": {
-                "Seattle": ["grey"],
-                "Calgary": ["grey"]
+                "Seattle": ["grey", 1],
+                "Calgary": ["grey", 3]
             },
             "Calgary": {
-                "Winnipeg": ["white"],
-                "Helena": ["grey"],
-                "Seattle": ["grey"],
-                "Vancouver": ["grey"]
+                "Winnipeg": ["white", 6],
+                "Helena": ["grey", 4],
+                "Seattle": ["grey", 4],
+                "Vancouver": ["grey", 3]
             },
             "Helena": {
-                "Seattle": ["yellow"],
-                "Calgary": ["grey"],
-                "Winnipeg": ["blue"],
-                "Duluth": ["orange"],
-                "Omaha": ["red"],
-                "Denver": ["orange"],
-                "Salt Lake City": ["grey"]
+                "Seattle": ["yellow", 6],
+                "Calgary": ["grey", 4],
+                "Winnipeg": ["blue", 4],
+                "Duluth": ["orange", 6],
+                "Omaha": ["red", 5],
+                "Denver": ["orange", 4],
+                "Salt Lake City": ["grey", 3]
             },
             "Salt Lake City": {
-                "Portland": ["blue"],
-                "San Francisco": ["orange"],
-                "Las Vegas": ["orange"],
-                "Denver": ["yellow"],
-                "Helena": ["grey"]
+                "Portland": ["blue", 6],
+                "San Francisco": ["orange", 5],
+                "Las Vegas": ["orange", 3],
+                "Denver": ["yellow", 3],
+                "Helena": ["grey", 3]
             },
             "Las Vegas": {
-                "Salt Lake City": ["orange"],
-                "Los Angeles": ["grey"]
+                "Salt Lake City": ["orange", 3],
+                "Los Angeles": ["grey", 2]
             },
             "Phoenix": {
-                "El Paso": ["grey"],
-                "Santa Fe": ["grey"],
-                "Los Angeles": ["grey"],
-                "Denver": ["white"]
+                "El Paso": ["grey", 3],
+                "Santa Fe": ["grey", 3],
+                "Los Angeles": ["grey", 3],
+                "Denver": ["white", 5]
             },
             "El Paso": {
-                "Santa Fe": ["grey"],
-                "Phoenix": ["grey"],
-                "Los Angeles": ["black"],
-                "Houston": ["orange"],
-                "Dallas": ["red"],
-                "Oklahoma City": ["yellow"]
+                "Santa Fe": ["grey", 2],
+                "Phoenix": ["grey", 3],
+                "Los Angeles": ["black", 6],
+                "Houston": ["orange", 6],
+                "Dallas": ["red", 4],
+                "Oklahoma City": ["yellow", 5]
             },
             "Santa Fe": {
-                "Phoenix": ["grey"],
-                "Denver": ["grey"],
-                "Oklahoma City": ["blue"],
-                "El Paso": ["grey"]
+                "Phoenix": ["grey", 3],
+                "Denver": ["grey", 2],
+                "Oklahoma City": ["blue", 3],
+                "El Paso": ["grey", 2]
             },
             "Denver": {
-                "Santa Fe": ["grey"],
-                "Phoenix": ["white"],
-                "Salt Lake City": ["yellow"],
-                "Helena": ["orange"],
-                "Omaha": ["grey"],
-                "Kansas City": ["black"],
-                "Oklahoma City": ["red"]
+                "Santa Fe": ["grey", 2],
+                "Phoenix": ["white", 5],
+                "Salt Lake City": ["yellow", 3],
+                "Helena": ["orange", 4],
+                "Omaha": ["grey", 4],
+                "Kansas City": ["black", 4],
+                "Oklahoma City": ["red", 4]
             },
             "Oklahoma City": {
-                "Denver": ["red"],
-                "Kansas City": ["grey"],
-                "Santa Fe": ["blue"],
-                "El Paso": ["yellow"],
-                "Dallas": ["grey"],
-                "Little Rock": ["grey"]
+                "Denver": ["red", 4],
+                "Kansas City": ["grey", 2],
+                "Santa Fe": ["blue", 3],
+                "El Paso": ["yellow", 6],
+                "Dallas": ["grey", 2],
+                "Little Rock": ["grey", 2]
             },
             "Kansas City": {
-                "Denver": ["orange"],
-                "Omaha": ["grey"],
-                "Saint Louis": ["grey"],
-                "Oklahoma City": ["grey"]
+                "Denver": ["orange", 4],
+                "Omaha": ["grey", 1],
+                "Saint Louis": ["grey", 2],
+                "Oklahoma City": ["grey", 2]
             },
             "Omaha": {
-                "Denver": ["grey"],
-                "Kansas City": ["grey"],
-                "Chicago": ["blue"],
-                "Duluth": ["grey"],
-                "Helena": ["yellow"]
+                "Denver": ["grey", 4],
+                "Kansas City": ["grey", 1],
+                "Chicago": ["blue", 4],
+                "Duluth": ["grey", 2],
+                "Helena": ["red", 5]
             },
             "Duluth": {
-                "Winnipeg": ["white"],
-                "Helena": ["orange"],
-                "Sault Ste Marie": ["grey"],
-                "Toronto": ["grey"],
-                "Chicago": ["red"],
-                "Omaha": ["grey"]
+                "Winnipeg": ["white", 4],
+                "Helena": ["orange", 6],
+                "Sault Ste Marie": ["grey", 3],
+                "Toronto": ["grey", 6],
+                "Chicago": ["red", 3],
+                "Omaha": ["grey", 2]
             },
             "Sault Ste Marie": {
-                "Winnipeg": ["grey"],
-                "Duluth": ["grey"],
-                "Toronto": ["grey"],
-                "Montreal": ["black"]
+                "Winnipeg": ["grey", 6],
+                "Duluth": ["grey", 3],
+                "Toronto": ["grey", 2],
+                "Montreal": ["black", 5]
             },
             "Winnipeg": {
-                "Calgary": ["white"],
-                "Helena": ["blue"],
-                "Duluth": ["black"],
-                "Sault Ste Marie": ["grey"]
+                "Calgary": ["white", 6],
+                "Helena": ["blue", 4],
+                "Duluth": ["black", 4],
+                "Sault Ste Marie": ["grey", 6]
             },
             "Dallas": {
-                "Houston": ["grey"],
-                "El Paso": ["red"],
-                "Oklahoma City": ["grey"],
-                "Little Rock": ["grey"]
+                "Houston": ["grey", 1],
+                "El Paso": ["red", 4],
+                "Oklahoma City": ["grey", 2],
+                "Little Rock": ["grey", 2]
             },
             "Houston": {
-                "Dallas": ["grey"],
-                "El Paso": ["orange"],
-                "New Orleans": ["grey"]
+                "Dallas": ["grey", 1],
+                "El Paso": ["orange", 6],
+                "New Orleans": ["grey", 2]
             },
             "New Orleans": {
-                "Houston": ["grey"],
-                "Little Rock": ["orange"],
-                "Atlanta": ["yellow"],
-                "Miami": ["red"]
+                "Houston": ["grey", 2],
+                "Little Rock": ["orange", 3],
+                "Atlanta": ["yellow", 4],
+                "Miami": ["red", 6]
             },
             "Little Rock": {
-                "New Orleans": ["orange"],
-                "Dallas": ["grey"],
-                "Oklahoma City": ["grey"],
-                "Saint Louis": ["grey"],
-                "Nashville": ["white"]
+                "New Orleans": ["orange", 3],
+                "Dallas": ["grey", 2],
+                "Oklahoma City": ["grey", 2],
+                "Saint Louis": ["grey", 2],
+                "Nashville": ["white", 3]
             },
             "Saint Louis": {
-                "Little Rock": ["grey"],
-                "Kansas City": ["grey"],
-                "Chicago": ["white"],
-                "Pittsburgh": ["orange"],
-                "Nashville": ["grey"]
+                "Little Rock": ["grey", 2],
+                "Kansas City": ["grey", 2],
+                "Chicago": ["white", 2],
+                "Pittsburgh": ["orange", 5],
+                "Nashville": ["grey", 2]
             },
             "Chicago": {
-                "Saint Louis": ["white"],
-                "Omaha": ["blue"],
-                "Duluth": ["red"],
-                "Toronto": ["white"],
-                "Pittsburgh": ["orange"]
+                "Saint Louis": ["white", 2],
+                "Omaha": ["blue", 4],
+                "Duluth": ["red", 3],
+                "Toronto": ["white", 4],
+                "Pittsburgh": ["black", 3]
             },
             "Nashville": {
-                "Saint Louis": ["grey"],
-                "Pittsburgh": ["yellow"],
-                "Little Rock": ["white"],
-                "Atlanta": ["grey"],
-                "Raleigh": ["black"]
+                "Saint Louis": ["grey", 2],
+                "Pittsburgh": ["yellow", 4],
+                "Little Rock": ["white", 3],
+                "Atlanta": ["grey", 1],
+                "Raleigh": ["black", 3]
             },
             "Atlanta": {
-                "Nashville": ["grey"],
-                "Raleigh": ["grey"],
-                "Charleston": ["grey"],
-                "New Orleans": ["yellow"],
-                "Miami": ["blue"]
+                "Nashville": ["grey", 1],
+                "Raleigh": ["grey", 2],
+                "Charleston": ["grey", 2],
+                "New Orleans": ["yellow", 4],
+                "Miami": ["blue", 5]
             },
             "Miami": {
-                "New Orleans": ["red"],
-                "Atlanta": ["blue"],
-                "Charleston": ["grey"]
+                "New Orleans": ["red", 6],
+                "Atlanta": ["blue", 5],
+                "Charleston": ["grey", 4]
             },
             "Charleston": {
-                "Miami": ["grey"],
-                "Atlanta": ["grey"],
-                "Raleigh": ["grey"]
+                "Miami": ["grey", 4],
+                "Atlanta": ["grey", 2],
+                "Raleigh": ["grey", 2]
             },
             "Pittsburgh": {
-                "Washington": ["grey"],
-                "Raleigh": ["grey"],
-                "Nashville": ["yellow"],
-                "Saint Louis": ["orange"],
-                "Chicago": ["black"],
-                "Toronto": ["grey"],
-                "New York": ["orange"]
+                "Washington": ["grey", 2],
+                "Raleigh": ["grey", 2],
+                "Nashville": ["yellow", 4],
+                "Saint Louis": ["orange", 5],
+                "Chicago": ["black", 3],
+                "Toronto": ["grey", 2],
+                "New York": ["orange", 2]
             },
             "Toronto": {
-                "Pittsburgh": ["grey"],
-                "Chicago": ["white"],
-                "Duluth": ["grey"],
-                "Sault Ste Marie": ["grey"],
-                "Montreal": ["grey"]
+                "Pittsburgh": ["grey", 2],
+                "Chicago": ["white", 4],
+                "Duluth": ["grey", 6],
+                "Sault Ste Marie": ["grey", 2],
+                "Montreal": ["grey", 3]
             },
             "Montreal": {
-                "Boston": ["grey"],
-                "New York": ["blue"],
-                "Toronto": ["grey"],
-                "Sault Ste Marie": ["black"]
+                "Boston": ["grey", 2],
+                "New York": ["blue", 3],
+                "Toronto": ["grey", 3],
+                "Sault Ste Marie": ["black", 5]
             },
             "Boston": {
-                "Montreal": ["grey"],
-                "New York": ["yellow"]
+                "Montreal": ["grey", 2],
+                "New York": ["yellow", 2]
             },
             "New York": {
-                "Boston": ["yellow"],
-                "Montreal": ["blue"],
-                "Pittsburgh": ["orange"],
-                "Washington": ["black"]
+                "Boston": ["yellow", 2],
+                "Montreal": ["blue", 3],
+                "Pittsburgh": ["orange", 2],
+                "Washington": ["black", 2]
             },
             "Washington": {
-                    "New York": ["black"],
-                    "Pittsburgh": ["grey"],
-                    "Raleigh": ["grey"]
+                "New York": ["black", 2],
+                "Pittsburgh": ["grey", 2],
+                "Raleigh": ["grey", 2]
             },
             "Raleigh": {
-                "Washington": ["grey"],
-                "Pittsburgh": ["grey"],
-                "Nashville": ["black"],
-                "Atlanta": ["grey"],
-                "Charleston": ["grey"]
+                "Washington": ["grey", 2],
+                "Pittsburgh": ["grey", 2],
+                "Nashville": ["black", 3],
+                "Atlanta": ["grey", 2],
+                "Charleston": ["grey", 2]
             },
         }
 
@@ -348,7 +348,7 @@ class Jeu():
         for ville in self.liens_villes.keys():
             x_ville, y_ville = self.villes[ville]
             for ville2 in self.liens_villes[ville].keys():
-                nom_lien, couleur_lien = ville2,self.liens_villes[ville][ville2][0]
+                nom_lien, couleur_lien = ville2, self.liens_villes[ville][ville2][0]
                 x_liens, y_liens = self.villes[nom_lien]
                 plt.plot((x_ville, x_liens), (y_ville, y_liens), couleur_lien, linewidth=5)
         """Affichage des points + noms des villes :"""
@@ -357,7 +357,7 @@ class Jeu():
             plt.plot(x, y, 'ro')
             plt.text(x - 1, y - 1, ville)
         """Arrière-plan du plateau :"""
-        ax=plt.axes()
+        ax = plt.axes()
         ax.set_facecolor('lightgrey')
         return plateau
 
