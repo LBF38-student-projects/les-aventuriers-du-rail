@@ -102,162 +102,238 @@ class Jeu():
             "Raleigh": (31.5, 10.5)
         }
         self.liens_villes = {
-            "Los Angeles": [["San Francisco", "yellow"],
-                            ["Las Vegas", "grey"],
-                            ["Phoenix", "grey"],
-                            ["El Paso", "black"]],
-            "San Francisco": [["Portland", "orange"],
-                              ["Salt Lake City", "orange"],
-                              ["Los Angeles", "grey"]],
-            "Portland": [["Seattle", "grey"],
-                         ["Salt Lake City", "blue"],
-                         ["San Francisco", "orange"]],
-            "Seattle": [["Portland", "grey"],
-                        ["Helena", "yellow"],
-                        ["Vancouver", "grey"],
-                        ["Calgary", "grey"]],
-            "Vancouver": [["Seattle", "grey"],
-                          ["Calgary", "grey"]],
-            "Calgary": [["Winnipeg", "white"],
-                        ["Helena", "grey"],
-                        ["Seattle", "grey"],
-                        ["Vancouver", "grey"]],
-            "Helena": [["Seattle", "yellow"],
-                       ["Calgary", "grey"],
-                       ["Winnipeg", "blue"],
-                       ["Duluth", "orange"],
-                       ["Omaha", "red"],
-                       ["Denver", "orange"],
-                       ["Salt Lake City", "grey"]],
-            "Salt Lake City": [["Portland", "blue"],
-                               ["San Francisco", "orange"],
-                               ["Las Vegas", "orange"],
-                               ["Denver", "yellow"],
-                               ["Helena", "grey"]],
-            "Las Vegas": [["Salt Lake City", "orange"],
-                          ["Los Angeles", "grey"]],
-            "Phoenix": [["El Paso", "grey"],
-                        ["Santa Fe", "grey"],
-                        ["Los Angeles", "grey"],
-                        ["Denver", "white"]],
-            "El Paso": [["Santa Fe", "grey"],
-                        ["Phoenix", "grey"],
-                        ["Los Angeles", "black"],
-                        ["Houston", "orange"],
-                        ["Dallas", "red"],
-                        ["Oklahoma City", "yellow"]],
-            "Santa Fe": [["Phoenix", "grey"],
-                         ["Denver", "grey"],
-                         ["Oklahoma City", "blue"],
-                         ["El Paso", "grey"]],
-            "Denver": [["Santa Fe", "grey"],
-                       ["Phoenix", "white"],
-                       ["Salt Lake City", "yellow"],
-                       ["Helena", "orange"],
-                       ["Omaha", "grey"],
-                       ["Kansas City", "black"],
-                       ["Oklahoma City", "red"]],
-            "Oklahoma City": [["Denver", "red"],
-                              ["Kansas City", "grey"],
-                              ["Santa Fe", "blue"],
-                              ["El Paso", "yellow"],
-                              ["Dallas", "grey"],
-                              ["Little Rock", "grey"]],
-            "Kansas City": [["Denver", "orange"],
-                            ["Omaha", "grey"],
-                            ["Saint Louis", "grey"],
-                            ["Oklahoma City", "grey"]],
-            "Omaha": [["Denver", "grey"],
-                      ["Kansas City", "grey"],
-                      ["Chicago", "blue"],
-                      ["Duluth", "grey"],
-                      ["Helena", "yellow"]],
-            "Duluth": [["Winnipeg", "white"],
-                       ["Helena", "orange"],
-                       ["Sault Ste Marie", "grey"],
-                       ["Toronto", "grey"],
-                       ["Chicago", "red"],
-                       ["Omaha", "grey"]],
-            "Sault Ste Marie": [["Winnipeg", "grey"],
-                                ["Duluth", "grey"],
-                                ["Toronto", "grey"],
-                                ["Montreal", "black"]],
-            "Winnipeg": [["Calgary", "white"],
-                         ["Helena", "blue"],
-                         ["Duluth", "black"],
-                         ["Sault Ste Marie", "grey"]],
-            "Dallas": [["Houston", "grey"],
-                       ["El Paso", "red"],
-                       ["Oklahoma City", "grey"],
-                       ["Little Rock", "grey"]],
-            "Houston": [["Dallas", "grey"],
-                        ["El Paso", "orange"],
-                        ["New Orleans", "grey"]],
-            "New Orleans": [["Houston", "grey"],
-                            ["Little Rock", "orange"],
-                            ["Atlanta", "yellow"],
-                            ["Miami", "red"]],
-            "Little Rock": [["New Orleans", "orange"],
-                            ["Dallas", "grey"],
-                            ["Oklahoma City", "grey"],
-                            ["Saint Louis", "grey"],
-                            ["Nashville", "white"]],
-            "Saint Louis": [["Little Rock", "grey"],
-                            ["Kansas City", "grey"],
-                            ["Chicago", "white"],
-                            ["Pittsburgh", "orange"],
-                            ["Nashville", "grey"]],
-            "Chicago": [["Saint Louis", "white"],
-                        ["Omaha", "blue"],
-                        ["Duluth", "red"],
-                        ["Toronto", "white"],
-                        ["Pittsburgh", "orange"]],
-            "Nashville": [["Saint Louis", "grey"],
-                          ["Pittsburgh", "yellow"],
-                          ["Little Rock", "white"],
-                          ["Atlanta", "grey"],
-                          ["Raleigh", "black"]],
-            "Atlanta": [["Nashville", "grey"],
-                        ["Raleigh", "grey"],
-                        ["Charleston", "grey"],
-                        ["New Orleans", "yellow"],
-                        ["Miami", "blue"]],
-            "Miami": [["New Orleans", "red"],
-                      ["Atlanta", "blue"],
-                      ["Charleston", "grey"]],
-            "Charleston": [["Miami", "grey"],
-                           ["Atlanta", "grey"],
-                           ["Raleigh", "grey"]],
-            "Pittsburgh": [["Washington", "grey"],
-                           ["Raleigh", "grey"],
-                           ["Nashville", "yellow"],
-                           ["Saint Louis", "orange"],
-                           ["Chicago", "black"],
-                           ["Toronto", "grey"],
-                           ["New York", "orange"]],
-            "Toronto": [["Pittsburgh", "grey"],
-                        ["Chicago", "white"],
-                        ["Duluth", "grey"],
-                        ["Sault Ste Marie", "grey"],
-                        ["Montreal", "grey"]],
-            "Montreal": [["Boston", "grey"],
-                         ["New York", "blue"],
-                         ["Toronto", "grey"],
-                         ["Sault Ste Marie", "black"]],
-            "Boston": [["Montreal", "grey"],
-                       ["New York", "yellow"]],
-            "New York": [["Boston", "yellow"],
-                         ["Montreal", "blue"],
-                         ["Pittsburgh", "orange"],
-                         ["Washington", "black"]],
-            "Washington": [["New York", "black"],
-                           ["Pittsburgh", "grey"],
-                           ["Raleigh", "grey"]],
-            "Raleigh": [["Washington", "grey"],
-                        ["Pittsburgh", "grey"],
-                        ["Nashville", "black"],
-                        ["Atlanta", "grey"],
-                        ["Charleston", "grey"]],
+            # Penser à mettre les nombres de segments par liens.
+            # "test":{
+            #     "nom":["cou",5],
+            # }
+            "Los Angeles": {
+                "San Francisco": ["yellow"],
+                "Las Vegas": ["grey"],
+                "Phoenix": ["grey"],
+                "El Paso": ["black"]
+            },
+            "San Francisco": {
+                "Portland": ["orange"],
+                "Salt Lake City": ["orange"],
+                "Los Angeles": ["grey"]
+            },
+            "Portland": {
+                "Seattle": ["grey"],
+                "Salt Lake City": ["blue"],
+                "San Francisco": ["orange"]
+            },
+            "Seattle": {
+                "Portland": ["grey"],
+                "Helena": ["yellow"],
+                "Vancouver": ["grey"],
+                "Calgary": ["grey"]
+            },
+            "Vancouver": {
+                "Seattle": ["grey"],
+                "Calgary": ["grey"]
+            },
+            "Calgary": {
+                "Winnipeg": ["white"],
+                "Helena": ["grey"],
+                "Seattle": ["grey"],
+                "Vancouver": ["grey"]
+            },
+            "Helena": {
+                "Seattle": ["yellow"],
+                "Calgary": ["grey"],
+                "Winnipeg": ["blue"],
+                "Duluth": ["orange"],
+                "Omaha": ["red"],
+                "Denver": ["orange"],
+                "Salt Lake City": ["grey"]
+            },
+            "Salt Lake City": {
+                "Portland": ["blue"],
+                "San Francisco": ["orange"],
+                "Las Vegas": ["orange"],
+                "Denver": ["yellow"],
+                "Helena": ["grey"]
+            },
+            "Las Vegas": {
+                "Salt Lake City": ["orange"],
+                "Los Angeles": ["grey"]
+            },
+            "Phoenix": {
+                "El Paso": ["grey"],
+                "Santa Fe": ["grey"],
+                "Los Angeles": ["grey"],
+                "Denver": ["white"]
+            },
+            "El Paso": {
+                "Santa Fe": ["grey"],
+                "Phoenix": ["grey"],
+                "Los Angeles": ["black"],
+                "Houston": ["orange"],
+                "Dallas": ["red"],
+                "Oklahoma City": ["yellow"]
+            },
+            "Santa Fe": {
+                "Phoenix": ["grey"],
+                "Denver": ["grey"],
+                "Oklahoma City": ["blue"],
+                "El Paso": ["grey"]
+            },
+            "Denver": {
+                "Santa Fe": ["grey"],
+                "Phoenix": ["white"],
+                "Salt Lake City": ["yellow"],
+                "Helena": ["orange"],
+                "Omaha": ["grey"],
+                "Kansas City": ["black"],
+                "Oklahoma City": ["red"]
+            },
+            "Oklahoma City": {
+                "Denver": ["red"],
+                "Kansas City": ["grey"],
+                "Santa Fe": ["blue"],
+                "El Paso": ["yellow"],
+                "Dallas": ["grey"],
+                "Little Rock": ["grey"]
+            },
+            "Kansas City": {
+                "Denver": ["orange"],
+                "Omaha": ["grey"],
+                "Saint Louis": ["grey"],
+                "Oklahoma City": ["grey"]
+            },
+            "Omaha": {
+                "Denver": ["grey"],
+                "Kansas City": ["grey"],
+                "Chicago": ["blue"],
+                "Duluth": ["grey"],
+                "Helena": ["yellow"]
+            },
+            "Duluth": {
+                "Winnipeg": ["white"],
+                "Helena": ["orange"],
+                "Sault Ste Marie": ["grey"],
+                "Toronto": ["grey"],
+                "Chicago": ["red"],
+                "Omaha": ["grey"]
+            },
+            "Sault Ste Marie": {
+                "Winnipeg": ["grey"],
+                "Duluth": ["grey"],
+                "Toronto": ["grey"],
+                "Montreal": ["black"]
+            },
+            "Winnipeg": {
+                "Calgary": ["white"],
+                "Helena": ["blue"],
+                "Duluth": ["black"],
+                "Sault Ste Marie": ["grey"]
+            },
+            "Dallas": {
+                "Houston": ["grey"],
+                "El Paso": ["red"],
+                "Oklahoma City": ["grey"],
+                "Little Rock": ["grey"]
+            },
+            "Houston": {
+                "Dallas": ["grey"],
+                "El Paso": ["orange"],
+                "New Orleans": ["grey"]
+            },
+            "New Orleans": {
+                "Houston": ["grey"],
+                "Little Rock": ["orange"],
+                "Atlanta": ["yellow"],
+                "Miami": ["red"]
+            },
+            "Little Rock": {
+                "New Orleans": ["orange"],
+                "Dallas": ["grey"],
+                "Oklahoma City": ["grey"],
+                "Saint Louis": ["grey"],
+                "Nashville": ["white"]
+            },
+            "Saint Louis": {
+                "Little Rock": ["grey"],
+                "Kansas City": ["grey"],
+                "Chicago": ["white"],
+                "Pittsburgh": ["orange"],
+                "Nashville": ["grey"]
+            },
+            "Chicago": {
+                "Saint Louis": ["white"],
+                "Omaha": ["blue"],
+                "Duluth": ["red"],
+                "Toronto": ["white"],
+                "Pittsburgh": ["orange"]
+            },
+            "Nashville": {
+                "Saint Louis": ["grey"],
+                "Pittsburgh": ["yellow"],
+                "Little Rock": ["white"],
+                "Atlanta": ["grey"],
+                "Raleigh": ["black"]
+            },
+            "Atlanta": {
+                "Nashville": ["grey"],
+                "Raleigh": ["grey"],
+                "Charleston": ["grey"],
+                "New Orleans": ["yellow"],
+                "Miami": ["blue"]
+            },
+            "Miami": {
+                "New Orleans": ["red"],
+                "Atlanta": ["blue"],
+                "Charleston": ["grey"]
+            },
+            "Charleston": {
+                "Miami": ["grey"],
+                "Atlanta": ["grey"],
+                "Raleigh": ["grey"]
+            },
+            "Pittsburgh": {
+                "Washington": ["grey"],
+                "Raleigh": ["grey"],
+                "Nashville": ["yellow"],
+                "Saint Louis": ["orange"],
+                "Chicago": ["black"],
+                "Toronto": ["grey"],
+                "New York": ["orange"]
+            },
+            "Toronto": {
+                "Pittsburgh": ["grey"],
+                "Chicago": ["white"],
+                "Duluth": ["grey"],
+                "Sault Ste Marie": ["grey"],
+                "Montreal": ["grey"]
+            },
+            "Montreal": {
+                "Boston": ["grey"],
+                "New York": ["blue"],
+                "Toronto": ["grey"],
+                "Sault Ste Marie": ["black"]
+            },
+            "Boston": {
+                "Montreal": ["grey"],
+                "New York": ["yellow"]
+            },
+            "New York": {
+                "Boston": ["yellow"],
+                "Montreal": ["blue"],
+                "Pittsburgh": ["orange"],
+                "Washington": ["black"]
+            },
+            "Washington": {
+                    "New York": ["black"],
+                    "Pittsburgh": ["grey"],
+                    "Raleigh": ["grey"]
+            },
+            "Raleigh": {
+                "Washington": ["grey"],
+                "Pittsburgh": ["grey"],
+                "Nashville": ["black"],
+                "Atlanta": ["grey"],
+                "Charleston": ["grey"]
+            },
         }
 
     def plateau(self):
@@ -268,18 +344,21 @@ class Jeu():
         """
         plateau = plt.figure()
 
-        for keys in self.villes.keys():
-            x, y = self.villes[keys]
-            """Affichage des points + noms des villes :"""
-            plt.plot(x, y, 'ro')
-            plt.text(x - 1, y - 1, keys)
         """Affichage des liens entre les villes :"""
-        for keys in self.liens_villes.keys():
-            x_ville, y_ville = self.villes[keys]
-            for liste in self.liens_villes[keys]:
-                nom_lien, couleur_lien = liste
+        for ville in self.liens_villes.keys():
+            x_ville, y_ville = self.villes[ville]
+            for ville2 in self.liens_villes[ville].keys():
+                nom_lien, couleur_lien = ville2,self.liens_villes[ville][ville2][0]
                 x_liens, y_liens = self.villes[nom_lien]
                 plt.plot((x_ville, x_liens), (y_ville, y_liens), couleur_lien, linewidth=5)
+        """Affichage des points + noms des villes :"""
+        for ville in self.villes.keys():
+            x, y = self.villes[ville]
+            plt.plot(x, y, 'ro')
+            plt.text(x - 1, y - 1, ville)
+        """Arrière-plan du plateau :"""
+        ax=plt.axes()
+        ax.set_facecolor('lightgrey')
         return plateau
 
     def melange_cartes(self, cartes):
@@ -302,22 +381,3 @@ class Jeu():
 if __name__ == '__main__':
     jeu = Jeu()
     jeu.plateau()
-    # """
-    # Couleurs :
-    # yellow: y
-    # green: g
-    # blue: b
-    # black: k
-    # white: w ?
-    # grey: grey
-    # """
-    # plt.plot((1,2),(3,5),'orange')
-    # plt.show()
-    # dico={
-    #     "test":{
-    #         "test2":2,
-    #         "autre":5
-    #     }
-    #     "autre key":10,
-    #     "finalement":5
-    # }
