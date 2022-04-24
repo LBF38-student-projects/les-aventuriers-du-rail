@@ -12,8 +12,8 @@ class Partie():
     Fait appel à la classe Jeu pour accéder à toutes les cartes et informations sur le plateau de jeu."""
 
     def __init__(self):
-        self.les_joueurs = {} # Dictionnaire contenant tous les noms + objet Joueur de la partie.
-        self.ordre=[] # Liste de l'ordre dans lequel joue les joueurs. Contient le nom de chaque joueur dans l'ordre.
+        self.les_joueurs = {}  # Dictionnaire contenant tous les noms + objet Joueur de la partie.
+        self.ordre = []  # Liste de l'ordre dans lequel joue les joueurs. Contient le nom de chaque joueur dans l'ordre.
         self.nb_joueurs: int = 0
 
     def debut_partie(self):
@@ -28,7 +28,7 @@ class Partie():
             self.les_joueurs[nom] = Joueur(nom, couleur, 0)
             self.ordre.append(nom)
 
-    def rotation_joueur(self,index):
+    def rotation_joueur(self, index):
         """
         Réalise la rotation des joueurs selon l'indice fourni dans le sens horaire.
         :return:
@@ -77,7 +77,8 @@ class Partie():
         elif choix == 2:
             self.prendre_route()
         else:
-            self.prendre_cartes_Destination()
+            print("Non disponible pour le moment")
+            # self.prendre_cartes_Destination()
 
     def prendre_cartes_wagon(self):
         """
@@ -93,7 +94,7 @@ class Partie():
         Cartes Wagon 
         
         Il existe 8 types de wagons différents en plus de la locomotive. Les couleurs de chaque carte Wagon 
-        correspondent aux couleurs présentes sur le plateau afin de relier les villes : bleu, violet, orange, blanc, 
+        correspondent aux couleurs présentes sur le plateau AFIN de relier les villes : bleu, violet, orange, blanc, 
         vert, jaune, noir et rouge. Les locomotives sont multicolores et, comme des cartes joker, peuvent remplacer 
         n’importe quelle couleur lors de la prise de possession d’une route."""
 
@@ -158,42 +159,34 @@ class Partie():
         print("A implémenter")
         return None
 
-    def prendre_cartes_Destination(self):
+    def preparation_partie(self):
         """
-        3. Prendre des cartes Destination supplémentaires :
-        – Le joueur prend 3 cartes Destination du dessus de la pioche. Il doit en conserver au moins une,
-        mais peut aussi garder 2 ou 3 cartes. Chaque carte qui n’est pas conservée est posée face cachée sous la pioche
-        des cartes Destination.
+        Prépare la partie selon les règles.
+        Préparation du jeu :
+        Mélangez les cartes Wagon et distribuez-en 4 à chacun des joueurs. Placez le reste
+        des cartes près du plateau, face cachée, puis retournez les cinq premières cartes que
+        vous posez à côté, face visible.
+        Posez la carte Chemin le plus long, face visible, à côté du plateau.
+        Mélangez les cartes Destination et distribuez-en 3 à chaque joueur. Chaque joueur
+        peut maintenant regarder ses destinations afin de décider lesquelles conserver. Il doit
+        garder au moins 2 cartes, mais peut conserver les 3 s’il le souhaite. Chaque carte rendue
+        est placée sous le talon des cartes Destination. Le paquet de cartes Destination est ensuite
+        placé face cachée à côté du plateau. Les joueurs gardent leurs destinations secrètes
+        jusqu’à la fin du jeu.
+        Vous êtes maintenant prêts à jouer.
         :return:
         """
 
-        """Indication
-        Prendre des cartes
-        Destination
-        Un joueur peut utiliser son tour de jeu pour récupérer des cartes
-        Destination supplémentaires. Pour cela, il doit prendre 3 cartes
-        sur le dessus de la pile des cartes Destination. Il doit conserver
-        au moins l’une des trois cartes, mais peut bien sûr en garder 2
-        ou même 3. S’il reste moins de 3 cartes Destination dans la pile,
-        le joueur ne peut prendre que le nombre de cartes disponibles. Chaque carte qui n’est pas conservée par le joueur est remise face cachée sous la pile.
-        Chaque carte Destination fait référence à deux villes de la carte et un nombre de points y est associé. Si le joueur réalise la connexion entre les deux
-        villes d’une carte Destination, il remporte le nombre de points indiqué sur la carte et l’additionne, en fin de partie, aux points déjà acquis. La route
-        reliant ces deux villes doit être formée uniquement par les trains de ce joueur. Si la connexion n’est pas réalisée, le joueur déduit de son nombre de
-        points déjà acquis le nombre indiqué sur la carte.
-        Les cartes Destination sont gardées secrètes tout au long de la partie. Elles sont rendues publiques à la fin de la partie et chaque joueur calcule son
-        score. Au cours du jeu, un joueur peut avoir autant de cartes Destination qu’il le souhaite.
-        """
-
-        print("Je prends une carte Destination")
-        print("A implémenter")
-        return None
+        # TODO: A implémenter
+        return "A implémenter"
 
     def partie(self):
         """
-        Fait tourner une partie complète du jeu. Du début à la fin.
+        fait tourner une partie complète du jeu. du début à la fin.
         :return:
         """
         self.debut_partie()
+        self.preparation_partie()
         """
         # Règle du jeu :
         ## Tour de jeu
@@ -205,17 +198,17 @@ class Partie():
         2. Prendre possession d’une route
         3. Prendre des cartes Destination supplémentaires
         """
-        i=0
-        nom=self.ordre[i]
-        joueur=self.les_joueurs[nom]
-        while joueur.wagons >2:
+        i = 0
+        nom = self.ordre[i]
+        joueur = self.les_joueurs[nom]
+        while joueur.wagons > 2:
             self.tour(joueur)
-            if i==len(self.ordre):
-                i=0
+            if i >= len(self.ordre):
+                i = 0
             else:
-                i+=1
-            nom=self.ordre[i]
-            joueur=self.les_joueurs[nom]
+                i += 1
+            nom = self.ordre[i]
+            joueur = self.les_joueurs[nom]
         self.rotation_joueur(i)
         for nom in self.ordre:
             self.tour(self.les_joueurs[nom])
@@ -227,8 +220,38 @@ class Partie():
         chacun compte ses points """
 
 
-
-
 if __name__ == '__main__':
     p = Partie()
     p.partie()
+
+# A conserver au cas où, pour plus tard :
+
+# def prendre_cartes_Destination(self):
+#     """
+#     3. Prendre des cartes Destination supplémentaires :
+#     – Le joueur prend 3 cartes Destination du dessus de la pioche. Il doit en conserver au moins une,
+#     mais peut aussi garder 2 ou 3 cartes. Chaque carte qui n’est pas conservée est posée face cachée sous la pioche
+#     des cartes Destination.
+#     :return:
+#     """
+#
+#     """Indication
+#     Prendre des cartes
+#     Destination
+#     Un joueur peut utiliser son tour de jeu pour récupérer des cartes
+#     Destination supplémentaires. Pour cela, il doit prendre 3 cartes
+#     sur le dessus de la pile des cartes Destination. Il doit conserver
+#     au moins l’une des trois cartes, mais peut bien sûr en garder 2
+#     ou même 3. S’il reste moins de 3 cartes Destination dans la pile,
+#     le joueur ne peut prendre que le nombre de cartes disponibles. Chaque carte qui n’est pas conservée par le joueur est remise face cachée sous la pile.
+#     Chaque carte Destination fait référence à deux villes de la carte et un nombre de points y est associé. Si le joueur réalise la connexion entre les deux
+#     villes d’une carte Destination, il remporte le nombre de points indiqué sur la carte et l’additionne, en fin de partie, aux points déjà acquis. La route
+#     reliant ces deux villes doit être formée uniquement par les trains de ce joueur. Si la connexion n’est pas réalisée, le joueur déduit de son nombre de
+#     points déjà acquis le nombre indiqué sur la carte.
+#     Les cartes Destination sont gardées secrètes tout au long de la partie. Elles sont rendues publiques à la fin de la partie et chaque joueur calcule son
+#     score. Au cours du jeu, un joueur peut avoir autant de cartes Destination qu’il le souhaite.
+#     """
+#
+#     print("Je prends une carte Destination")
+#     print("A implémenter")
+#     return None
