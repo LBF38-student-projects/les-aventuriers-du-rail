@@ -30,7 +30,7 @@ class Joueur():
             },
             'Destination': []  # Réunit toutes les cartes Destination du joueur. Ne contient que les noms des cartes.
         }  # Définit la main actuelle du joueur => contient toutes ses cartes
-        self.route_prise={}
+        self.route_prise = {}
 
     @property
     def couleur(self):
@@ -41,7 +41,7 @@ class Joueur():
         return self.__couleur
 
     @couleur.setter
-    def couleur(self, nom_couleur):
+    def couleur(self, nom_couleur: str):
         """
         Définit la valeur du paramètre et vérifie les conditions de définition
         :param nom_couleur: str

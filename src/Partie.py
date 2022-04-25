@@ -339,7 +339,8 @@ class Jeu():
         }
 
     def plateau(self):
-        """Définit le plateau du jeu
+        """
+        Définit le plateau du jeu
         => Construit le graphe des villes
         Affiche un point pour chaque ville avec le nom en dessous
         Relie chaque ville par un trait gris quand non occupé
@@ -484,7 +485,7 @@ class Partie(Jeu):
             p1.insert(index, carte)
         return p1
 
-    def prendre_cartes_wagon(self):
+    def prendre_cartes_wagon(self,joueur):
         """
          1. Prendre des cartes Wagon :
         – le joueur peut prendre 2 cartes Wagon.
@@ -498,7 +499,7 @@ class Partie(Jeu):
         Cartes Wagon 
         
         Il existe 8 types de wagons différents en plus de la locomotive. Les couleurs de chaque carte Wagon 
-        correspondent aux couleurs présentes sur le plateau AFIN de relier les villes : bleu, violet, orange, blanc, 
+        correspondent aux couleurs présentes sur le plateau afin de relier les villes : bleu, violet, orange, blanc, 
         vert, jaune, noir et rouge. Les locomotives sont multicolores et, comme des cartes joker, peuvent remplacer 
         n’importe quelle couleur lors de la prise de possession d’une route."""
 
@@ -519,6 +520,32 @@ class Partie(Jeu):
         plus prendre de cartes. Il ne peut donc que prendre possession d’une route ou tirer de nouvelles cartes 
         Destination. """
 
+        print("Voici les cartes sur la table :")
+        # TODO: Vérifier le cas pour les locomotives pr mélanger à nouveau si besoin
+        for k in range(5): # On montre les 5 premières cartes de la pile pour faire les cartes face visible.
+            print(self.pile_cartes_wagon[k])
+        print("Vous pouvez choisir 2 cartes")
+        visible=input("Voulez-vous une 1ère carte visible ? [y/n]")=="y"
+        nom_carte=""
+        if visible:
+            nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
+            while nom_carte not in self.pile_cartes_wagon[0:5]:
+                print("Il faut que la carte soit parmi celles face visible.\nRecommencer.")
+                nom_carte=input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
+            joueur.main_cartes['Wagon'][nom_carte] += 1
+        else:
+            carte=self.pile_cartes_wagon.pop(0)
+            joueur.main_cartes['Wagon'][carte]+=1
+        if nom_carte!="locomotive":
+            for k in range(5):
+                print(self.pile_cartes_wagon[k])
+            visible = input("Voulez-vous une 2e carte visible ? [y/n]") == "y"
+            if visible:
+                nom_carte=input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
+                joueur.main_cartes['Wagon'][nom_carte]+=1
+        # TODO: vérifier que le joueur ne peut ajouter que 2 cartes au max.
+        # TODO: vérifier qu'il peut prendre 2 cartes au total.
+        # TODO: vérifier le cas où il prend une locomotive lorsque c'est face visible.
         print("Je prends des cartes Wagon")
         print("A implémenter")
         return None
