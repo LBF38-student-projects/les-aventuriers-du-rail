@@ -2,6 +2,8 @@
 @authors: Mathis URIEN, Kenza BELAID"""
 
 # Imports :
+import random
+
 from Joueur import Joueur
 from Score import Score
 import matplotlib.pyplot as plt
@@ -383,7 +385,6 @@ class Partie(Jeu):
         # Définit l'ordre des cartes wagons. C'est la pile de cartes.
         self.pile_cartes_destination = [destination for destination in self.carte_destination.keys()]
         self.defausse_wagon = []
-        self.route_prise=[]
 
     def debut_partie(self):
         """
@@ -615,13 +616,8 @@ class Partie(Jeu):
         possession de l’une des 2 routes disponibles, la route restante
         demeurant fermée jusqu’à la fin de la partie.
         """
-        nom_route = [input("Quelle route voulez-vous prendre ? Indiquer le nom de la première ville."),
-                     input("Indiquer le nom de la seconde ville")]
-        # TODO: vérifier que la route n'appartient pas à celle déjà prise.
-        while nom_route in self.route_prise:
-            print("La route est déjà prise.\nRecommencer.")
-            nom_route = [input("Quelle route voulez-vous prendre ? Indiquer le nom de la première ville."),
-                         input("Indiquer le nom de la seconde ville")]
+        nom_route = [input("Quelle route voulez-vous prendre ? Indiquer le nom de la première ville.")]
+        nom_route.append(input("Indiquer le nom de la seconde ville"))
         # TODO: pour l'IHM, faire en fonction des cliques du joueur sur la carte pour relier les 2.
         #  Click sur le lien entre les villes ou clique sur les 2 villes.
         route = self.liens_villes[nom_route[0]][nom_route[1]]  # contient [couleur,nb_segments]
@@ -631,7 +627,6 @@ class Partie(Jeu):
             if joueur.main_cartes['Wagon'][couleur] == route[1]:
                 # défausse des cartes de la main vers la défausse
                 for k in range(route[1]):
-                    # TODO: et si le joueur veut utiliser des locomotives?
                     self.defausse_wagon.append(couleur) # à voir : on a plusieurs solutions pour la défausse des cartes.
                 # ajout de la route au joueur :
                 joueur.route_prise.append(nom_route)
@@ -639,16 +634,7 @@ class Partie(Jeu):
                 # TODO: implémenter la méthode du calcul du score en fonction du nb de wagons posés. cf. Classe Score.
                 # Score.points() => à corriger en fonction de l'implémentation
         else:
-            if joueur.main_cartes['Wagon'][route[0]] == route[1]:
-                # défausse des cartes de la main vers la défausse
-                for k in range(route[1]):
-                    # TODO: et si le joueur veut utiliser des locomotives?
-                    self.defausse_wagon.append(route[0]) # à voir : on a plusieurs solutions pour la défausse des cartes.
-                # ajout de la route au joueur :
-                joueur.route_prise.append(nom_route)
-                # calcul des points gagnés :
-                # TODO: implémenter la méthode du calcul du score en fonction du nb de wagons posés. cf. Classe Score.
-                # Score.points() => à corriger en fonction de l'implémentation
+
 
     def preparation_partie(self):
         """
@@ -698,15 +684,14 @@ class Partie(Jeu):
         i = 0
         nom = self.ordre[i]
         joueur = self.les_joueurs[nom]
-        self.tour(joueur)
         while joueur.wagons > 2:
+            self.tour(joueur)
             if i == len(self.ordre) - 1:
                 i = 0
             else:
                 i += 1
             nom = self.ordre[i]
             joueur = self.les_joueurs[nom]
-            self.tour(joueur)
         self.rotation_joueur(i)
         for nom in self.ordre:
             self.tour(self.les_joueurs[nom])
