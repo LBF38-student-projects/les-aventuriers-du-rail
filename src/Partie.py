@@ -25,6 +25,9 @@ class Jeu():
         - Variable : carte_destination
         - Type : dictionnaire
         - Syntaxe : "Nom de la carte": nb de points
+
+        Villes :
+        - Variable : villes
         """
         self.carte_wagons = {
             "violet": 12,
@@ -373,7 +376,7 @@ class Jeu():
 
 
 class Partie(Jeu):
-    """Classe qui est utilisé pour lancer une partie du jeu.
+    """Classe qui est utilisée pour lancer une partie du jeu.
     Fait appel à la classe Jeu pour accéder à toutes les cartes et informations sur le plateau de jeu."""
 
     def __init__(self):
@@ -426,7 +429,7 @@ class Partie(Jeu):
 
     def liste_joueurs(self):
         """
-        Renvoie la liste des joueurs en partie dans l'ordre de leur tour.
+        Renvoie la liste des joueurs de la partie en cours dans l'ordre de leur tour.
         :return:
         """
         liste_joueurs = ""
@@ -633,7 +636,7 @@ class Partie(Jeu):
                 # calcul des points gagnés :
                 # TODO: implémenter la méthode du calcul du score en fonction du nb de wagons posés. cf. Classe Score.
                 # Score.points() => à corriger en fonction de l'implémentation
-        else:
+        #else:
 
 
     def preparation_partie(self):

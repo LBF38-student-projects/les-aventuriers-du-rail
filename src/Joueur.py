@@ -28,9 +28,9 @@ class Joueur():
                 'vert': 0,
                 'locomotive': 0
             },
-            'Destination': []  # Réunit toutes les cartes Destination du joueur. Ne contient que les noms des cartes.
+            'Destination': []  # Réunit toutes les cartes Objectifs/Destination du joueur. Ne contient que les noms des cartes.
         }  # Définit la main actuelle du joueur => contient toutes ses cartes
-        self.route_prise = {}
+        self.route_prise = []
 
     @property
     def couleur(self):
