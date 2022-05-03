@@ -4,7 +4,7 @@
 from Joueur import Joueur as jr
 from Partie import Partie as pt
 
-class Score():
+class Score(object):
     """Classe qui implémente les différentes méthodes pour calculer les joueur.nb_points du jeu
     => Il pourra y avoir plusieurs méthodes de calcul des joueur.nb_points sur le graphe. A voir selon le temps qu'on a."""
     def __init__(self,partie):
@@ -12,7 +12,6 @@ class Score():
         self.partie=partie
         self.tableau_score = {
             1 : 1,
-            2
         }
         #A compléter
         #nb_joueurs = pt.nb_joueurs
@@ -33,11 +32,17 @@ class Score():
                 joueur.nb_points += self.partie.carte_destination["nv_nom_route"]
 
     def calcul_pts_route(self,joueur):
-        for r in self.joueur.route_prise :
+        """
+        Compte le nb de points gagnés par les joueurs lors de la prise d'une route.
+        :param joueur:
+        :return:
+        """
+        for r in joueur.route_prise :
             ville1 = r[0]
             ville2 = r[1]
             joueur.nb_points += self.partie.liens_villes[ville1][ville2][1]
 
     def calcul_plus_long_chemin(self,joueur):
-        for r in self.joueur.route_prise :
-            ville =
+        # for r in joueur.route_prise :
+        #     ville =
+        return "A implémenter"
