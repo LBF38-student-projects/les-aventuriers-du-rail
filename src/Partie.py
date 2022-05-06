@@ -25,9 +25,6 @@ class Jeu():
         - Variable : carte_destination
         - Type : dictionnaire
         - Syntaxe : "Nom de la carte": nb de points
-
-        Villes :
-        - Variable : villes
         """
         self.carte_wagons = {
             "violet": 12,
@@ -376,7 +373,7 @@ class Jeu():
 
 
 class Partie(Jeu):
-    """Classe qui est utilisée pour lancer une partie du jeu.
+    """Classe qui est utilisé pour lancer une partie du jeu.
     Fait appel à la classe Jeu pour accéder à toutes les cartes et informations sur le plateau de jeu."""
 
     def __init__(self):
@@ -429,7 +426,7 @@ class Partie(Jeu):
 
     def liste_joueurs(self):
         """
-        Renvoie la liste des joueurs de la partie en cours dans l'ordre de leur tour.
+        Renvoie la liste des joueurs en partie dans l'ordre de leur tour.
         :return:
         """
         liste_joueurs = ""
@@ -627,16 +624,24 @@ class Partie(Jeu):
         # Vérification que le joueur peut prendre une route :
         if route[0]=="grey":
             couleur=input("La route est grise. Avec quelle couleur voulez-vous la prendre ?")
-            if joueur.main_cartes['Wagon'][couleur] == route[1]:
-                # défausse des cartes de la main vers la défausse
-                for k in range(route[1]):
-                    self.defausse_wagon.append(couleur) # à voir : on a plusieurs solutions pour la défausse des cartes.
-                # ajout de la route au joueur :
-                joueur.route_prise.append(nom_route)
-                # calcul des points gagnés :
-                # TODO: implémenter la méthode du calcul du score en fonction du nb de wagons posés. cf. Classe Score.
-                # Score.points() => à corriger en fonction de l'implémentation
-        #else:
+        else:
+            couleur = route[1]
+        if joueur.main_cartes['Wagon'][couleur] == route[1]:
+            # défausse des cartes de la main vers la défausse
+            for k in range(route[1]):
+                self.defausse_wagon.append(
+                    couleur)  # à voir : on a plusieurs solutions pour la défausse des cartes.
+            # retrait des wagons de la main du joueur :
+            joueur.main_cartes['Wagon'][couleur]-=route[1]
+            # TODO: faire un accesseur en écriture pour vérifier qu'aucune entrée de wagons soient négatives.
+            # ajout de la route au joueur :
+            joueur.route_prise.append(nom_route)
+            print("Vous avez pris la route de {} à {}".format(nom_route[0],nom_route[1]))
+            # calcul des points gagnés :
+            pts=Score.calcul_pts_route(joueur)
+            print("Vous avez gagné {} points".format(pts))
+            # TODO: implémenter la méthode du calcul du score en fonction du nb de wagons posés. cf. Classe Score.
+            # Score.points() => à corriger en fonction de l'implémentation
 
 
     def preparation_partie(self):
@@ -708,7 +713,7 @@ class Partie(Jeu):
 
 if __name__ == '__main__':
     p = Partie()
-    p.partie()
+    # p.partie()
 
 # A conserver au cas où, pour plus tard :
 
