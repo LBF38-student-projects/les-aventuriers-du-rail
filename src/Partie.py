@@ -5,7 +5,7 @@
 import random
 
 from Joueur import Joueur
-from Score import Score
+from Score import *
 import matplotlib.pyplot as plt
 import random as r
 
@@ -380,7 +380,7 @@ class Partie(Jeu):
         super().__init__()
         self.les_joueurs = {}  # Dictionnaire contenant tous les noms + objet Joueur de la partie.
         self.ordre = []  # Liste de l'ordre dans lequel joue les joueurs. Contient le nom de chaque joueur dans l'ordre.
-        self.nb_joueurs: int = 0
+        self.nb_joueurs: int = 4
         self.pile_cartes_wagon = [carte for carte, nb_carte in self.carte_wagons.items() for k in range(nb_carte)]
         # Définit l'ordre des cartes wagons. C'est la pile de cartes.
         self.pile_cartes_destination = [destination for destination in self.carte_destination.keys()]
@@ -391,7 +391,7 @@ class Partie(Jeu):
         Définition des joueurs
         :return:
         """
-        self.nb_joueurs = int(input('Nombre de joueurs pour la partie'))
+        self.nb_joueurs = input('Nombre de joueurs pour la partie')
         for k in range(self.nb_joueurs):
             nom = input('Nom du Joueur ' + str(k + 1))
             couleur = input('Choisir sa couleur de Joueur parmi les suivantes :\n- blue\n- red\n - black \n - random')
@@ -399,6 +399,23 @@ class Partie(Jeu):
             self.ordre.append(nom)
         # TODO : Demander le nb total de joueurs de la partie, nb joueurs humains. => compléter par des joueurs IAs
         # TODO: vérifier que nb_joueurs est compris entre 2 et 5.
+
+    @property
+    def nb_joueurs(self):
+        """Accesseur en lecture du nombre de joueurs de la partie"""
+        return self.__nb_joueurs
+
+    @nb_joueurs.setter
+    def nb_joueurs(self, value):
+        """Accesseur en écriture du nombre de joueurs de la partie"""
+        if type(value) != int:
+            print("Indiquer un nombre.")
+            self.nb_joueurs = input("Nombre de joueurs pour la partie")
+        if value not in range(2, 6):
+            print("Le nombre de joueurs doit être compris entre 2 et 5 pour lancer une partie.\nCela est différent du "
+                  "nombre de joueurs IAs.\nVeuillez rentrer à nouveau une valeur correcte.")
+            self.nb_joueurs = input("Nombre de joueurs pour la partie")
+        self.__nb_joueurs = value
 
     def rotation_joueur(self, index):
         """
@@ -622,8 +639,8 @@ class Partie(Jeu):
         #  Click sur le lien entre les villes ou clique sur les 2 villes.
         route = self.liens_villes[nom_route[0]][nom_route[1]]  # contient [couleur,nb_segments]
         # Vérification que le joueur peut prendre une route :
-        if route[0]=="grey":
-            couleur=input("La route est grise. Avec quelle couleur voulez-vous la prendre ?")
+        if route[0] == "grey":
+            couleur = input("La route est grise. Avec quelle couleur voulez-vous la prendre ?")
         else:
             couleur = route[1]
         if joueur.main_cartes['Wagon'][couleur] == route[1]:
@@ -632,17 +649,16 @@ class Partie(Jeu):
                 self.defausse_wagon.append(
                     couleur)  # à voir : on a plusieurs solutions pour la défausse des cartes.
             # retrait des wagons de la main du joueur :
-            joueur.main_cartes['Wagon'][couleur]-=route[1]
+            joueur.main_cartes['Wagon'][couleur] -= route[1]
             # TODO: faire un accesseur en écriture pour vérifier qu'aucune entrée de wagons soient négatives.
             # ajout de la route au joueur :
             joueur.route_prise.append(nom_route)
-            print("Vous avez pris la route de {} à {}".format(nom_route[0],nom_route[1]))
+            print("Vous avez pris la route de {} à {}".format(nom_route[0], nom_route[1]))
             # calcul des points gagnés :
-            pts=Score.calcul_pts_route(joueur)
+            pts = Score.calcul_pts_route(joueur)
             print("Vous avez gagné {} points".format(pts))
             # TODO: implémenter la méthode du calcul du score en fonction du nb de wagons posés. cf. Classe Score.
             # Score.points() => à corriger en fonction de l'implémentation
-
 
     def preparation_partie(self):
         """

@@ -2,7 +2,7 @@
 @authors: Mathis URIEN, Kenza BELAID"""
 
 from Joueur import Joueur as jr
-from Partie import Partie as pt
+from Partie import *
 
 class Score(object):
     """Classe qui implémente les différentes méthodes pour calculer les joueur.nb_points du jeu
