@@ -26,6 +26,7 @@ class Jeu():
         - Type : dictionnaire
         - Syntaxe : "Nom de la carte": nb de points
         """
+        self.dims_carte=(603,380) #TODO: à lier avec l'IHM
         self.carte_wagons = {
             "violet": 12,
             "blanc": 12,
@@ -70,42 +71,42 @@ class Jeu():
             "Seattle to Los Angeles": 9
         }
         self.villes = {
-            "Los Angeles": (4, 5),
-            "San Francisco": (1.5, 9),
-            "Portland": (2, 17),
-            "Seattle": (3, 19),
-            "Vancouver": (3, 21),
-            "Calgary": (8, 21.5),
-            "Helena": (12, 16.5),
-            "Salt Lake City": (9, 12),
-            "Las Vegas": (7, 7.5),
-            "Phoenix": (9, 5),
-            "El Paso": (13.5, 4),
-            "Santa Fe": (14, 7),
-            "Denver": (14, 10.5),
-            "Oklahoma City": (20, 8),
-            "Kansas City": (20.5, 11),
-            "Omaha": (19.5, 13),
-            "Duluth": (21, 17),
-            "Winnipeg": (17, 21),
-            "Sault Ste Marie": (25.5, 19),
-            "Dallas": (20.5, 5),
-            "Houston": (22, 3),
-            "New Orleans": (25.5, 3.5),
-            "Little Rock": (23, 8),
-            "Saint Louis": (24, 11),
-            "Chicago": (25.5, 14),
-            "Nashville": (27, 10),
-            "Atlanta": (29, 8),
-            "Miami": (34, 2),
-            "Charleston": (33, 8),
-            "Pittsburgh": (30, 15),
-            "Toronto": (30, 18),
-            "Montreal": (33, 22),
-            "Boston": (35.5, 19.5),
-            "New York": (33.5, 16.5),
-            "Washington": (34, 13),
-            "Raleigh": (31.5, 10.5)
+            "Los Angeles": Ville("Los Angeles",4, 5,self.dims_carte[0],self.dims_carte[1]),
+            "San Francisco": Ville("San Francisco",1.5, 9,self.dims_carte[0],self.dims_carte[1]),
+            "Portland": Ville("Portland",2,17,self.dims_carte[0],self.dims_carte[1]),
+            "Seattle": Ville("Seattle",3, 19,self.dims_carte[0],self.dims_carte[1]),
+            "Vancouver": Ville("Vancouver",3, 21,self.dims_carte[0],self.dims_carte[1]),
+            "Calgary": Ville("Calgary",8, 21.5,self.dims_carte[0],self.dims_carte[1]),
+            "Helena": Ville("Helena",12, 16.5,self.dims_carte[0],self.dims_carte[1]),
+            "Salt Lake City": Ville("Salt Lake City",9, 12,self.dims_carte[0],self.dims_carte[1]),
+            "Las Vegas": Ville("Las Vegas",7, 7.5,self.dims_carte[0],self.dims_carte[1]),
+            "Phoenix": Ville("Phoenix",9, 5,self.dims_carte[0],self.dims_carte[1]),
+            "El Paso": Ville("El Paso",13.5, 4,self.dims_carte[0],self.dims_carte[1]),
+            "Santa Fe": Ville("Santa Fe",14, 7,self.dims_carte[0],self.dims_carte[1]),
+            "Denver": Ville("Denver",14, 10.5,self.dims_carte[0],self.dims_carte[1]),
+            "Oklahoma City": Ville("Oklahoma City",20, 8,self.dims_carte[0],self.dims_carte[1]),
+            "Kansas City": Ville("Kansas City",20.5, 11,self.dims_carte[0],self.dims_carte[1]),
+            "Omaha": Ville("Omaha",19.5, 13,self.dims_carte[0],self.dims_carte[1]),
+            "Duluth": Ville("Duluth",21, 17,self.dims_carte[0],self.dims_carte[1]),
+            "Winnipeg": Ville("Winnipeg",17, 21,self.dims_carte[0],self.dims_carte[1]),
+            "Sault Ste Marie": Ville("Sault Ste Marie",25.5, 19,self.dims_carte[0],self.dims_carte[1]),
+            "Dallas": Ville("Dallas",20.5, 5,self.dims_carte[0],self.dims_carte[1]),
+            "Houston": Ville("Houston",22, 3,self.dims_carte[0],self.dims_carte[1]),
+            "New Orleans": Ville("New Orleans",25.5, 3.5,self.dims_carte[0],self.dims_carte[1]),
+            "Little Rock": Ville("Little Rock",23, 8,self.dims_carte[0],self.dims_carte[1]),
+            "Saint Louis": Ville("Saint Louis",24, 11,self.dims_carte[0],self.dims_carte[1]),
+            "Chicago": Ville("Chicago",25.5, 14,self.dims_carte[0],self.dims_carte[1]),
+            "Nashville": Ville("Nashville",27, 10,self.dims_carte[0],self.dims_carte[1]),
+            "Atlanta": Ville("Atlanta",29, 8,self.dims_carte[0],self.dims_carte[1]),
+            "Miami": Ville("Miami",34, 2,self.dims_carte[0],self.dims_carte[1]),
+            "Charleston": Ville("Charleston",33, 8,self.dims_carte[0],self.dims_carte[1]),
+            "Pittsburgh": Ville("Pittsburgh",30, 15,self.dims_carte[0],self.dims_carte[1]),
+            "Toronto": Ville("Toronto",30, 18,self.dims_carte[0],self.dims_carte[1]),
+            "Montreal": Ville("Montreal",33, 22,self.dims_carte[0],self.dims_carte[1]),
+            "Boston": Ville("Boston",35.5, 19.5,self.dims_carte[0],self.dims_carte[1]),
+            "New York": Ville("New York",33.5, 16.5,self.dims_carte[0],self.dims_carte[1]),
+            "Washington": Ville("Washington",34, 13,self.dims_carte[0],self.dims_carte[1]),
+            "Raleigh": Ville("Raleigh",31.5, 10.5,self.dims_carte[0],self.dims_carte[1])
         }
         self.liens_villes = {
             "Los Angeles": {
@@ -335,8 +336,16 @@ class Jeu():
                 "Nashville": ["black", 3],
                 "Atlanta": ["grey", 2],
                 "Charleston": ["grey", 2]
-            },
+            }
         }
+        self.init_villes()
+    def init_villes(self):
+        """
+        Initialise les liens entre les villes
+        """
+        for key1 in self.villes.keys():
+            for key2,value2 in self.liens_villes[key1].items():
+                self.villes[key1].ajout_liens(key2,value2[0],value2[1])
 
     def plateau(self):
         """
@@ -370,6 +379,34 @@ class Jeu():
         :return:
         """
         return "A implémenter"
+
+
+class Ville:
+    id = 0
+
+    def __init__(self, nom_ville,x, y, width, height):
+        Ville.id += 1
+        self.nom:str=nom_ville
+        self.dims_carte = (width, height)
+        self.coords = (x, y)
+        self.liens = {}  # format: "nom_ville":["couleur_liens",nb_wagons]
+
+    @classmethod
+    def get_id(cls):
+        return Ville.id
+
+    @property
+    def coords(self):
+        return self.__coords
+
+    @coords.setter
+    def coords(self, value):
+        self.__coords = (max(min(0, value[0]), self.dims_carte[0]), max(min(0, value[1]), self.dims_carte[1]))
+
+    def ajout_liens(self,nom_ville2,couleur,nb_wagons):
+        self.liens[nom_ville2]=[couleur,nb_wagons]
+
+
 
 
 class Partie(Jeu):
@@ -729,6 +766,7 @@ class Partie(Jeu):
 
 if __name__ == '__main__':
     p = Partie()
+    j=Jeu()
     # p.partie()
 
 # A conserver au cas où, pour plus tard :
