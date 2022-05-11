@@ -48,6 +48,9 @@ if __name__=='__main__':
                     sys.exit()
                 if event.key==K_g:
                     game()
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                mx,my=pygame.mouse.get_pos()
+                print((mx,my))
         screen.fill("grey")
         screen.blit(plateau, ((width-size_plateau[0])//2, (height-size_plateau[1])//2))
         # pygame.display.flip()

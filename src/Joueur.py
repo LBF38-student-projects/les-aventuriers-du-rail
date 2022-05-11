@@ -17,35 +17,32 @@ class Joueur():
         self.wagons = 45  # Nombre de wagons maximum par joueur
         self.couleur = nom_couleur  # Définit la couleur du joueur
         self.nb_points = points  # Définit le marqueur de points du joueur
-        self.__main_cartes = {
-            'Wagon': {
-                'violet': 0,
-                'blanc': 0,
-                'bleu': 0,
-                'jaune': 0,
-                'orange': 0,
-                'noir': 0,
-                'rouge': 0,
-                'vert': 0,
-                'locomotive': 0
-            },
-            'Destination': []
-            # Réunit toutes les cartes Objectifs/Destination du joueur. Ne contient que les noms des cartes.
-        }  # Définit la main actuelle du joueur => contient toutes ses cartes
+        self.__main_wagon = {
+            'violet': 0,
+            'blanc': 0,
+            'bleu': 0,
+            'jaune': 0,
+            'orange': 0,
+            'noir': 0,
+            'rouge': 0,
+            'vert': 0,
+            'locomotive': 0
+        }
+        self.main_destination = [] # Réunit toutes les cartes Objectifs/Destination du joueur. Ne contient que les
+        # noms des cartes.
         self.route_prise = []
 
     @property
-    def main_cartes(self):
+    def main_wagon(self):
         """Accesseur en lecture"""
-        return self.__main_cartes
+        return self.__main_wagon
 
-    @main_cartes.setter
-    def main_cartes(self, key, value):
+    def add_main_wagon(self, couleur, value):
         """Accesseur de main_cartes"""
-        if self.__main_cartes['Wagon'][key] - value <= 0:
-            self.__main_cartes['Wagon'][key] = 0
+        if self.__main_wagon[couleur] <= 0:
+            self.__main_wagon[couleur] = 0
         else:
-            self.__main_cartes['Wagon'][key] = value
+            self.__main_wagon[couleur] += value
 
     @property
     def couleur(self):
