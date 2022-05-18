@@ -131,12 +131,18 @@ def game():
 def test():
     pygame.init()
     size = width, height = 1920 // 2, 1080 // 2
-    screen = pygame.display.set_mode(size)
+    screen = pygame.display.set_mode(size,pygame.RESIZABLE)
     plateau = pygame.image.load("img\carte_usa.jpg")
+    wagon_bleu = pygame.image.load("img\wagon_bleu.jpg")
+    dos_wagon = pygame.image.load("img\dos_wagon.jpg")
     # print(plateau.get_width(), plateau.get_height())
-    wagon = pygame.image.load("img\wagon_test.png")
+    # wagon = pygame.image.load("img\wagon_test.png")
     pygame.display.set_caption("Les aventuriers du rail")
     size_plateau = plateau.get_size()
+    dos_wagon = pygame.transform.rotate(dos_wagon, 90)
+    # basic font for user typed
+    base_font = pygame.font.Font(None, 32)
+    user_text = ""
     # pygame.display.toggle_fullscreen()
     while True:
         for event in pygame.event.get():
@@ -147,19 +153,39 @@ def test():
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     sys.exit()
-                if event.key == K_g:
-                    game()
+                # if event.key == K_g:
+                #     game()
+                # Check for backspace
+                if event.key == pygame.K_BACKSPACE:
+                    # get text input from 0 to -1 i.e. end.
+                    user_text = user_text[:-1]
+                # Unicode standard is used for string
+                # formation
+                else:
+                    user_text += event.unicode
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mx, my = pygame.mouse.get_pos()
                 print((mx, my))
+            if event.type==pygame.VIDEORESIZE:
+                screen=pygame.display.set_mode((event.w,event.h),pygame.RESIZABLE)
         screen.fill("grey")
-        screen.blit(plateau, ((width - size_plateau[0]) // 2, (height - size_plateau[1]) // 2))
+        screen.blit(plateau, ((screen.get_width() - size_plateau[0]) // 2, (screen.get_height() - size_plateau[1]) // 2))
         # pygame.display.flip()
-        screen.blit(wagon, (369, 191))
+        # screen.blit(wagon, (369, 191))
+        low_bar = pygame.Rect(0, (screen.get_height() + plateau.get_height()) // 2 + 5, screen.get_width(), screen.get_height())
+        pygame.draw.rect(screen, "blue", low_bar)
+        text_surface = base_font.render(user_text, True, (255, 255, 255))
+        # render at position stated in arguments
+        screen.blit(text_surface, (30, (screen.get_height() + plateau.get_height()) // 2 + 20))
+        for k in range(5):
+            screen.blit(wagon_bleu, (50, (screen.get_height() - plateau.get_height()) // 2 + wagon_bleu.get_height() * k + k * 5))
+        screen.blit(dos_wagon, ((screen.get_width() + plateau.get_width()) // 2 + 10, 50))
+        pygame.draw.circle(screen, "red", [screen.get_width(), screen.get_height()], (screen.get_height() - plateau.get_height()) // 2 - 5, 0)
+        pygame.draw.polygon(screen, "green",
+                            [[screen.get_width() // 2 - 250, 0], [screen.get_width() // 2 + 250, 0], [screen.get_width() // 2 + 225, 35], [screen.get_width() // 2 - 225, 35]])
+        title_surface=base_font.render("Les aventuriers du rail",True, "black")
+        screen.blit(title_surface,(screen.get_width()//2-title_surface.get_width()//2,10))
         pygame.display.flip()
-        # rect=pygame.Rect(1,1,1,1)
-        # pygame.draw.rect(screen,"blue",rect)
-        # pygame.display.flip()
 
 
 def text_input():
@@ -249,4 +275,5 @@ def text_input():
 
 if __name__ == '__main__':
     # launch_game()
-    text_input()
+    # text_input()
+    test()
