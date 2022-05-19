@@ -6,10 +6,9 @@ Projet informatique
 # Imports:
 import pygame, sys
 from pygame.locals import *
-from Partie import *
 
 
-class Screen():
+class Screen:
     def __init__(self, title, width=640, height=445, fill="white"):
         self.title = title
         self.width = width
@@ -36,7 +35,7 @@ class Screen():
         return self.screen
 
 
-class Button():
+class Button:
     def __init__(self, x, y, sx, sy, bcolour, fbcolour, font, fontsize, fcolour, text):
         self.x = x
         self.y = y
@@ -128,64 +127,254 @@ def game():
         # screen.blit(plateau, ((width - size_plateau[0]) // 2, (height - size_plateau[1]) // 2))
 
 
-def test():
-    pygame.init()
-    size = width, height = 1920 // 2, 1080 // 2
-    screen = pygame.display.set_mode(size,pygame.RESIZABLE)
-    plateau = pygame.image.load("img\carte_usa.jpg")
-    wagon_bleu = pygame.image.load("img\wagon_bleu.jpg")
-    dos_wagon = pygame.image.load("img\dos_wagon.jpg")
-    # print(plateau.get_width(), plateau.get_height())
-    # wagon = pygame.image.load("img\wagon_test.png")
-    pygame.display.set_caption("Les aventuriers du rail")
-    size_plateau = plateau.get_size()
-    dos_wagon = pygame.transform.rotate(dos_wagon, 90)
-    # basic font for user typed
-    base_font = pygame.font.Font(None, 32)
-    user_text = ""
-    # pygame.display.toggle_fullscreen()
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == K_ESCAPE:
+# def IHM():
+#     pygame.init()
+#
+#     # Initialize the screen
+#     size = width, height = 1920 // 2, 1080 // 2
+#     screen = pygame.display.set_mode(size, pygame.RESIZABLE)
+#     pygame.display.set_caption("Les aventuriers du rail")
+#
+#     # Images import
+#     plateau = pygame.image.load("img\carte_usa.jpg")
+#     wagon_blanc = pygame.image.load("img\wagon_blanc.jpg")
+#     wagon_bleu = pygame.image.load("img\wagon_bleu.jpg")
+#     wagon_jaune = pygame.image.load("img\wagon_jaune.jpg")
+#     wagon_noir = pygame.image.load("img\wagon_noir.jpg")
+#     wagon_orange = pygame.image.load("img\wagon_orange.jpg")
+#     wagon_rose = pygame.image.load("img\wagon_rose.jpg")
+#     wagon_rouge = pygame.image.load("img\wagon_rouge.jpg")
+#     wagon_vert = pygame.image.load("img\wagon_vert.jpg")
+#     locomotive = pygame.image.load("img\locomotive.jpg")
+#     dos_destination = pygame.image.load("img\dos_destination.jpg")
+#     table_points = pygame.image.load("img/table_points.jpg")
+#     dos_wagon = pygame.image.load("img\dos_wagon.jpg")
+#     dos_wagon = pygame.transform.rotate(dos_wagon, 90)
+#     les_wagons=[wagon_blanc,wagon_bleu,wagon_jaune,wagon_noir,wagon_orange,wagon_rose,wagon_rouge,wagon_vert,locomotive]
+#     size_plateau = plateau.get_size()
+#
+#     # basic font for user typed
+#     base_font = pygame.font.Font(None, 32)
+#     user_text = ""
+#
+#     while True:
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 pygame.quit()
+#                 sys.exit()
+#             if event.type == pygame.KEYDOWN:
+#                 if event.key == K_ESCAPE:
+#                     pygame.quit()
+#                     sys.exit()
+#                 # Check for backspace
+#                 if event.key == pygame.K_BACKSPACE:
+#                     # get text input from 0 to -1 i.e. end.
+#                     user_text = user_text[:-1]
+#                 # Unicode standard is used for string
+#                 # formation
+#                 else:
+#                     user_text += event.unicode
+#             if event.type == pygame.MOUSEBUTTONDOWN:
+#                 mx, my = pygame.mouse.get_pos()
+#                 print((mx, my))
+#             if event.type == pygame.VIDEORESIZE:
+#                 screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+#
+#         # background
+#         screen.fill("grey")
+#         screen.blit(plateau,
+#                     ((screen.get_width() - size_plateau[0]) // 2, (screen.get_height() - size_plateau[1]) // 2))
+#         low_bar = pygame.Rect(0, (screen.get_height() + plateau.get_height()) // 2 + 5, screen.get_width(),
+#                               screen.get_height())
+#         pygame.draw.rect(screen, "blue", low_bar)
+#
+#         # textes
+#         text_surface = base_font.render(user_text, True, (255, 255, 255))
+#         questions_surface = base_font.render("Interaction avec le joueur", True, "black")
+#
+#         # Affichage texte pour interaction joueur
+#         screen.blit(questions_surface, (10, (screen.get_height() + plateau.get_height()) // 2 + 10))
+#         screen.blit(text_surface, (10, (screen.get_height() + plateau.get_height()) // 2 + questions_surface.get_height()+10))
+#
+#
+#         # Affichage de la pile
+#         for k in range(5):
+#             screen.blit(wagon_bleu,
+#                         (50, (screen.get_height() - plateau.get_height()) // 2 + wagon_bleu.get_height() * k + k * 5))
+#
+#         # Affichage texte : Pioche
+#         pioche_surface = base_font.render("Pioche", True, "black")
+#         screen.blit(pioche_surface, (50,(screen.get_height() - plateau.get_height()) // 2-pioche_surface.get_height()))
+#
+#         # Affichage des cartes Destination
+#         for i in range(3):
+#             screen.blit(dos_destination, ((screen.get_width() + plateau.get_width()) // 2 + 20,
+#                                           (screen.get_height() - plateau.get_height()) // 2 + (
+#                                                       dos_destination.get_height() + 5) * i))
+#         # Affichage texte : Pioche
+#         destination_surface = base_font.render("Destination", True, "black")
+#         screen.blit(destination_surface,
+#                     (50, (screen.get_height() - plateau.get_height()) // 2 - pioche_surface.get_height()))
+#
+#         # Affichage des cartes de la main du joueur
+#         for w,wagon in enumerate(les_wagons):
+#             screen.blit(wagon,
+#                         (questions_surface.get_width()+20+(wagon.get_width()+5)*w, (screen.get_height() + plateau.get_height()) // 2 + 10))
+#
+#
+#
+#         # screen.blit(dos_wagon, ((screen.get_width() + plateau.get_width()) // 2 + 10, 50))
+#
+#         # Affichage du compteur de points
+#         pygame.draw.circle(screen, "red", [screen.get_width(), screen.get_height()],
+#                            (screen.get_height() - plateau.get_height()) // 2 - 5, 0)
+#         nb_points=5
+#         points_surface = base_font.render(str(nb_points), True, "black")
+#         screen.blit(points_surface, (screen.get_width()-(points_surface.get_width()+20), screen.get_height()-(points_surface.get_height()+20)))
+#
+#         # Affichage du titre/pseudo du joueur (?)
+#         pygame.draw.polygon(screen, "green",
+#                             [[screen.get_width() // 2 - 250, 0], [screen.get_width() // 2 + 250, 0],
+#                              [screen.get_width() // 2 + 225, 35], [screen.get_width() // 2 - 225, 35]])
+#         title_surface = base_font.render("Les aventuriers du rail", True, "black")
+#         screen.blit(title_surface, (screen.get_width() // 2 - title_surface.get_width() // 2, 10))
+#
+#         pygame.display.update()
+
+
+# TODO: faire une fonction pour changer les cartes de la pioche en fonction de la pioche de la partie
+# TODO: faire une fonction pour les cartes du joueur
+# TODO: faire une fonction pour ajouter une route prise
+# TODO: faire une fonction pour récupérer les instructions du joueur => texte input
+# TODO: faire une classe pour gérer tout l'IHM ?
+
+class IhmJoueur:
+    def __init__(self):
+        pygame.init()
+
+        # Initialize the screen
+        self.size = width, height = 1920 // 2, 1080 // 2
+        self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
+        pygame.display.set_caption("Les aventuriers du rail")
+
+        # Images import
+        self.plateau = pygame.image.load("img/carte_usa.jpg")
+        self.wagon_blanc = pygame.image.load("img/wagon_blanc.jpg")
+        self.wagon_bleu = pygame.image.load("img/wagon_bleu.jpg")
+        self.wagon_jaune = pygame.image.load("img/wagon_jaune.jpg")
+        self.wagon_noir = pygame.image.load("img/wagon_noir.jpg")
+        self.wagon_orange = pygame.image.load("img/wagon_orange.jpg")
+        self.wagon_rose = pygame.image.load("img/wagon_rose.jpg")
+        self.wagon_rouge = pygame.image.load("img/wagon_rouge.jpg")
+        self.wagon_vert = pygame.image.load("img/wagon_vert.jpg")
+        self.locomotive = pygame.image.load("img/locomotive.jpg")
+        self.dos_destination = pygame.image.load("img/dos_destination.jpg")
+        self.table_points = pygame.image.load("img/table_points.jpg")
+        self.dos_wagon = pygame.image.load("img/dos_wagon.jpg")
+        self.dos_wagon = pygame.transform.rotate(self.dos_wagon, 90)
+        self.les_wagons = [self.wagon_blanc, self.wagon_bleu, self.wagon_jaune, self.wagon_noir, self.wagon_orange,
+                           self.wagon_rose, self.wagon_rouge,
+                           self.wagon_vert, self.locomotive]
+        self.size_plateau = self.plateau.get_size()
+
+        # basic font for user typed
+        self.base_font = pygame.font.Font(None, 32)
+        self.user_text = ""
+
+    # def affichage_pioche(self,pioche):
+
+    def launch(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                # if event.key == K_g:
-                #     game()
-                # Check for backspace
-                if event.key == pygame.K_BACKSPACE:
-                    # get text input from 0 to -1 i.e. end.
-                    user_text = user_text[:-1]
-                # Unicode standard is used for string
-                # formation
-                else:
-                    user_text += event.unicode
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mx, my = pygame.mouse.get_pos()
-                print((mx, my))
-            if event.type==pygame.VIDEORESIZE:
-                screen=pygame.display.set_mode((event.w,event.h),pygame.RESIZABLE)
-        screen.fill("grey")
-        screen.blit(plateau, ((screen.get_width() - size_plateau[0]) // 2, (screen.get_height() - size_plateau[1]) // 2))
-        # pygame.display.flip()
-        # screen.blit(wagon, (369, 191))
-        low_bar = pygame.Rect(0, (screen.get_height() + plateau.get_height()) // 2 + 5, screen.get_width(), screen.get_height())
-        pygame.draw.rect(screen, "blue", low_bar)
-        text_surface = base_font.render(user_text, True, (255, 255, 255))
-        # render at position stated in arguments
-        screen.blit(text_surface, (30, (screen.get_height() + plateau.get_height()) // 2 + 20))
-        for k in range(5):
-            screen.blit(wagon_bleu, (50, (screen.get_height() - plateau.get_height()) // 2 + wagon_bleu.get_height() * k + k * 5))
-        screen.blit(dos_wagon, ((screen.get_width() + plateau.get_width()) // 2 + 10, 50))
-        pygame.draw.circle(screen, "red", [screen.get_width(), screen.get_height()], (screen.get_height() - plateau.get_height()) // 2 - 5, 0)
-        pygame.draw.polygon(screen, "green",
-                            [[screen.get_width() // 2 - 250, 0], [screen.get_width() // 2 + 250, 0], [screen.get_width() // 2 + 225, 35], [screen.get_width() // 2 - 225, 35]])
-        title_surface=base_font.render("Les aventuriers du rail",True, "black")
-        screen.blit(title_surface,(screen.get_width()//2-title_surface.get_width()//2,10))
-        pygame.display.flip()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+                    # Check for backspace
+                    if event.key == pygame.K_BACKSPACE:
+                        # get text input from 0 to -1 i.e. end.
+                        self.user_text = self.user_text[:-1]
+                    # Unicode standard is used for string
+                    # formation
+                    else:
+                        self.user_text += event.unicode
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mx, my = pygame.mouse.get_pos()
+                    print((mx, my))
+                if event.type == pygame.VIDEORESIZE:
+                    self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+
+            # background
+            self.screen.fill("grey")
+            self.screen.blit(self.plateau,
+                             ((self.screen.get_width() - self.size_plateau[0]) // 2,
+                              (self.screen.get_height() - self.size_plateau[1]) // 2))
+            self.low_bar = pygame.Rect(0, (self.screen.get_height() + self.plateau.get_height()) // 2 + 5,
+                                       self.screen.get_width(),
+                                       self.screen.get_height())
+            pygame.draw.rect(self.screen, "blue", self.low_bar)
+
+            # textes
+            self.text_surface = self.base_font.render(self.user_text, True, (255, 255, 255))
+            self.questions_surface = self.base_font.render("Interaction avec le joueur", True, "black")
+
+            # Affichage texte pour interaction joueur
+            self.screen.blit(self.questions_surface,
+                             (10, (self.screen.get_height() + self.plateau.get_height()) // 2 + 10))
+            self.screen.blit(self.text_surface,
+                             (10, (self.screen.get_height() + self.plateau.get_height()) // 2
+                              + self.questions_surface.get_height() + 10))
+
+            # Affichage de la pile
+            for k in range(5):
+                self.screen.blit(self.wagon_bleu,
+                                 (50, (self.screen.get_height() - self.plateau.get_height()) // 2
+                                  + self.wagon_bleu.get_height() * k + k * 5))
+
+            # Affichage texte : Pioche
+            self.pioche_surface = self.base_font.render("Pioche", True, "black")
+            self.screen.blit(self.pioche_surface,
+                             (50, (self.screen.get_height() - self.plateau.get_height()) // 2
+                              - self.pioche_surface.get_height()))
+
+            # Affichage des cartes Destination
+            for i in range(3):
+                self.screen.blit(self.dos_destination, ((self.screen.get_width() + self.plateau.get_width()) // 2 + 20,
+                                                        (self.screen.get_height() - self.plateau.get_height()) // 2 + (
+                                                                self.dos_destination.get_height() + 5) * i))
+            # Affichage texte : Pioche
+            self.destination_surface = self.base_font.render("Destination", True, "black")
+            self.screen.blit(self.destination_surface,
+                             (50, (
+                                     self.screen.get_height() - self.plateau.get_height()) // 2 - self.pioche_surface.get_height()))
+
+            # Affichage des cartes de la main du joueur
+            for w, wagon in enumerate(self.les_wagons):
+                self.screen.blit(wagon,
+                                 (self.questions_surface.get_width() + 20 + (wagon.get_width() + 5) * w,
+                                  (self.screen.get_height() + self.plateau.get_height()) // 2 + 10))
+
+            # screen.blit(dos_wagon, ((screen.get_width() + plateau.get_width()) // 2 + 10, 50))
+
+            # Affichage du compteur de points
+            pygame.draw.circle(self.screen, "red", [self.screen.get_width(), self.screen.get_height()],
+                               (self.screen.get_height() - self.plateau.get_height()) // 2 - 5, 0)
+            nb_points = 5
+            points_surface = self.base_font.render(str(nb_points), True, "black")
+            self.screen.blit(points_surface, (self.screen.get_width() - (points_surface.get_width() + 20),
+                                              self.screen.get_height() - (points_surface.get_height() + 20)))
+
+            # Affichage du titre/pseudo du joueur (?)
+            pygame.draw.polygon(self.screen, "green",
+                                [[self.screen.get_width() // 2 - 250, 0], [self.screen.get_width() // 2 + 250, 0],
+                                 [self.screen.get_width() // 2 + 225, 35], [self.screen.get_width() // 2 - 225, 35]])
+            title_surface = self.base_font.render("Les aventuriers du rail", True, "black")
+            self.screen.blit(title_surface, (self.screen.get_width() // 2 - title_surface.get_width() // 2, 10))
+
+            pygame.display.update()
 
 
 def text_input():
@@ -274,6 +463,8 @@ def text_input():
 
 
 if __name__ == '__main__':
+    # print("hello world")
     # launch_game()
     # text_input()
-    test()
+    IHM=IhmJoueur
+    IhmJoueur.launch(IHM)

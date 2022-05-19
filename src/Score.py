@@ -2,7 +2,6 @@
 @authors: Mathis URIEN, Kenza BELAID"""
 
 from Joueur import Joueur as jr
-#from Partie import Partie as pt
 
 class EnsembleDisjoint:
     """
