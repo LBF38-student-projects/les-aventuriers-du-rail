@@ -12,7 +12,7 @@ class Joueur:
     Il y aura ici les joueurs IA et humains. A nous de les définir comme on le souhaite.
     """
 
-    def __init__(self, nom_joueur, nom_couleur, points, ihm_joueur=IhmJoueur):
+    def __init__(self, nom_joueur, nom_couleur, points, ihm_joueur=IhmJoueur()):
         self.nom_joueur: str = nom_joueur  # Nom du joueur
         self.wagons = 45  # Nombre de wagons maximum par joueur
         self.couleur = nom_couleur  # Définit la couleur du joueur
