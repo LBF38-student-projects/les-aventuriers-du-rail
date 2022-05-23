@@ -4,7 +4,6 @@
 # Imports :
 from abc import abstractmethod, ABCMeta, ABC
 import random as rd
-from interface import *
 
 class Joueur:
     """
@@ -12,7 +11,7 @@ class Joueur:
     Il y aura ici les joueurs IA et humains. A nous de les définir comme on le souhaite.
     """
 
-    def __init__(self, nom_joueur, nom_couleur, points, ihm_joueur=IhmJoueur()):
+    def __init__(self, nom_joueur, nom_couleur, points=0):
         self.nom_joueur: str = nom_joueur  # Nom du joueur
         self.wagons = 45  # Nombre de wagons maximum par joueur
         self.couleur = nom_couleur  # Définit la couleur du joueur
@@ -31,7 +30,6 @@ class Joueur:
         self.main_destination = [] # Réunit toutes les cartes Objectifs/Destination du joueur. Ne contient que les
         # noms des cartes.
         self.route_prise = []
-        self.ihm_joueur=ihm_joueur
 
     @property
     def main_wagon(self):

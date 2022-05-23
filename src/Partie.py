@@ -432,7 +432,7 @@ class Partie(Jeu):
         for k in range(self.nb_joueurs):
             nom = input('Nom du Joueur ' + str(k + 1))
             couleur = input('Choisir sa couleur de Joueur parmi les suivantes :\n- blue\n- red\n - black \n - random')
-            self.les_joueurs[nom] = Joueur(nom, couleur, 0)
+            self.les_joueurs[nom] = Joueur(nom, couleur)
             self.ordre.append(nom)
         # TODO : Demander le nb total de joueurs de la partie, nb joueurs humains. => compléter par des joueurs IAs
         # TODO: vérifier que nb_joueurs est compris entre 2 et 5.
@@ -495,7 +495,6 @@ class Partie(Jeu):
         Réalise 1 tour de tous les joueurs où chacun joue leur tour de jeu en fonction de toutes les actions possibles.
         :return:
         """
-        joueur.ihm_joueur.launch()
         print("C'est le tour de " + joueur.nom_joueur)
         choix: int = int(input(
             "Que voulez-vous faire ?\n" + "1. Prendre des cartes Wagon\n2. Prendre possession d'une route\n3. "
@@ -770,7 +769,7 @@ class Partie(Jeu):
 
 
 if __name__ == '__main__':
-    p = Partie()
+    p = partie()
     # j = Jeu()
     # p.partie()
 

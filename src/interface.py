@@ -6,7 +6,7 @@ Projet informatique
 # Imports:
 import pygame, sys, os
 from pygame.locals import *
-
+from Partie import *
 
 class Screen:
     def __init__(self, title, width=640, height=445, fill="white"):
@@ -67,64 +67,64 @@ class Screen:
 #             return False
 
 
-def launch_game():
-    pygame.init()
-    pygame.font.init()
-    menuScreen = Screen("Les aventuriers du rail")
-    screen2 = Screen("Screen 2")
+# def launch_game():
+#     pygame.init()
+#     pygame.font.init()
+#     menuScreen = Screen("Les aventuriers du rail")
+#     screen2 = Screen("Screen 2")
+#
+#     win = menuScreen.make_current()
+#     done = False
+#     testButton = Button(0, 0, 150, 50, "black", "blue", "arial", 20, "white", "Menu")
+#     returnButton = Button(0, 0, 150, 50, "orange", "green", "arial", 20, "black", "Back")
+#
+#     toggle = False
+#
+#     while not done:
+#         menuScreen.screen_update()
+#         screen2.screen_update()
+#         mouse_pos = pygame.mouse.get_pos()
+#         mouse_click = pygame.mouse.get_pressed()
+#         keys = pygame.key.get_pressed()
+#
+#         # menuScreen Page code
+#         if menuScreen.check_update():
+#             screen2button = testButton.focus_check(mouse_pos, mouse_click)
+#             testButton.show_button(menuScreen.return_title())
+#             if screen2button:
+#                 win = screen2.make_current()
+#                 menuScreen.end_current()
+#
+#         # Screen 2 Page code
+#         elif screen2.check_update():
+#             # Back Button
+#             returnm = returnButton.focus_check(mouse_pos, mouse_click)
+#             returnButton.show_button(screen2.return_title())
+#             if returnm:
+#                 win = menuScreen.make_current()
+#                 screen2.end_current()
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 done = True
+#         pygame.display.update()
+#     pygame.quit()
 
-    win = menuScreen.make_current()
-    done = False
-    testButton = Button(0, 0, 150, 50, "black", "blue", "arial", 20, "white", "Menu")
-    returnButton = Button(0, 0, 150, 50, "orange", "green", "arial", 20, "black", "Back")
 
-    toggle = False
-
-    while not done:
-        menuScreen.screen_update()
-        screen2.screen_update()
-        mouse_pos = pygame.mouse.get_pos()
-        mouse_click = pygame.mouse.get_pressed()
-        keys = pygame.key.get_pressed()
-
-        # menuScreen Page code
-        if menuScreen.check_update():
-            screen2button = testButton.focus_check(mouse_pos, mouse_click)
-            testButton.show_button(menuScreen.return_title())
-            if screen2button:
-                win = screen2.make_current()
-                menuScreen.end_current()
-
-        # Screen 2 Page code
-        elif screen2.check_update():
-            # Back Button
-            returnm = returnButton.focus_check(mouse_pos, mouse_click)
-            returnButton.show_button(screen2.return_title())
-            if returnm:
-                win = menuScreen.make_current()
-                screen2.end_current()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
-        pygame.display.update()
-    pygame.quit()
-
-
-def game():
-    size = width, height = 1920 // 2, 1080 // 2
-    screen = pygame.display.set_mode(size)
-    run = True
-    while run:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == K_ESCAPE:
-                    run = False
-        screen.fill("blue")
-        pygame.display.flip()
-        # screen.blit(plateau, ((width - size_plateau[0]) // 2, (height - size_plateau[1]) // 2))
+# def game():
+#     size = width, height = 1920 // 2, 1080 // 2
+#     screen = pygame.display.set_mode(size)
+#     run = True
+#     while run:
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 pygame.quit()
+#                 sys.exit()
+#             if event.type == pygame.KEYDOWN:
+#                 if event.key == K_ESCAPE:
+#                     run = False
+#         screen.fill("blue")
+#         pygame.display.flip()
+#         # screen.blit(plateau, ((width - size_plateau[0]) // 2, (height - size_plateau[1]) // 2))
 
 
 # def IHM():
@@ -348,9 +348,12 @@ class Text:
 
 
 class IhmPartie:
-    def __init__(self):
+    def __init__(self, partie=Partie()):
         pygame.init()
 
+        # Lien avec la partie :
+        self.partie=partie
+        self.partie.les_joueurs["TestPlayer"]=Joueur("TestPlayer","blue") # Pour tester l'IHM
         # Initialize the screen
         self.size = width, height = 1920 // 2, 1080 // 2
         self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
@@ -363,7 +366,9 @@ class IhmPartie:
         self.button_credits = Button('Credits',
                                      (self.button_options.pos[0],
                                       self.button_options.pos[1] + self.button_options.height + 10))
-        self.button_back= Button('Back',(200, self.screen.get_height()-50))
+        self.button_back = Button('Back', (20, self.screen.get_height() - 50))
+        self.button_start = Button('Start',
+                                  (self.button_back.pos[0], self.button_back.pos[1]-50))
 
     def launch_game(self):
         """Lance le jeu et la fenêtre d'accueil du jeu"""
@@ -387,7 +392,6 @@ class IhmPartie:
             if self.button_credits.pressed:
                 self.button_credits.pressed = False
                 self.launch_credits()
-
 
             # Default setup for the menu screen
             background = pygame.transform.scale(background, self.screen.get_size())
@@ -420,7 +424,7 @@ class IhmPartie:
         screen_partie.blit(background, (0, 0))
 
         # Text
-        text_partie=Text("Nouvelle Partie",(screen_partie.get_width()//2,screen_partie.get_height()//2))
+        text_partie = Text("Nouvelle Partie", (screen_partie.get_width() // 2, screen_partie.get_height() // 2))
 
         run = True
         while run:
@@ -434,12 +438,17 @@ class IhmPartie:
             if self.button_back.pressed:
                 self.button_back.pressed = False
                 self.launch_game()
+            if self.button_start.pressed:
+                self.button_start.pressed = False
+                for joueur in self.partie.les_joueurs.values():
+                    IhmJoueur().launch(joueur)
 
             text_partie.show(screen_partie)
             background = pygame.transform.scale(background, screen_partie.get_size())
             screen_partie.blit(background, (0, 0))
             # Draw buttons on the menu screen
             self.button_back.draw(self.screen)
+            self.button_start.draw(self.screen)
 
             # Update current screen
             pygame.display.update()
@@ -509,7 +518,6 @@ class IhmPartie:
                 self.button_back.pressed = False
                 self.launch_game()
 
-
             text_credits.show(screen_credits)
             background = pygame.transform.scale(background, screen_credits.get_size())
             screen_credits.blit(background, (0, 0))
@@ -519,6 +527,7 @@ class IhmPartie:
             # Update current screen
             pygame.display.update()
             self.clock.tick(60)
+
 
 class IhmJoueur(IhmPartie):
     def __init__(self):
@@ -548,18 +557,21 @@ class IhmJoueur(IhmPartie):
         self.base_font = pygame.font.Font(None, 32)
         self.user_text = ""
 
+        self.button_fin_tour = Button("Fin du tour", (20, 10))
+        # self.joueur=joueur
+
     # def affichage_pioche(self,pioche):
 
-    def launch(self):
-        while True:
+    def launch(self, joueur):
+        run=True
+        while run:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
+                        run=False
                     # Check for backspace
                     if event.key == K_BACKSPACE:
                         # get text input from 0 to -1 i.e. end.
@@ -575,6 +587,11 @@ class IhmJoueur(IhmPartie):
                     print((mx, my))
                 if event.type == pygame.VIDEORESIZE:
                     self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+            if self.button_fin_tour.pressed:
+                self.button_fin_tour.pressed=not self.button_fin_tour.pressed
+                run=False
+
+
 
             # background
             self.screen.fill("grey")
@@ -617,9 +634,8 @@ class IhmJoueur(IhmPartie):
             # Affichage texte : Pioche
             self.destination_surface = self.base_font.render("Destination", True, "black")
             self.screen.blit(self.destination_surface,
-                             (50, (
-                                     self.screen.get_height() - self.plateau.get_height()) // 2 - self.pioche_surface.get_height()))
-
+                             ((self.screen.get_width()-self.destination_surface.get_width())-20,
+                              (self.screen.get_height() - self.plateau.get_height()) // 2 - self.pioche_surface.get_height()))
             # Affichage des cartes de la main du joueur
             for w, wagon in enumerate(self.les_wagons):
                 self.screen.blit(wagon,
@@ -628,19 +644,22 @@ class IhmJoueur(IhmPartie):
 
             # screen.blit(dos_wagon, ((screen.get_width() + plateau.get_width()) // 2 + 10, 50))
 
+            # Bouton pour la fin de tour
+            self.button_fin_tour.draw(self.screen)
+
             # Affichage du compteur de points
-            pygame.draw.circle(self.screen, "red", [self.screen.get_width(), self.screen.get_height()],
+            pygame.draw.circle(self.screen, "darkgrey", [self.screen.get_width(), self.screen.get_height()],
                                (self.screen.get_height() - self.plateau.get_height()) // 2 - 5, 0)
-            nb_points = 5
+            nb_points = joueur.nb_points
             points_surface = self.base_font.render(str(nb_points), True, "black")
             self.screen.blit(points_surface, (self.screen.get_width() - (points_surface.get_width() + 20),
                                               self.screen.get_height() - (points_surface.get_height() + 20)))
 
             # Affichage du titre/pseudo du joueur (?)
-            pygame.draw.polygon(self.screen, "green",
+            pygame.draw.polygon(self.screen, "darkgrey",
                                 [[self.screen.get_width() // 2 - 250, 0], [self.screen.get_width() // 2 + 250, 0],
                                  [self.screen.get_width() // 2 + 225, 35], [self.screen.get_width() // 2 - 225, 35]])
-            title_surface = self.base_font.render("Les aventuriers du rail", True, "black")
+            title_surface = self.base_font.render(joueur.nom_joueur, True, "black")
             self.screen.blit(title_surface, (self.screen.get_width() // 2 - title_surface.get_width() // 2, 10))
 
             pygame.display.update()
