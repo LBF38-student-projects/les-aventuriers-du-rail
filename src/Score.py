@@ -2,11 +2,26 @@
 @authors: Mathis URIEN, Kenza BELAID"""
 
 from Joueur import Joueur as jr
-#from Partie import Partie as pt
+from Partie import *
+
+def conversion(nb_wagons):
+    #convertit le nombre de wagons en nombre de points
+    if nb_wagons == 1 :
+        return 1
+    if nb_wagons == 2 :
+        return 2
+    if nb_wagons == 3 :
+        return 4
+    if nb_wagons == 4 :
+        return 7
+    if nb_wagons == 5 :
+        return 10
+    if nb_wagons == 6 :
+        return 15
 
 class EnsembleDisjoint:
     """
-    Cette classe permet de gérer les ensmebles disjoints. Deux éléments sont
+    Cette classe permet de gérer les ensembles disjoints. Deux éléments sont
     considérés dans le même ensemble s'ils ont le même parent.
     """
     parent = {}
@@ -35,17 +50,17 @@ def Kruskal(liaisons, nombre_villes):
     arbre_minimal =[]
     ed = EnsembleDisjoint(nombre_villes)
     index = 0
-    while len(arbre_minimal) != nombre_villes - 1 :
+    while len(arbre_minimal) < nombre_villes - 1 :
         (depart, arrivee, longueur) = liaisons[index]
-        index = index + 1
+        index += 1
 
         x = ed.get_parent(depart)
         y = ed.get_parent(arrivee)
 
         if x != y :
-            arbre_minimal.apppend((depart, arrivee, longueur))
+            arbre_minimal.append((depart, arrivee, longueur))
             ed.Union(x,y)
-        return arbre_minimal
+    return arbre_minimal, len(arbre_minimal)
 
 class Score():
     """Classe qui implémente les différentes méthodes pour calculer les joueur.nb_points du jeu
@@ -62,18 +77,24 @@ class Score():
         #L = nb_joueurs*[0]
         #for i in range(nb_joueurs):
             #L[i] = []
-        Objectifs = jr.main_cartes['Destination']
+        #Objectifs = jr.main_cartes['Destination']
+
+    def get_id_ville(self,nom_ville):
+        return self.partie.villes[nom_ville].id
+
+    def get_lien_villes(self,nom_ville1,nom_ville2):
+        return self.partie.liens_villes[nom_ville1][nom_ville2][1]
+
+    def get_infos_liaison(self,nom_ville1,nom_ville2):
+        return (self.get_id_ville(nom_ville1),self.get_id_ville(nom_ville2),self.get_lien_villes(nom_ville1,nom_ville2))
 
     def calcul_pts_destinations(self,joueur):
         joueur.nb_points = 0
-        for r in self.joueur.route_prise :
-            nv_nom_route = "{0} to {1}".format(r[0], r[1])
-            if nv_nom_route not in self.joueur.mains_cartes['Destination']:
-                nv_nom_route = "{0} to {1}".format(r[1], r[0])
-            elif nv_nom_route not in self.joueur.mains_cartes['Destination']:
-                joueur.nb_points = joueur.nb_points
-            else :
-                joueur.nb_points += self.partie.carte_destination["nv_nom_route"]
+        for j in range(3):
+            if (joueur.main_cartes[1][j][0][0] and joueur.main_cartes[1][j][0][1]) in arbre_min:
+                joueur.nb_points += joueur.main_cartes[1][j][1]
+            else:
+                joueur.nb_points += joueur.main_cartes[1][j][1]
 
     def calcul_pts_route(self,joueur):
         """
@@ -84,62 +105,104 @@ class Score():
         for r in joueur.route_prise :
             ville1 = r[0]
             ville2 = r[1]
-            joueur.nb_points += self.partie.liens_villes[ville1][ville2][1]
-
-    #def calcul_plus_long_chemin(self,joueur):
-        #for r in self.joueur.route_prise :
-            #ville =
+            joueur.nb_points += conversion(self.partie.liens_villes[ville1][ville2][1])
+        return joueur.nb_points
 
 
+    def calcul_plus_long_chemin(self,joueur):
+       pass
 
 
 
 if __name__ == '__main__':
 
-# liste des arcs au format (départ, arrivée, longueur)
+# liste des liaisons au format (départ, arrivée, longueur)
 
-    liaisons = [("Los Angeles", "San Franciso", 3),("Los Angeles", "Las Vegas", 2),
-                ("Los Angeles", "Phoenix", 3),("Los Angeles", "El Paso", 6),
-                ("San Francisco", "Portland", 5),("San Francisco", "Salt Lake City", 5),
-                ("Portland", "Seattle", 1),("Portland", "Salt Lake City", 6),
-                ("Seattle", "Helena", 6),("Seattle", "Vancouver", 1),
-                ("Seattle", "Calgary", 4),("Vancouver","Calgary",3),
-                ("Calgary", "Winnipeg", 6),("Calgary", "Helena", 4),
-                ("Helena", "Winnipeg", 4),("Helena", "Duluth", 6),
-                ("Helena", "Omaha", 5),("Helena", "Denver", 4),
-                ("Helena", "Salt Lake City", 3),("Salt Lake City", "Las Vegas", 3),
-                ("Salt Lake City","Denver",3),("Phoenix","El Paso",3),
-                ("Phoenix","Santa Fe",3),("Phoenix", "Denver", 5),
-                ("El Paso","Santa Fe",2),("El Paso","Houston",6),
-                ("El Paso","Dallas",4),("El Paso", "Oklahoma City", 5),
-                ("Santa Fe","Denver",2),("Santa Fe", "Oklahoma City", 3),
-                ("Denver","Omaha",4),("Denver","Kansas City",4),
-                ("Oklahoma City","Kansas City",2),("Oklahoma City","Dallas",2),
-                ("Oklahoma City","Little Rock",2),("Kansas City","Omaha",1),
-                ("Kansas City", "Saint Louis",2),("Omaha","Chicago",4),
-                ("Omaha", "Duluth", 2),("Duluth","Winnipeg",4),
-                ("Duluth", "Sault Ste Marie", 3),("Duluth","Toronto",6),
-                ("Duluth", "Chicago", 3),("Sault Ste Marie","Winnipeg",6),
-                ("Sault Ste Marie","Duluth",3),("Sault Ste Marie","Toronto",2),
-                ("Sault Ste Marie","Montreal",5),("Winnipeg","Calgary",6),
-                ("Dallas","Houston",1),("Dallas","Little Rock",2),
-                ("Houston","New Orleans",2),("New Orleans","Little Rock",3),
-                ("New Orleans","Atlanta",4),("New Orleans","Miami",6),
-                ("Little Rock","Saint Louis",2),("Little Rock","Nashville",3),
-                ("Saint Louis","Chicago",2),("Saint Louis","Pittsburgh",5),
-                ("Saint Louis","Nashville",2),("Chicago","Toronto",4),
-                ("Chicago","Pittsburgh",3),("Nashville","Pittsburgh",4),
-                ("Nashville","Atlanta",1),("Nashville","Raleigh", 3),
-                ("Atlanta","Raleigh",2),("Atlanta","Charleston",2),
-                ("Atlanta","Miami",5),("Miami","Charleston",4),
-                ("Charleston","Raleigh",2),("Pittsburgh","Washington",2),
-                ("Pittsburgh","Raleigh",2),("Pittsburgh","Toronto",2),
-                ("Pittsburgh","New York",2),("Toronto","Montreal",3),
-                ("Montreal","Boston",2),("Montreal","New York",3),
-                ("Boston","New York",2),("New York","Boston",2),
-                ("Boston","Washington",2),("Washington","Raleigh",2,)]
+    partie = Partie()
+    score = Score(partie)
+
+    liaisons = [score.get_infos_liaison("Los Angeles","San Francisco"),
+                score.get_infos_liaison("Los Angeles","Las Vegas"),
+                score.get_infos_liaison("Los Angeles","Phoenix"),
+                score.get_infos_liaison("Los Angeles","El Paso"),
+                score.get_infos_liaison("San Francisco","Portland"),
+                score.get_infos_liaison("San Francisco","Salt Lake City"),
+                score.get_infos_liaison("Portland","Seattle"),
+                score.get_infos_liaison("Portland","Salt Lake City"),
+                score.get_infos_liaison("Seattle","Helena"),
+                score.get_infos_liaison("Seattle","Vancouver"),
+                score.get_infos_liaison("Seattle","Calgary"),
+                score.get_infos_liaison("Vancouver","Calgary"),
+                score.get_infos_liaison("Calgary","Winnipeg"),
+                score.get_infos_liaison("Calgary","Helena"),
+                score.get_infos_liaison("Helena","Winnipeg"),
+                score.get_infos_liaison("Helena","Duluth"),
+                score.get_infos_liaison("Helena","Omaha"),
+                score.get_infos_liaison("Helena","Denver"),
+                score.get_infos_liaison("Helena","Salt Lake City"),
+                score.get_infos_liaison("Salt Lake City","Las Vegas"),
+                score.get_infos_liaison("Salt Lake City","Denver"),
+                score.get_infos_liaison("Phoenix","El Paso"),
+                score.get_infos_liaison("Phoenix","Santa Fe"),
+                score.get_infos_liaison("Phoenix","Denver"),
+                score.get_infos_liaison("El Paso","Santa Fe"),
+                score.get_infos_liaison("El Paso","Houston"),
+                score.get_infos_liaison("El Paso","Dallas"),
+                score.get_infos_liaison("El Paso","Oklahoma City"),
+                score.get_infos_liaison("Santa Fe","Denver"),
+                score.get_infos_liaison("Santa Fe","Oklahoma City"),
+                score.get_infos_liaison("Denver","Omaha"),
+                score.get_infos_liaison("Denver","Kansas City"),
+                score.get_infos_liaison("Oklahoma City","Kansas City"),
+                score.get_infos_liaison("Oklahoma City","Dallas"),
+                score.get_infos_liaison("Oklahoma City","Little Rock"),
+                score.get_infos_liaison("Kansas City","Omaha"),
+                score.get_infos_liaison("Kansas City", "Saint Louis"),
+                score.get_infos_liaison("Omaha","Chicago"),
+                score.get_infos_liaison("Omaha","Duluth"),
+                score.get_infos_liaison("Duluth","Winnipeg"),
+                score.get_infos_liaison("Duluth","Sault Ste Marie"),
+                score.get_infos_liaison("Duluth","Toronto"),
+                score.get_infos_liaison("Duluth","Chicago"),
+                score.get_infos_liaison("Sault Ste Marie","Winnipeg"),
+                score.get_infos_liaison("Sault Ste Marie","Duluth"),
+                score.get_infos_liaison("Sault Ste Marie","Toronto"),
+                score.get_infos_liaison("Sault Ste Marie","Montreal"),
+                score.get_infos_liaison("Winnipeg","Calgary"),
+                score.get_infos_liaison("Dallas","Houston"),
+                score.get_infos_liaison("Dallas","Little Rock"),
+                score.get_infos_liaison("Houston","New Orleans"),
+                score.get_infos_liaison("New Orleans","Little Rock"),
+                score.get_infos_liaison("New Orleans","Atlanta"),
+                score.get_infos_liaison("New Orleans","Miami"),
+                score.get_infos_liaison("Little Rock","Saint Louis"),
+                score.get_infos_liaison("Little Rock","Nashville"),
+                score.get_infos_liaison("Saint Louis","Chicago"),
+                score.get_infos_liaison("Saint Louis","Pittsburgh"),
+                score.get_infos_liaison("Saint Louis","Nashville"),
+                score.get_infos_liaison("Chicago","Toronto"),
+                score.get_infos_liaison("Chicago","Pittsburgh"),
+                score.get_infos_liaison("Nashville","Pittsburgh"),
+                score.get_infos_liaison("Nashville","Atlanta"),
+                score.get_infos_liaison("Nashville","Raleigh"),
+                score.get_infos_liaison("Atlanta","Raleigh"),
+                score.get_infos_liaison("Atlanta","Charleston"),
+                score.get_infos_liaison("Atlanta","Miami"),
+                score.get_infos_liaison("Miami","Charleston"),
+                score.get_infos_liaison("Charleston","Raleigh"),
+                score.get_infos_liaison("Pittsburgh","Washington"),
+                score.get_infos_liaison("Pittsburgh","Raleigh"),
+                score.get_infos_liaison("Pittsburgh","Toronto"),
+                score.get_infos_liaison("Pittsburgh","New York"),
+                score.get_infos_liaison("Toronto","Montreal"),
+                score.get_infos_liaison("Montreal","Boston"),
+                score.get_infos_liaison("Montreal","New York"),
+                score.get_infos_liaison("Boston","New York"),
+                score.get_infos_liaison("New York","Washington"),
+                score.get_infos_liaison("Washington","Raleigh")]
 
     liaisons.sort(key=lambda x: x[2]) # on trie les liaisons par longueur
     nombre_villes = 36
 
-    print(Kruskal(liaisons, nombre_villes))
+    arbre_min = Kruskal(liaisons, nombre_villes)
+    print(arbre_min)

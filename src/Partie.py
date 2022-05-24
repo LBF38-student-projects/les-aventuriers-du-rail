@@ -383,7 +383,7 @@ class Jeu(object):
 
 
 class Ville(object):
-    id = 0
+    id = -1
 
     def __init__(self, nom_ville, x, y, width, height):
         self.nom: str = nom_ville

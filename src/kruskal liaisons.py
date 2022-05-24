@@ -98,4 +98,6 @@ if __name__ == '__main__':
     liaisons.sort(key=lambda x: x[2])  # on trie les liaisons par longueur
     nombre_villes = 36
 
-    print(Kruskal(liaisons, nombre_villes))
+    arbre_min = Kruskal(liaisons, nombre_villes)
+
+    if
