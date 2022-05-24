@@ -422,8 +422,9 @@ class Partie(Jeu):
         # Définit l'ordre des cartes wagons. C'est la pile de cartes.
         self.pile_cartes_destination = [destination for destination in self.carte_destination.keys()]
         self.defausse_wagon = []
+        # self.current_player=self.change_current_player()
 
-    def debut_partie(self):
+    def debut_partie(self, ihm_partie):
         """
         Définition des joueurs
         :return:
@@ -471,7 +472,10 @@ class Partie(Jeu):
             self.ordre = temp_joueur
         return "L'ordre des joueurs est établi comme suit : \n" + self.liste_joueurs()
 
-    def choix_tour_joueur(self):
+    # def change_current_player(self):
+
+
+    def choix_tour_joueur(self, ihm_partie):
         """
         Définit le tour des joueurs en fonction de celui qui a le plus voyagé puis selon sens horaire.
         :return:
@@ -490,18 +494,19 @@ class Partie(Jeu):
             liste_joueurs += joueur + "\n"
         return liste_joueurs
 
-    def tour(self, joueur):
+    def tour(self, joueur, ihm_partie):
         """
         Réalise 1 tour de tous les joueurs où chacun joue leur tour de jeu en fonction de toutes les actions possibles.
         :return:
         """
+        ihm_partie.launch(joueur)
         print("C'est le tour de " + joueur.nom_joueur)
         choix: int = int(input(
             "Que voulez-vous faire ?\n" + "1. Prendre des cartes Wagon\n2. Prendre possession d'une route\n3. "
                                           "Prendre des cartes Destination supplémentaires\nIndiquer le numéro "
                                           "de l'action choisie"))
         if choix == 1:
-            self.prendre_cartes_wagon(joueur)
+            self.prendre_cartes_wagon(joueur, ihm_partie)
         elif choix == 2:
             self.prendre_route(joueur)
         else:
@@ -542,7 +547,7 @@ class Partie(Jeu):
             p1.insert(index, carte)
         return p1
 
-    def prendre_cartes_wagon(self, joueur):
+    def prendre_cartes_wagon(self, joueur, ihm_partie):
         """
          1. Prendre des cartes Wagon :
         – le joueur peut prendre 2 cartes Wagon.
@@ -728,18 +733,18 @@ class Partie(Jeu):
             for i in range(3):
                 joueur.main_destination.append(self.pile_cartes_destination.pop(0))
 
-    def partie(self):
+    def partie(self, ihm_partie):
         """
         fait tourner une partie complète du jeu. du début à la fin.
         :return:
         """
-        self.debut_partie()
+        self.debut_partie(ihm_partie)
         self.preparation_partie()
         """
         # Règle du jeu :
         ## Tour de jeu
         Le joueur qui a le plus voyagé commence."""
-        self.choix_tour_joueur()
+        self.choix_tour_joueur(ihm_partie)
         """Par la suite, on joue dans le sens des aiguilles d’une montre. 
         À son tour, le joueur doit faire une et une seule des trois actions suivantes : 
         1. Prendre des cartes Wagon
@@ -750,7 +755,7 @@ class Partie(Jeu):
         nom = self.ordre[i]
         joueur = self.les_joueurs[nom]
         while joueur.wagons > 2:
-            self.tour(joueur)
+            self.tour(joueur, ihm_partie)
             if i == len(self.ordre) - 1:
                 i = 0
             else:
@@ -759,7 +764,7 @@ class Partie(Jeu):
             joueur = self.les_joueurs[nom]
         self.rotation_joueur(i)
         for nom in self.ordre:
-            self.tour(self.les_joueurs[nom])
+            self.tour(self.les_joueurs[nom], ihm_partie)
         print("Fin de partie\nAffichage du score bientôt disponible")
         """
         Fin du jeu

@@ -8,6 +8,7 @@ import pygame, sys, os
 from pygame.locals import *
 from Partie import *
 
+
 class Screen:
     def __init__(self, title, width=640, height=445, fill="white"):
         self.title = title
@@ -331,6 +332,8 @@ class Button:
             self.top_color = '#475F77'
 
 
+# TODO: créer une classe pour les texts inputs. Penser à faire une méthode pour renvoyer les valeurs des inputs
+
 class Text:
     def __init__(self, text: str, pos: tuple, color="black"):
         """Classe pour afficher du texte sur une fenêtre"""
@@ -352,8 +355,11 @@ class IhmPartie:
         pygame.init()
 
         # Lien avec la partie :
-        self.partie=partie
-        self.partie.les_joueurs["TestPlayer"]=Joueur("TestPlayer","blue") # Pour tester l'IHM
+        self.partie = partie
+        self.count_joueur = 0
+        # Pour tester l'IHM:
+        self.partie.les_joueurs["TestPlayer1"] = Joueur("TestPlayer1", "random")
+        self.partie.les_joueurs["TestPlayer2"] = Joueur("TestPlayer2", "random")
         # Initialize the screen
         self.size = width, height = 1920 // 2, 1080 // 2
         self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
@@ -368,7 +374,7 @@ class IhmPartie:
                                       self.button_options.pos[1] + self.button_options.height + 10))
         self.button_back = Button('Back', (20, self.screen.get_height() - 50))
         self.button_start = Button('Start',
-                                  (self.button_back.pos[0], self.button_back.pos[1]-50))
+                                   (self.button_back.pos[0], self.button_back.pos[1] - 50))
 
     def launch_game(self):
         """Lance le jeu et la fenêtre d'accueil du jeu"""
@@ -440,6 +446,7 @@ class IhmPartie:
                 self.launch_game()
             if self.button_start.pressed:
                 self.button_start.pressed = False
+                # self.partie.partie(self)
                 for joueur in self.partie.les_joueurs.values():
                     IhmJoueur().launch(joueur)
 
@@ -450,6 +457,16 @@ class IhmPartie:
             self.button_back.draw(self.screen)
             self.button_start.draw(self.screen)
 
+            # Text & Text inputs
+            # FIXME: remplacer tous les textes ci-dessous par des texts inputs
+            self.text_nb_joueurs = Text("Nombre de joueurs pour la partie", ((self.screen.get_width() - 50) // 2,
+                                                                             (self.screen.get_height() - 100) // 2))
+            self.text_joueur = Text("Nom et couleur du joueur", (self.text_nb_joueurs.pos[0],
+                                                                 self.text_nb_joueurs.pos[1] + 20))
+
+            # Affichage des textes
+            self.text_nb_joueurs.show(self.screen)
+            self.text_joueur.show(self.screen)
             # Update current screen
             pygame.display.update()
             self.clock.tick(60)
@@ -563,7 +580,7 @@ class IhmJoueur(IhmPartie):
     # def affichage_pioche(self,pioche):
 
     def launch(self, joueur):
-        run=True
+        run = True
         while run:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -571,7 +588,7 @@ class IhmJoueur(IhmPartie):
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_ESCAPE:
-                        run=False
+                        run = False
                     # Check for backspace
                     if event.key == K_BACKSPACE:
                         # get text input from 0 to -1 i.e. end.
@@ -588,10 +605,8 @@ class IhmJoueur(IhmPartie):
                 if event.type == pygame.VIDEORESIZE:
                     self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
             if self.button_fin_tour.pressed:
-                self.button_fin_tour.pressed=not self.button_fin_tour.pressed
-                run=False
-
-
+                self.button_fin_tour.pressed = False
+                run = False
 
             # background
             self.screen.fill("grey")
@@ -634,8 +649,9 @@ class IhmJoueur(IhmPartie):
             # Affichage texte : Pioche
             self.destination_surface = self.base_font.render("Destination", True, "black")
             self.screen.blit(self.destination_surface,
-                             ((self.screen.get_width()-self.destination_surface.get_width())-20,
-                              (self.screen.get_height() - self.plateau.get_height()) // 2 - self.pioche_surface.get_height()))
+                             ((self.screen.get_width() - self.destination_surface.get_width()) - 20,
+                              (
+                                          self.screen.get_height() - self.plateau.get_height()) // 2 - self.pioche_surface.get_height()))
             # Affichage des cartes de la main du joueur
             for w, wagon in enumerate(self.les_wagons):
                 self.screen.blit(wagon,
