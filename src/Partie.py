@@ -2,13 +2,13 @@
 @authors: Mathis URIEN, Kenza BELAID"""
 
 # Imports :
-import random
-
 from Joueur import Joueur
-from Score import *
+from Score import Score
 import matplotlib.pyplot as plt
 import random as r
 
+
+# TODO: penser à faire les tests unitaires sur les classes et méthodes
 
 class Jeu(object):
     """Classe qui met en place les parties immuables du jeu pour ensuite être utilisé dans chaque partie."""
@@ -391,7 +391,7 @@ class Ville(object):
         self.coords = (x, y)
         self.liens = {}  # format: "nom_ville":["couleur_liens",nb_wagons]
         Ville.id += 1
-        self.id=Ville.id
+        self.id = Ville.id
 
     @classmethod
     def get_id(cls):
@@ -432,7 +432,7 @@ class Partie(Jeu):
         for k in range(self.nb_joueurs):
             nom = input('Nom du Joueur ' + str(k + 1))
             couleur = input('Choisir sa couleur de Joueur parmi les suivantes :\n- blue\n- red\n - black \n - random')
-            self.les_joueurs[nom] = Joueur(nom, couleur, 0)
+            self.les_joueurs[nom] = Joueur(nom, couleur)
             self.ordre.append(nom)
         # TODO : Demander le nb total de joueurs de la partie, nb joueurs humains. => compléter par des joueurs IAs
         # TODO: vérifier que nb_joueurs est compris entre 2 et 5.
@@ -445,14 +445,16 @@ class Partie(Jeu):
     @nb_joueurs.setter
     def nb_joueurs(self, value):
         """Accesseur en écriture du nombre de joueurs de la partie"""
-        if type(value) != int:
-            print("Indiquer un nombre.")
-            self.nb_joueurs = input("Nombre de joueurs pour la partie")
-        if value not in range(2, 6):
+        #TODO: traiter le cas où la valeur n'est pas un int mais du texte par exemple
+
+        # if type(value) != int:
+        #     print("Indiquer un nombre.")
+        #     self.nb_joueurs = input("Nombre de joueurs pour la partie")
+        if int(value) not in range(2, 6):
             print("Le nombre de joueurs doit être compris entre 2 et 5 pour lancer une partie.\nCela est différent du "
                   "nombre de joueurs IAs.\nVeuillez rentrer à nouveau une valeur correcte.")
             self.nb_joueurs = input("Nombre de joueurs pour la partie")
-        self.__nb_joueurs = value
+        self.__nb_joueurs = int(value)
 
     def rotation_joueur(self, index):
         """
@@ -588,14 +590,14 @@ class Partie(Jeu):
             while nom_carte not in self.pile_cartes_wagon[0:5]:
                 print("Il faut que la carte soit parmi celles face visible.\nRecommencer.")
                 nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
-            joueur.main_cartes['Wagon'][nom_carte] += 1
+            joueur.main_wagon[nom_carte] += 1
             self.pile_cartes_wagon.pop(
                 self.pile_cartes_wagon.index(nom_carte))  # TODO: améliorer le retrait des cartes.
             # Pour l'instant, on enlève la première occurrence du nom_carte et non celle choisi parmi les 5. A vérifier.
             print("Vous avez choisi la carte " + str(nom_carte))
         else:
             carte = self.pile_cartes_wagon.pop(6)  # Car c'est la carte au-dessus de la pile après les cartes visibles.
-            joueur.main_cartes['Wagon'][carte] += 1
+            joueur.main_wagon[carte] += 1
             print("Vous avez pris une carte face cachée.")
             # TODO: ajouter une fonctionnalité pour que le joueur puisse voir la carte sans que les autres la voient.
             #  Solution : Faire un jeu contre IA ou faire plusieurs fenêtres ou jouer en LAN ou jouer en
@@ -609,14 +611,14 @@ class Partie(Jeu):
                 while nom_carte not in self.pile_cartes_wagon[0:5]:
                     print("Il faut que la carte soit parmi celles face visible.\nRecommencer.")
                     nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
-                joueur.main_cartes['Wagon'][nom_carte] += 1
+                joueur.main_wagon[nom_carte] += 1
                 self.pile_cartes_wagon.pop(self.pile_cartes_wagon.index(nom_carte))
                 # TODO: améliorer le retrait des cartes. Pour l'instant, on enlève la première occurrence du
                 #  nom_carte et non celle choisi parmi les 5. A vérifier.
                 print("Vous avez choisi la carte " + str(nom_carte))
             else:
                 carte = self.pile_cartes_wagon.pop(6)  # Car c'est la carte au-dessus de la pile après celles visibles.
-                joueur.main_cartes['Wagon'][carte] += 1
+                joueur.main_wagon[carte] += 1
                 print("Vous avez pris une carte face cachée.")
         print("Fin du tour.")
         # TODO: vérifier que le joueur ne peut ajouter que 2 cartes au max. TODO: vérifier qu'il peut prendre 2
@@ -672,8 +674,8 @@ class Partie(Jeu):
         possession de l’une des 2 routes disponibles, la route restante
         demeurant fermée jusqu’à la fin de la partie.
         """
-        nom_route = [input("Quelle route voulez-vous prendre ? Indiquer le nom de la première ville.")]
-        nom_route.append(input("Indiquer le nom de la seconde ville"))
+        nom_route = [input("Quelle route voulez-vous prendre ? Indiquer le nom de la première ville."),
+                     input("Indiquer le nom de la seconde ville")]
         # TODO: pour l'IHM, faire en fonction des cliques du joueur sur la carte pour relier les 2.
         #  Click sur le lien entre les villes ou clique sur les 2 villes.
         route = self.liens_villes[nom_route[0]][nom_route[1]]  # contient [couleur,nb_segments]
@@ -682,13 +684,13 @@ class Partie(Jeu):
             couleur = input("La route est grise. Avec quelle couleur voulez-vous la prendre ?")
         else:
             couleur = route[1]
-        if joueur.main_cartes['Wagon'][couleur] == route[1]:
+        if joueur.main_wagon[couleur] == route[1]:
             # défausse des cartes de la main vers la défausse
             for k in range(route[1]):
                 self.defausse_wagon.append(
                     couleur)  # à voir : on a plusieurs solutions pour la défausse des cartes.
             # retrait des wagons de la main du joueur :
-            joueur.main_cartes['Wagon'][couleur] -= route[1]
+            joueur.main_wagon[couleur] -= route[1]
             # TODO: faire un accesseur en écriture pour vérifier qu'aucune entrée de wagons soient négatives.
             # ajout de la route au joueur :
             joueur.route_prise.append(nom_route)
@@ -722,9 +724,9 @@ class Partie(Jeu):
         self.pile_cartes_destination = self.melange_americain(self.pile_cartes_destination)
         for joueur in self.les_joueurs.values():
             for k in range(4):
-                joueur.main_cartes['Wagon'][self.pile_cartes_wagon.pop(0)] += 1
+                joueur.main_wagon[self.pile_cartes_wagon.pop(0)] += 1
             for i in range(3):
-                joueur.main_cartes['Destination'].append(self.pile_cartes_destination.pop(0))
+                joueur.main_destination.append(self.pile_cartes_destination.pop(0))
 
     def partie(self):
         """
@@ -767,7 +769,7 @@ class Partie(Jeu):
 
 
 if __name__ == '__main__':
-    p = Partie()
+    p = partie()
     # j = Jeu()
     # p.partie()
 

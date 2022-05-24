@@ -60,7 +60,7 @@ def Kruskal(liaisons, nombre_villes):
         if x != y :
             arbre_minimal.append((depart, arrivee, longueur))
             ed.Union(x,y)
-    return arbre_minimal, len(arbre_minimal)
+        return arbre_minimal
 
 class Score():
     """Classe qui implémente les différentes méthodes pour calculer les joueur.nb_points du jeu

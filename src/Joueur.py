@@ -5,14 +5,13 @@
 from abc import abstractmethod, ABCMeta, ABC
 import random as rd
 
-
-class Joueur():
+class Joueur:
     """
     Classe qui définit les attributs et cartes du joueur d'une partie.
     Il y aura ici les joueurs IA et humains. A nous de les définir comme on le souhaite.
     """
 
-    def __init__(self, nom_joueur, nom_couleur, points):
+    def __init__(self, nom_joueur, nom_couleur, points=0):
         self.nom_joueur: str = nom_joueur  # Nom du joueur
         self.wagons = 45  # Nombre de wagons maximum par joueur
         self.couleur = nom_couleur  # Définit la couleur du joueur
