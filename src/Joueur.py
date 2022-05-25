@@ -87,15 +87,15 @@ class Joueur:
         self.couleur = nom_couleur  # Définit la couleur du joueur
         self.nb_points = points  # Définit le marqueur de points du joueur
         self.__main_wagon = {
-            'violet': 0,
-            'blanc': 0,
-            'bleu': 0,
-            'jaune': 0,
-            'orange': 0,
-            'noir': 0,
-            'rouge': 0,
-            'vert': 0,
-            'locomotive': 0
+            "blanc": 0,
+            "bleu": 0,
+            "jaune": 0,
+            "noir": 0,
+            "orange": 0,
+            "rose": 0,
+            "rouge": 0,
+            "vert": 0,
+            "locomotive": 0
         }
         self.main_destination = []  # Réunit toutes les cartes Objectifs/Destination du joueur. Ne contient que les
         # noms des cartes.

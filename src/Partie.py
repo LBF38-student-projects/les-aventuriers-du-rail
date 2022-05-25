@@ -28,12 +28,12 @@ class Jeu(object):
         """
         self.dims_carte = (603, 380)  # TODO: à lier avec l'IHM
         self.carte_wagons = {
-            "violet": 12,
             "blanc": 12,
             "bleu": 12,
             "jaune": 12,
-            "orange": 12,
             "noir": 12,
+            "orange": 12,
+            "rose": 12,
             "rouge": 12,
             "vert": 12,
             "locomotive": 14
@@ -51,7 +51,7 @@ class Jeu(object):
             "Dallas to New York": 11,
             "Calgary to Salt Lake City": 7,
             "Calgary to Phoenix": 13,
-            "LA to Miami": 20,
+            "Los Angeles to Miami": 20,
             "Winnipeg to Little Rock": 11,
             "San Francisco to Atlanta": 17,
             "Kansas City to Houston": 5,
@@ -513,7 +513,8 @@ class Partie(Jeu):
             print("Non disponible pour le moment")
             # self.prendre_cartes_Destination()
 
-    def melange_cartes(self, pile_cartes: list):
+    @staticmethod
+    def melange_cartes(pile_cartes: list):
         """
         Mélange des cartes.
         Renvoie un paquet totalement mélangé aléatoirement.
@@ -525,7 +526,8 @@ class Partie(Jeu):
             pile_cartes[index1], pile_cartes[index2] = pile_cartes[index2], pile_cartes[index1]
         return pile_cartes
 
-    def melange_americain(self, paquet: list):
+    @staticmethod
+    def melange_americain(paquet: list):
         """
         Mélange les cartes à la façon américaine.
         Renvoie un paquet mélangé selon cette façon.

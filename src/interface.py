@@ -335,16 +335,28 @@ class Button:
 # TODO: créer une classe pour les texts inputs. Penser à faire une méthode pour renvoyer les valeurs des inputs
 
 class Text:
-    def __init__(self, text: str, pos: tuple, color="black"):
+    def __init__(self, text: str, width: int, height: int, color="black"):
         """Classe pour afficher du texte sur une fenêtre"""
         # Core attributes
+        self.width = width
+        self.height = height
         self.text = text
-        self.pos = pos
+        self.pos = (self.width, self.height)
         self.color = color
 
         # Text initialization
         self.base_font = pygame.font.Font(None, 32)
         self.text_surface = self.base_font.render(text, True, color)
+
+    @property
+    def pos(self):
+        """Accesseur en lecture de pos"""
+        return self.width, self.height
+
+    @pos.setter
+    def pos(self, value: tuple):
+        """Accesseur en écriture de pos"""
+        self.__pos = value
 
     def show(self, screen):
         screen.blit(self.text_surface, self.pos)
@@ -357,9 +369,11 @@ class IhmPartie:
         # Lien avec la partie :
         self.partie = partie
         self.count_joueur = 0
+
         # Pour tester l'IHM:
         self.partie.les_joueurs["TestPlayer1"] = Joueur("TestPlayer1", "random")
         self.partie.les_joueurs["TestPlayer2"] = Joueur("TestPlayer2", "random")
+
         # Initialize the screen
         self.size = width, height = 1920 // 2, 1080 // 2
         self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
@@ -375,6 +389,57 @@ class IhmPartie:
         self.button_back = Button('Back', (20, self.screen.get_height() - 50))
         self.button_start = Button('Start',
                                    (self.button_back.pos[0], self.button_back.pos[1] - 50))
+
+        # Images import
+        # basics
+        self.plateau = pygame.image.load("img/carte_usa.jpg")
+        self.dos_destination = pygame.image.load("img/dos_destination.jpg")
+        self.table_points = pygame.image.load("img/table_points.jpg")
+
+        # Cartes wagons
+        self.wagon_blanc = pygame.image.load("img/wagon_blanc.jpg")
+        self.wagon_bleu = pygame.image.load("img/wagon_bleu.jpg")
+        self.wagon_jaune = pygame.image.load("img/wagon_jaune.jpg")
+        self.wagon_noir = pygame.image.load("img/wagon_noir.jpg")
+        self.wagon_orange = pygame.image.load("img/wagon_orange.jpg")
+        self.wagon_rose = pygame.image.load("img/wagon_rose.jpg")
+        self.wagon_rouge = pygame.image.load("img/wagon_rouge.jpg")
+        self.wagon_vert = pygame.image.load("img/wagon_vert.jpg")
+        self.locomotive = pygame.image.load("img/locomotive.jpg")
+        self.dos_wagon = pygame.image.load("img/dos_wagon.jpg")
+        self.dos_wagon = pygame.transform.rotate(self.dos_wagon, 90)
+
+        # Cartes Destination
+        self.los_angeles_new_york = pygame.image.load("img/los_angeles_new_york.jpg")
+        self.duluth_houston = pygame.image.load("img/duluth_houston.jpg")
+        self.sault_ste_marie_nashville = pygame.image.load("img/sault_ste_marie_nashville.jpg")
+        self.new_york_atlanta = pygame.image.load("img/new_york_atlanta.jpg")
+        self.portland_nashville = pygame.image.load("img/portland_nashville.jpg")
+        self.vancouver_montreal = pygame.image.load("img/vancouver_montreal.jpg")
+        self.duluth_el_paso = pygame.image.load("img/duluth_el_paso.jpg")
+        self.toronto_miami = pygame.image.load("img/toronto_miami.jpg")
+        self.portland_phoenix = pygame.image.load("img/portland_phoenix.jpg")
+        self.dallas_new_york = pygame.image.load("img/dallas_new_york.jpg")
+        self.calgary_salt_lake_city = pygame.image.load("img/calgary_salt_lake_city.jpg")
+        self.calgary_phoenix = pygame.image.load("img/calgary_phoenix.jpg")
+        self.los_angeles_miami = pygame.image.load("img/los_angeles_miami.jpg")
+        self.winnipeg_little_rock = pygame.image.load("img/winnipeg_little_rock.jpg")
+        self.san_francisco_atlanta = pygame.image.load("img/san_francisco_atlanta.jpg")
+        self.kansas_city_houston = pygame.image.load("img/kansas_city_houston.jpg")
+        self.los_angeles_chicago = pygame.image.load("img/los_angeles_chicago.jpg")
+        self.denver_pittsburgh = pygame.image.load("img/denver_pittsburgh.jpg")
+        self.chicago_santa_fe = pygame.image.load("img/chicago_santa_fe.jpg")
+        self.vancouver_santa_fe = pygame.image.load("img/vancouver_santa_fe.jpg")
+        self.boston_miami = pygame.image.load("img/boston_miami.jpg")
+        self.chicago_new_orleans = pygame.image.load("img/chicago_new_orleans.jpg")
+        self.montreal_atlanta = pygame.image.load("img/montreal_atlanta.jpg")
+        self.seattle_new_york = pygame.image.load("img/seattle_new_york.jpg")
+        self.denver_el_paso = pygame.image.load("img/denver_el_paso.jpg")
+        self.helena_los_angeles = pygame.image.load("img/helena_los_angeles.jpg")
+        self.winnipeg_houston = pygame.image.load("img/winnipeg_houston.jpg")
+        self.montreal_new_orleans = pygame.image.load("img/montreal_new_orleans.jpg")
+        self.sault_ste_marie_oklahoma_city = pygame.image.load("img/sault_ste_marie_oklahoma_city.jpg")
+        self.seattle_los_angeles = pygame.image.load("img/seattle_los_angeles.jpg")
 
     def launch_game(self):
         """Lance le jeu et la fenêtre d'accueil du jeu"""
@@ -430,7 +495,7 @@ class IhmPartie:
         screen_partie.blit(background, (0, 0))
 
         # Text
-        text_partie = Text("Nouvelle Partie", (screen_partie.get_width() // 2, screen_partie.get_height() // 2))
+        text_partie = Text("Nouvelle Partie", 20, 20)
 
         run = True
         while run:
@@ -447,10 +512,11 @@ class IhmPartie:
             if self.button_start.pressed:
                 self.button_start.pressed = False
                 # self.partie.partie(self)
+                self.partie.preparation_partie()
                 for joueur in self.partie.les_joueurs.values():
                     IhmJoueur().launch(joueur)
+                    self.clock.tick(60)
 
-            text_partie.show(screen_partie)
             background = pygame.transform.scale(background, screen_partie.get_size())
             screen_partie.blit(background, (0, 0))
             # Draw buttons on the menu screen
@@ -459,11 +525,11 @@ class IhmPartie:
 
             # Text & Text inputs
             # FIXME: remplacer tous les textes ci-dessous par des texts inputs
-            self.text_nb_joueurs = Text("Nombre de joueurs pour la partie", ((self.screen.get_width() - 50) // 2,
-                                                                             (self.screen.get_height() - 100) // 2))
-            self.text_joueur = Text("Nom et couleur du joueur", (self.text_nb_joueurs.pos[0],
-                                                                 self.text_nb_joueurs.pos[1] + 20))
-
+            self.text_nb_joueurs = Text("Nombre de joueurs pour la partie", (self.screen.get_width() - 100) // 2,
+                                        (self.screen.get_height() - 250) // 2)
+            self.text_joueur = Text("Nom et couleur du joueur", self.text_nb_joueurs.pos[0],
+                                    self.text_nb_joueurs.pos[1] + 50)
+            text_partie.show(screen_partie)
             # Affichage des textes
             self.text_nb_joueurs.show(self.screen)
             self.text_joueur.show(self.screen)
@@ -483,7 +549,7 @@ class IhmPartie:
         screen_options.blit(background, (0, 0))
 
         # Text
-        text_options = Text("Options du jeu", (screen_options.get_width() // 2, screen_options.get_height() // 2))
+        text_options = Text("Options du jeu", screen_options.get_width() // 2, screen_options.get_height() // 2)
 
         run = True
         while run:
@@ -498,12 +564,11 @@ class IhmPartie:
                 self.button_back.pressed = False
                 self.launch_game()
 
-            text_options.show(screen_options)
             background = pygame.transform.scale(background, screen_options.get_size())
             screen_options.blit(background, (0, 0))
             # Draw buttons on the menu screen
             self.button_back.draw(self.screen)
-
+            text_options.show(screen_options)
             # Update current screen
             pygame.display.update()
             self.clock.tick(60)
@@ -520,8 +585,10 @@ class IhmPartie:
         screen_credits.blit(background, (0, 0))
 
         # Text
-        text_credits = Text("Crédits du jeu", (screen_credits.get_width() // 2, screen_credits.get_height() // 2))
-
+        title_credits = Text("Crédits du jeu", screen_credits.get_width() // 2, screen_credits.get_height() // 2)
+        plain_text="paragraphe sur les crédits\nBonjour, je suis un paragraphe\tEt ceux-ci sont les crédits" \
+                   "\nMathis URIEN & Kenza BELAID"
+        text_credits=Text(plain_text, title_credits.width, title_credits.height+50)
         run = True
         while run:
             for event in pygame.event.get():
@@ -535,11 +602,12 @@ class IhmPartie:
                 self.button_back.pressed = False
                 self.launch_game()
 
-            text_credits.show(screen_credits)
             background = pygame.transform.scale(background, screen_credits.get_size())
             screen_credits.blit(background, (0, 0))
             # Draw buttons on the menu screen
             self.button_back.draw(self.screen)
+            title_credits.show(screen_credits)
+            text_credits.show(screen_credits)
 
             # Update current screen
             pygame.display.update()
@@ -550,34 +618,59 @@ class IhmJoueur(IhmPartie):
     def __init__(self):
         super().__init__()
 
-        # Images import
-        self.plateau = pygame.image.load("img/carte_usa.jpg")
-        self.wagon_blanc = pygame.image.load("img/wagon_blanc.jpg")
-        self.wagon_bleu = pygame.image.load("img/wagon_bleu.jpg")
-        self.wagon_jaune = pygame.image.load("img/wagon_jaune.jpg")
-        self.wagon_noir = pygame.image.load("img/wagon_noir.jpg")
-        self.wagon_orange = pygame.image.load("img/wagon_orange.jpg")
-        self.wagon_rose = pygame.image.load("img/wagon_rose.jpg")
-        self.wagon_rouge = pygame.image.load("img/wagon_rouge.jpg")
-        self.wagon_vert = pygame.image.load("img/wagon_vert.jpg")
-        self.locomotive = pygame.image.load("img/locomotive.jpg")
-        self.dos_destination = pygame.image.load("img/dos_destination.jpg")
-        self.table_points = pygame.image.load("img/table_points.jpg")
-        self.dos_wagon = pygame.image.load("img/dos_wagon.jpg")
-        self.dos_wagon = pygame.transform.rotate(self.dos_wagon, 90)
-        self.les_wagons = [self.wagon_blanc, self.wagon_bleu, self.wagon_jaune, self.wagon_noir, self.wagon_orange,
-                           self.wagon_rose, self.wagon_rouge,
-                           self.wagon_vert, self.locomotive]
+        # Core attributes
+        self.les_wagons = {
+            "blanc": self.wagon_blanc,
+            "bleu": self.wagon_bleu,
+            "jaune": self.wagon_jaune,
+            "noir": self.wagon_noir,
+            "orange": self.wagon_orange,
+            "rose": self.wagon_rose,
+            "rouge": self.wagon_rouge,
+            "vert": self.wagon_vert,
+            "locomotive": self.locomotive
+        }
+        self.les_destinations={
+            "Los Angeles to New York": self.los_angeles_new_york,
+            "Duluth to Houston": self.duluth_houston,
+            "Sault Ste Marie to Nashville": self.sault_ste_marie_nashville,
+            "New York to Atlanta": self.new_york_atlanta,
+            "Portland to Nashville": self.portland_nashville,
+            "Vancouver to Montreal": self.vancouver_montreal,
+            "Duluth to El Paso": self.duluth_el_paso,
+            "Toronto to Miami": self.toronto_miami,
+            "Portland to Phoenix": self.portland_phoenix,
+            "Dallas to New York": self.dallas_new_york,
+            "Calgary to Salt Lake City": self.calgary_salt_lake_city,
+            "Calgary to Phoenix": self.calgary_phoenix,
+            "Los Angeles to Miami": self.los_angeles_miami,
+            "Winnipeg to Little Rock": self.winnipeg_little_rock,
+            "San Francisco to Atlanta": self.san_francisco_atlanta,
+            "Kansas City to Houston": self.kansas_city_houston,
+            "Los Angeles to Chicago": self.los_angeles_chicago,
+            "Denver to Pittsburgh": self.denver_pittsburgh,
+            "Chicago to Santa Fe": self.chicago_santa_fe,
+            "Vancouver to Santa Fe": self.vancouver_santa_fe,
+            "Boston to Miami": self.boston_miami,
+            "Chicago to New Orleans": self.chicago_new_orleans,
+            "Montreal to Atlanta": self.montreal_atlanta,
+            "Seattle to New York": self.seattle_new_york,
+            "Denver to El Paso": self.denver_el_paso,
+            "Helena to Los Angeles": self.helena_los_angeles,
+            "Winnipeg to Houston": self.winnipeg_houston,
+            "Montreal to New Orleans": self.montreal_new_orleans,
+            "Sault Ste Marie to Oklahoma City": self.sault_ste_marie_oklahoma_city,
+            "Seattle to Los Angeles": self.seattle_los_angeles
+        }
         self.size_plateau = self.plateau.get_size()
 
         # basic font for user typed
         self.base_font = pygame.font.Font(None, 32)
         self.user_text = ""
 
-        self.button_fin_tour = Button("Fin du tour", (20, 10))
-        # self.joueur=joueur
-
-    # def affichage_pioche(self,pioche):
+        # Buttons
+        self.button_fin_tour = Button("Fin du tour", (self.screen.get_width() - 220, 10))
+        self.button_test = Button("Test", (self.screen.get_width() - 20, 10))
 
     def launch(self, joueur):
         run = True
@@ -616,7 +709,7 @@ class IhmJoueur(IhmPartie):
             self.low_bar = pygame.Rect(0, (self.screen.get_height() + self.plateau.get_height()) // 2 + 5,
                                        self.screen.get_width(),
                                        self.screen.get_height())
-            pygame.draw.rect(self.screen, "blue", self.low_bar)
+            pygame.draw.rect(self.screen, "darkslategray", self.low_bar)
 
             # textes
             self.text_surface = self.base_font.render(self.user_text, True, (255, 255, 255))
@@ -629,34 +722,60 @@ class IhmJoueur(IhmPartie):
                              (10, (self.screen.get_height() + self.plateau.get_height()) // 2
                               + self.questions_surface.get_height() + 10))
 
-            # Affichage de la pile
+            # Affichage de la pile + pioche en début de file
+            for i in range(5):
+                offset = 1.5 * i
+                self.screen.blit(self.dos_wagon,
+                                 (-self.dos_wagon.get_width() // 2 + offset,
+                                  (self.screen.get_height() - self.plateau.get_height()) // 2
+                                  - self.dos_wagon.get_height() - 10 + offset))
             for k in range(5):
-                self.screen.blit(self.wagon_bleu,
-                                 (50, (self.screen.get_height() - self.plateau.get_height()) // 2
-                                  + self.wagon_bleu.get_height() * k + k * 5))
+                # DONE: link this to the current partie
+                current_wagon = self.les_wagons[self.partie.pile_cartes_wagon[k]]
+                self.screen.blit(current_wagon,
+                                 (current_wagon.get_width() // 4,
+                                  (self.screen.get_height() - self.plateau.get_height()) // 2 +
+                                  (current_wagon.get_height() + 5) * k))
 
             # Affichage texte : Pioche
-            self.pioche_surface = self.base_font.render("Pioche", True, "black")
-            self.screen.blit(self.pioche_surface,
-                             (50, (self.screen.get_height() - self.plateau.get_height()) // 2
-                              - self.pioche_surface.get_height()))
+            # self.pioche_surface = self.base_font.render("Pioche", True, "black")
+            # self.screen.blit(self.pioche_surface,
+            #                  (50, (self.screen.get_height() - self.plateau.get_height()) // 2
+            #                   - self.pioche_surface.get_height()))
 
-            # Affichage des cartes Destination
-            for i in range(3):
-                self.screen.blit(self.dos_destination, ((self.screen.get_width() + self.plateau.get_width()) // 2 + 20,
-                                                        (self.screen.get_height() - self.plateau.get_height()) // 2 + (
-                                                                self.dos_destination.get_height() + 5) * i))
-            # Affichage texte : Pioche
-            self.destination_surface = self.base_font.render("Destination", True, "black")
-            self.screen.blit(self.destination_surface,
-                             ((self.screen.get_width() - self.destination_surface.get_width()) - 20,
-                              (
-                                          self.screen.get_height() - self.plateau.get_height()) // 2 - self.pioche_surface.get_height()))
+            # Affichage des cartes Destination + pioche Destination
+            for k in range(5): # Pioche Destination
+                offset = 1.5 * k
+                self.screen.blit(self.dos_destination,
+                                 (self.screen.get_width() - self.dos_destination.get_width() // 2 - offset,
+                                  (self.screen.get_height() - self.plateau.get_height()) // 2 - 10 + offset))
+            for i in range(3): # Cartes joueur Destination
+                # DONE: link this to player's ones
+                if joueur.main_destination:
+                    current_destination=self.les_destinations[joueur.main_destination[i]]
+                else:
+                    current_destination=self.dos_destination
+                current_destination=pygame.transform.scale(current_destination,self.dos_destination.get_size())
+                self.screen.blit(current_destination, ((self.screen.get_width() + self.plateau.get_width()) // 2 + 20,
+                                                        (self.screen.get_height() - self.plateau.get_height()) // 2
+                                                        + self.dos_destination.get_height() + 10 +
+                                                        (self.dos_destination.get_height() + 5) * i))
+            # Affichage texte : Destination
+            # self.destination_surface = self.base_font.render("Destination", True, "black")
+            # self.screen.blit(self.destination_surface,
+            #                  ((self.screen.get_width() - self.destination_surface.get_width()) - 20,
+            #                   (self.screen.get_height() - self.plateau.get_height()) // 2 - self.pioche_surface.get_height()))
+
             # Affichage des cartes de la main du joueur
-            for w, wagon in enumerate(self.les_wagons):
-                self.screen.blit(wagon,
-                                 (self.questions_surface.get_width() + 20 + (wagon.get_width() + 5) * w,
-                                  (self.screen.get_height() + self.plateau.get_height()) // 2 + 10))
+            for w, wagon in enumerate(joueur.main_wagon.items()):
+                # DONE: lier avec la main du joueur
+                img_wagon = self.les_wagons[wagon[0]]
+                pos = (self.questions_surface.get_width() + 20 + img_wagon.get_width() * 6//10 * w,
+                       (self.screen.get_height() + self.plateau.get_height()) // 2 + 10)
+                nb_wagon = Text(str(wagon[1]), pos[0] + 5, pos[1] + img_wagon.get_height())
+                nb_wagon.height = pos[1] + img_wagon.get_height() - nb_wagon.text_surface.get_height()
+                self.screen.blit(img_wagon, pos)
+                nb_wagon.show(self.screen)
 
             # screen.blit(dos_wagon, ((screen.get_width() + plateau.get_width()) // 2 + 10, 50))
 
@@ -664,7 +783,7 @@ class IhmJoueur(IhmPartie):
             self.button_fin_tour.draw(self.screen)
 
             # Affichage du compteur de points
-            pygame.draw.circle(self.screen, "darkgrey", [self.screen.get_width(), self.screen.get_height()],
+            pygame.draw.circle(self.screen, "lightsteelblue", [self.screen.get_width(), self.screen.get_height()],
                                (self.screen.get_height() - self.plateau.get_height()) // 2 - 5, 0)
             nb_points = joueur.nb_points
             points_surface = self.base_font.render(str(nb_points), True, "black")
@@ -672,13 +791,24 @@ class IhmJoueur(IhmPartie):
                                               self.screen.get_height() - (points_surface.get_height() + 20)))
 
             # Affichage du titre/pseudo du joueur (?)
-            pygame.draw.polygon(self.screen, "darkgrey",
+            pygame.draw.polygon(self.screen, joueur.couleur,
                                 [[self.screen.get_width() // 2 - 250, 0], [self.screen.get_width() // 2 + 250, 0],
                                  [self.screen.get_width() // 2 + 225, 35], [self.screen.get_width() // 2 - 225, 35]])
-            title_surface = self.base_font.render(joueur.nom_joueur, True, "black")
+            if joueur.couleur == "black":
+                title_color = "white"
+            else:
+                title_color = "black"
+            title_surface = self.base_font.render(joueur.nom_joueur, True, title_color)
             self.screen.blit(title_surface, (self.screen.get_width() // 2 - title_surface.get_width() // 2, 10))
 
+            # Bouton test pour tester les fonctionnalités
+            # self.button_test.draw(self.screen)
+            # if self.button_test.pressed:
+            #     self.button_test.pressed = not self.button_test.pressed
+            #     joueur.nb_points += 1
+
             pygame.display.update()
+            self.clock.tick(60)
 
 
 def text_input():
