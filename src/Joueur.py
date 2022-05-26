@@ -100,6 +100,7 @@ class Joueur:
         self.main_destination = []  # Réunit toutes les cartes Objectifs/Destination du joueur. Ne contient que les
         # noms des cartes.
         self.route_prise = []
+        self.IA=False # Permet de savoir si le joueur est un ordi ou non
 
     # TODO: if color = random alors assigner une couleur random
 

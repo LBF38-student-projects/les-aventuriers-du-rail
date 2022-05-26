@@ -410,7 +410,7 @@ class IhmPartie:
         self.button_credits = Button('Credits',
                                      (self.button_options.pos[0],
                                       self.button_options.pos[1] + self.button_options.height + 10))
-        self.button_back = Button('Back', (20, self.screen.get_height() - 50))
+        self.button_back = Button('Back', (self.screen.get_width()-220, self.screen.get_height() - 50))
         self.button_start = Button('Start',
                                    (self.button_back.pos[0], self.button_back.pos[1] - 50))
 
@@ -471,7 +471,7 @@ class IhmPartie:
     def launch_game(self):
         """Lance le jeu et la fenêtre d'accueil du jeu"""
         background, bg_rect = load_png("menu_principal.jpg")
-        test_input = TextInput()
+        # test_input = TextInput()
         run = True
         while run:
             clicking = False
@@ -485,7 +485,7 @@ class IhmPartie:
                 if event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
                         clicking = True
-                test_input.event_handler(event)
+                # test_input.event_handler(event)
             if self.button_play.pressed:
                 self.button_play.pressed = False
                 self.launch_partie()
@@ -511,9 +511,9 @@ class IhmPartie:
             self.button_play.draw(self.screen)
             self.button_options.draw(self.screen)
             self.button_credits.draw(self.screen)
-            input_test = test_input.input(clicking, self.screen)
-            if input_test:
-                print(input_test)
+            # input_test = test_input.input(clicking, self.screen)
+            # if input_test:
+            #     print(input_test)
 
             # Update screen
             pygame.display.flip()
@@ -542,7 +542,36 @@ class IhmPartie:
 
         # Text
         text_partie = Text("Nouvelle Partie", 20, 20)
-
+        # Text inputs
+        self.input_nb_joueurs_tot = TextInput("Nombre total de joueurs pour la partie",
+                                              (text_partie.pos[0], text_partie.pos[1] + text_partie.height + 50))
+        self.input_nom_joueur = TextInput("Nom du joueur",
+                                          (self.input_nb_joueurs_tot.rect_input.x,
+                                           self.input_nb_joueurs_tot.rect_input.y))
+        self.input_couleur_joueur = TextInput("Couleur du joueur",
+                                              (
+                                                  self.input_nb_joueurs_tot.rect_input.x + self.input_nom_joueur.rect_input.width + 20,
+                                                  self.input_nom_joueur.rect_input.y))
+        self.input_nb_joueurs_IA = TextInput("Nombre de joueurs IAs",
+                                             (
+                                                 self.input_nb_joueurs_tot.rect_input.x + self.input_nb_joueurs_tot.rect_input.width + 20,
+                                                 self.input_nb_joueurs_tot.rect_input.y))
+        # variables pour les inputs
+        nb_joueurs_tot = False
+        bool_tot = False
+        nb_joueurs_ia = False
+        bool_ia = False
+        input_joueurs = []
+        les_inputs = [self.input_nb_joueurs_tot, self.input_nb_joueurs_IA]
+        #  pour tous les inputs des joueurs de la partie. Inputs max de 5 joueurs par partie.
+        for k in range(5):
+            input_joueurs.append([TextInput(f"Nom du joueur {k + 1}",
+                                            (self.input_nb_joueurs_tot.rect_input.x,
+                                             self.input_nb_joueurs_tot.rect_input.y)),
+                                  TextInput(f"Couleur du joueur {k + 1}",
+                                            (self.input_nb_joueurs_tot.rect_input.x
+                                             + self.input_nom_joueur.rect_input.width * 3 // 4,
+                                             self.input_nb_joueurs_tot.rect_input.y))])
         run = True
         while run:
             clicking = False
@@ -556,6 +585,12 @@ class IhmPartie:
                 if event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
                         clicking = True
+                for INPUT in les_inputs:  # Pour faire tous les inputs définis au dessus. Penser à update la liste.
+                    INPUT.event_handler(event)
+                for inputs in input_joueurs:
+                    input_nom, input_couleur = inputs
+                    input_nom.event_handler(event)
+                    input_couleur.event_handler(event)
             if self.button_back.pressed:
                 self.button_back.pressed = False
                 self.launch_game()
@@ -565,8 +600,8 @@ class IhmPartie:
                 # FIXME: vérifier attributions des cartes au début du jeu. Améliorer le lien avec le backend.
                 # FIXME: Améliorer les fonctionnalités des buttons => refonte si tps ? (problème de clicker 1x)
                 self.partie.preparation_partie()
-                print(self.partie.pile_cartes_destination)
-                print(self.partie.pile_cartes_wagon)
+                print(len(self.partie.pile_cartes_destination))
+                print(len(self.partie.pile_cartes_wagon))
                 for joueur in self.partie.les_joueurs.values():
                     IhmJoueur().launch(joueur)
                     # self.clock.tick(60)
@@ -578,15 +613,48 @@ class IhmPartie:
             self.button_start.draw(self.screen)
 
             # Text & Text inputs
-            # FIXME: remplacer tous les textes ci-dessous par des texts inputs
-            self.text_nb_joueurs = Text("Nombre de joueurs pour la partie", (self.screen.get_width() - 100) // 2,
-                                        (self.screen.get_height() - 250) // 2)
-            self.text_joueur = Text("Nom et couleur du joueur", self.text_nb_joueurs.pos[0],
-                                    self.text_nb_joueurs.pos[1] + 50)
-            text_partie.show(screen_partie)
             # Affichage des textes
-            self.text_nb_joueurs.show(self.screen)
-            self.text_joueur.show(self.screen)
+            text_partie.show(screen_partie)
+
+            # Affichage des texts inputs
+            # TODO: ajouter une fonctionnalité d'affichage du texte une fois que l'on a envoyé.
+            #  Est-ce possible ? ou chiant ? A voir.
+            self.input_nb_joueurs_tot.input(clicking, self.screen)
+            self.input_nb_joueurs_IA.input(clicking, self.screen)
+            if self.input_nb_joueurs_tot.toggle_return:
+                nb_joueurs_tot = self.input_nb_joueurs_tot.return_input()
+            if self.input_nb_joueurs_IA.toggle_return:
+                nb_joueurs_ia = self.input_nb_joueurs_IA.return_input()
+            if nb_joueurs_tot:
+                bool_tot = True
+            if nb_joueurs_ia:
+                bool_ia = True
+            if bool_tot and bool_ia:
+                nb_joueurs_tot = int(nb_joueurs_tot)
+                nb_joueurs_ia = int(nb_joueurs_ia)
+                # print(nb_joueurs_tot,nb_joueurs_ia)
+                # nb_joueurs_tot,nb_joueurs_ia=5,2
+                for k, inputs in enumerate(input_joueurs[:nb_joueurs_tot - nb_joueurs_ia]):
+                    # for k, inputs in enumerate(input_joueurs[:5]):
+                    input_nom, input_couleur = inputs
+                    nom_joueur, couleur_joueur = False, False
+                    x = self.input_nb_joueurs_tot.rect_input.x
+                    y = self.input_nb_joueurs_tot.rect_input.y + self.input_nb_joueurs_tot.rect_input.height + 20
+                    input_nom.rect_input.update(x, y + 65 * k, input_nom.rect_input.width, input_nom.rect_input.height)
+                    input_couleur.rect_input.update(x + input_nom.rect_input.width + 20,
+                                                    y + 65 * k, input_couleur.rect_input.width,
+                                                    input_couleur.rect_input.height)
+                    input_nom.input(clicking, self.screen)
+                    input_couleur.input(clicking, self.screen)
+                    if input_nom.toggle_return:
+                        nom_joueur = input_nom.return_input()
+                    if input_couleur.toggle_return:
+                        couleur_joueur = input_couleur.return_input()
+                    if nom_joueur:
+                        print(nom_joueur)
+                    if couleur_joueur:
+                        print(couleur_joueur)
+
             # Update current screen
             pygame.display.update()
             self.clock.tick(60)
@@ -906,7 +974,8 @@ class TextInput():
         self.active = False
 
         # Text
-        self.base_font = pygame.font.Font(None, 24)
+        self.font_size = 24
+        self.base_font = pygame.font.Font(None, self.font_size)
         self.text_input = ""
 
         # Title
@@ -951,6 +1020,7 @@ class TextInput():
         self.text_surf = self.base_font.render(self.text_input, True, self.text_color)
         self.show(screen)
 
+    def return_input(self):
         if self.toggle_return:
             returned_text = self.text_input
             self.text_input = ""
@@ -964,7 +1034,7 @@ class TextInput():
                 self.text_input = self.text_input[:-1]
             elif self.active:
                 self.text_input += event.unicode
-            if event.key == K_RETURN:
+            if event.key == K_RETURN and self.active:
                 self.toggle_return = True
 
 
