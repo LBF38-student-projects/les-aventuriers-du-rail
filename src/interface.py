@@ -268,6 +268,33 @@ def load_png(name):
     return image, image.get_rect()
 
 
+def text_objects(text, font):
+    paragraph_size = (600, 500)
+    font_size = font.get_height()
+
+    # Step 1
+    paragraph_surface = pygame.Surface(paragraph_size)
+
+    # Set colorkey to fake transparent paragraph surface
+    paragraph_surface.fill((255, 255, 255))
+    paragraph_surface.set_colorkey((255, 255, 255))
+
+    # Step 2
+    split_lines = text.splitlines()
+
+    # Step 3: center the text vertically
+    off_set = (paragraph_size[1] - len(split_lines) * (font_size + 1)) // 2
+
+    # Step 4
+    for idx, line in enumerate(split_lines):
+        current_text_line = font.render(line, False, (0, 0, 0))
+        current_position = (0, idx * font_size + off_set)
+        paragraph_surface.blit(current_text_line, current_position)
+
+    # Step 5
+    return paragraph_surface, paragraph_size
+
+
 class Button:
     def __init__(self, text, pos, width=200, height=40, elevation=5):
         # Core attributes
@@ -314,6 +341,7 @@ class Button:
     def reposition(self):
         self.top_rect.x, self.top_rect.y = self.pos
         self.bottom_rect.x, self.bottom_rect.y = self.pos
+        self.original_y_pos = self.pos[1]
 
     def check_click(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -370,10 +398,6 @@ class IhmPartie:
         self.partie = partie
         self.count_joueur = 0
 
-        # Pour tester l'IHM:
-        self.partie.les_joueurs["TestPlayer1"] = Joueur("TestPlayer1", "random")
-        self.partie.les_joueurs["TestPlayer2"] = Joueur("TestPlayer2", "random")
-
         # Initialize the screen
         self.size = width, height = 1920 // 2, 1080 // 2
         self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
@@ -395,6 +419,9 @@ class IhmPartie:
         self.plateau = pygame.image.load("img/carte_usa.jpg")
         self.dos_destination = pygame.image.load("img/dos_destination.jpg")
         self.table_points = pygame.image.load("img/table_points.jpg")
+        # window icon
+        self.game_icon = pygame.image.load("img/cargo-train.png")
+        pygame.display.set_icon(self.game_icon)
 
         # Cartes wagons
         self.wagon_blanc = pygame.image.load("img/wagon_blanc.jpg")
@@ -444,16 +471,21 @@ class IhmPartie:
     def launch_game(self):
         """Lance le jeu et la fenêtre d'accueil du jeu"""
         background, bg_rect = load_png("menu_principal.jpg")
-
+        test_input = TextInput()
         run = True
         while run:
+            clicking = False
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN:
+                if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
                         run = False
+                if event.type == MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        clicking = True
+                test_input.event_handler(event)
             if self.button_play.pressed:
                 self.button_play.pressed = False
                 self.launch_partie()
@@ -479,8 +511,12 @@ class IhmPartie:
             self.button_play.draw(self.screen)
             self.button_options.draw(self.screen)
             self.button_credits.draw(self.screen)
+            input_test = test_input.input(clicking, self.screen)
+            if input_test:
+                print(input_test)
 
-            pygame.display.update()
+            # Update screen
+            pygame.display.flip()
             self.clock.tick(60)
 
     def launch_partie(self):
@@ -488,6 +524,16 @@ class IhmPartie:
         # Core attributes
         screen_partie = pygame.display.set_mode(self.size, pygame.RESIZABLE)
         pygame.display.set_caption("Les aventuriers du rail - Nouvelle Partie")
+
+        # Nouvelle partie :
+        self.partie = Partie()
+        self.count_joueur = 0
+
+        # Pour tester l'IHM:
+        self.partie.les_joueurs["TestPlayer1"] = Joueur("TestPlayer1", "random")
+        self.partie.les_joueurs["TestPlayer2"] = Joueur("TestPlayer2", "random")
+        self.partie.ordre.append("TestPlayer1")
+        self.partie.ordre.append("TestPlayer2")
 
         # Default setup for the menu screen
         background, bg_rect = load_png("ticket_to_ride.jpg")
@@ -499,6 +545,7 @@ class IhmPartie:
 
         run = True
         while run:
+            clicking = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -506,16 +553,23 @@ class IhmPartie:
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_ESCAPE:
                         run = False
+                if event.type == MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        clicking = True
             if self.button_back.pressed:
                 self.button_back.pressed = False
                 self.launch_game()
             if self.button_start.pressed:
                 self.button_start.pressed = False
                 # self.partie.partie(self)
+                # FIXME: vérifier attributions des cartes au début du jeu. Améliorer le lien avec le backend.
+                # FIXME: Améliorer les fonctionnalités des buttons => refonte si tps ? (problème de clicker 1x)
                 self.partie.preparation_partie()
+                print(self.partie.pile_cartes_destination)
+                print(self.partie.pile_cartes_wagon)
                 for joueur in self.partie.les_joueurs.values():
                     IhmJoueur().launch(joueur)
-                    self.clock.tick(60)
+                    # self.clock.tick(60)
 
             background = pygame.transform.scale(background, screen_partie.get_size())
             screen_partie.blit(background, (0, 0))
@@ -553,13 +607,16 @@ class IhmPartie:
 
         run = True
         while run:
+            clicking = False
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN:
+                if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
                         run = False
+                if event.type == MOUSEBUTTONDOWN:
+                    clicking = True
             if self.button_back.pressed:
                 self.button_back.pressed = False
                 self.launch_game()
@@ -586,9 +643,9 @@ class IhmPartie:
 
         # Text
         title_credits = Text("Crédits du jeu", screen_credits.get_width() // 2, screen_credits.get_height() // 2)
-        plain_text="paragraphe sur les crédits\nBonjour, je suis un paragraphe\tEt ceux-ci sont les crédits" \
-                   "\nMathis URIEN & Kenza BELAID"
-        text_credits=Text(plain_text, title_credits.width, title_credits.height+50)
+        plain_text = """paragraphe sur les crédits\nBonjour, je suis un paragraphe\tEt ceux-ci sont les crédits
+        \nMathis URIEN & Kenza BELAID"""
+        text_credits = Text(plain_text, title_credits.width, title_credits.height + 50)
         run = True
         while run:
             for event in pygame.event.get():
@@ -607,7 +664,9 @@ class IhmPartie:
             # Draw buttons on the menu screen
             self.button_back.draw(self.screen)
             title_credits.show(screen_credits)
-            text_credits.show(screen_credits)
+            # text_credits.show(screen_credits)
+            paragraph_surface, paragraph_size = text_objects(plain_text, pygame.font.Font(None, 32))
+            self.screen.blit(paragraph_surface, paragraph_size)
 
             # Update current screen
             pygame.display.update()
@@ -630,7 +689,7 @@ class IhmJoueur(IhmPartie):
             "vert": self.wagon_vert,
             "locomotive": self.locomotive
         }
-        self.les_destinations={
+        self.les_destinations = {
             "Los Angeles to New York": self.los_angeles_new_york,
             "Duluth to Houston": self.duluth_houston,
             "Sault Ste Marie to Nashville": self.sault_ste_marie_nashville,
@@ -667,14 +726,17 @@ class IhmJoueur(IhmPartie):
         # basic font for user typed
         self.base_font = pygame.font.Font(None, 32)
         self.user_text = ""
+        self.interaction_joueur = "Interaction avec le joueur"
 
         # Buttons
         self.button_fin_tour = Button("Fin du tour", (self.screen.get_width() - 220, 10))
         self.button_test = Button("Test", (self.screen.get_width() - 20, 10))
 
     def launch(self, joueur):
+        mx, my = -1, -1
         run = True
         while run:
+            clicking = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -695,6 +757,8 @@ class IhmJoueur(IhmPartie):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mx, my = pygame.mouse.get_pos()
                     print((mx, my))
+                    if event.button == 1:
+                        clicking = True
                 if event.type == pygame.VIDEORESIZE:
                     self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
             if self.button_fin_tour.pressed:
@@ -713,7 +777,7 @@ class IhmJoueur(IhmPartie):
 
             # textes
             self.text_surface = self.base_font.render(self.user_text, True, (255, 255, 255))
-            self.questions_surface = self.base_font.render("Interaction avec le joueur", True, "black")
+            self.questions_surface = self.base_font.render(self.interaction_joueur, True, "black")
 
             # Affichage texte pour interaction joueur
             self.screen.blit(self.questions_surface,
@@ -723,19 +787,25 @@ class IhmJoueur(IhmPartie):
                               + self.questions_surface.get_height() + 10))
 
             # Affichage de la pile + pioche en début de file
-            for i in range(5):
-                offset = 1.5 * i
-                self.screen.blit(self.dos_wagon,
-                                 (-self.dos_wagon.get_width() // 2 + offset,
-                                  (self.screen.get_height() - self.plateau.get_height()) // 2
-                                  - self.dos_wagon.get_height() - 10 + offset))
+            for i in range(len(self.partie.pile_cartes_wagon)):
+                offset = 0.05 * i
+                x = -self.dos_wagon.get_width() // 2 + offset
+                y = (
+                            self.screen.get_height() - self.plateau.get_height()) // 2 - self.dos_wagon.get_height() - 10 + offset
+                self.screen.blit(self.dos_wagon, (x, y))
+                if pygame.Rect.collidepoint(self.dos_wagon.get_rect().move(x, y), mx, my) and clicking:
+                    # self.partie.prendre_cartes_wagon(joueur,self)
+                    print("Carte face cachée")
             for k in range(5):
                 # DONE: link this to the current partie
                 current_wagon = self.les_wagons[self.partie.pile_cartes_wagon[k]]
-                self.screen.blit(current_wagon,
-                                 (current_wagon.get_width() // 4,
-                                  (self.screen.get_height() - self.plateau.get_height()) // 2 +
-                                  (current_wagon.get_height() + 5) * k))
+                x = current_wagon.get_width() // 4
+                y = (self.screen.get_height() - self.plateau.get_height()) // 2 + (current_wagon.get_height() + 5) * k
+                self.screen.blit(current_wagon, (x, y))
+                if pygame.Rect.collidepoint(current_wagon.get_rect().move(x, y), mx, my) and clicking:
+                    nom_carte = self.partie.pile_cartes_wagon.pop(k)
+                    self.interaction_joueur = f"Vous avez tiré un wagon {nom_carte}"
+                    # print("Carte visible")
 
             # Affichage texte : Pioche
             # self.pioche_surface = self.base_font.render("Pioche", True, "black")
@@ -744,22 +814,27 @@ class IhmJoueur(IhmPartie):
             #                   - self.pioche_surface.get_height()))
 
             # Affichage des cartes Destination + pioche Destination
-            for k in range(5): # Pioche Destination
-                offset = 1.5 * k
-                self.screen.blit(self.dos_destination,
-                                 (self.screen.get_width() - self.dos_destination.get_width() // 2 - offset,
-                                  (self.screen.get_height() - self.plateau.get_height()) // 2 - 10 + offset))
-            for i in range(3): # Cartes joueur Destination
+            x, y = -1, -1
+            for k in range(len(self.partie.pile_cartes_destination)):  # Pioche Destination
+                offset = 0.5 * k
+                x = self.screen.get_width() - self.dos_destination.get_width() // 2 - offset
+                y = (self.screen.get_height() - self.plateau.get_height()) // 2 - 10 + offset
+                self.screen.blit(self.dos_destination, (x, y))
+            if pygame.Rect.collidepoint(self.dos_destination.get_rect().move(x, y), mx, my) and clicking:
+                nom_carte_destination = self.partie.pile_cartes_destination.pop(0)
+                joueur.main_destination.append(nom_carte_destination)
+                self.interaction_joueur = f"Objectif: relier {nom_carte_destination}"
+            for i in range(len(joueur.main_destination)):  # Cartes joueur Destination
                 # DONE: link this to player's ones
                 if joueur.main_destination:
-                    current_destination=self.les_destinations[joueur.main_destination[i]]
+                    current_destination = self.les_destinations[joueur.main_destination[i]]
                 else:
-                    current_destination=self.dos_destination
-                current_destination=pygame.transform.scale(current_destination,self.dos_destination.get_size())
+                    current_destination = self.dos_destination
+                current_destination = pygame.transform.scale(current_destination, self.dos_destination.get_size())
                 self.screen.blit(current_destination, ((self.screen.get_width() + self.plateau.get_width()) // 2 + 20,
-                                                        (self.screen.get_height() - self.plateau.get_height()) // 2
-                                                        + self.dos_destination.get_height() + 10 +
-                                                        (self.dos_destination.get_height() + 5) * i))
+                                                       (self.screen.get_height() - self.plateau.get_height()) // 2
+                                                       + self.dos_destination.get_height() + 10 +
+                                                       (self.dos_destination.get_height() + 5) * i))
             # Affichage texte : Destination
             # self.destination_surface = self.base_font.render("Destination", True, "black")
             # self.screen.blit(self.destination_surface,
@@ -770,7 +845,8 @@ class IhmJoueur(IhmPartie):
             for w, wagon in enumerate(joueur.main_wagon.items()):
                 # DONE: lier avec la main du joueur
                 img_wagon = self.les_wagons[wagon[0]]
-                pos = (self.questions_surface.get_width() + 20 + img_wagon.get_width() * 6//10 * w,
+                pos = ((self.screen.get_width() - self.screen.get_height() + self.plateau.get_height()) // 2 - 15
+                       + img_wagon.get_width() * 5 // 10 * w,
                        (self.screen.get_height() + self.plateau.get_height()) // 2 + 10)
                 nb_wagon = Text(str(wagon[1]), pos[0] + 5, pos[1] + img_wagon.get_height())
                 nb_wagon.height = pos[1] + img_wagon.get_height() - nb_wagon.text_surface.get_height()
@@ -790,10 +866,12 @@ class IhmJoueur(IhmPartie):
             self.screen.blit(points_surface, (self.screen.get_width() - (points_surface.get_width() + 20),
                                               self.screen.get_height() - (points_surface.get_height() + 20)))
 
-            # Affichage du titre/pseudo du joueur (?)
-            pygame.draw.polygon(self.screen, joueur.couleur,
-                                [[self.screen.get_width() // 2 - 250, 0], [self.screen.get_width() // 2 + 250, 0],
-                                 [self.screen.get_width() // 2 + 225, 35], [self.screen.get_width() // 2 - 225, 35]])
+            # Affichage du titre/pseudo du joueur
+            self.title_rect = pygame.draw.polygon(self.screen, joueur.couleur,
+                                                  [[self.screen.get_width() // 2 - 250, 0],
+                                                   [self.screen.get_width() // 2 + 250, 0],
+                                                   [self.screen.get_width() // 2 + 225, 35],
+                                                   [self.screen.get_width() // 2 - 225, 35]])
             if joueur.couleur == "black":
                 title_color = "white"
             else:
@@ -801,14 +879,93 @@ class IhmJoueur(IhmPartie):
             title_surface = self.base_font.render(joueur.nom_joueur, True, title_color)
             self.screen.blit(title_surface, (self.screen.get_width() // 2 - title_surface.get_width() // 2, 10))
 
+            # Affichage des autres scores de joueur
+            other_players = self.partie.ordre.copy()
+            other_players.pop(other_players.index(joueur.nom_joueur))
+            for p, player in enumerate(other_players):
+                player = self.partie.les_joueurs[player]
+                plain_text = f"{player.nom_joueur}: {player.nb_points}"
+                text_player = Text(plain_text, self.title_rect.width + 20 * p, self.title_rect.height)
+                text_player.show(self.screen)
+
             # Bouton test pour tester les fonctionnalités
-            # self.button_test.draw(self.screen)
-            # if self.button_test.pressed:
-            #     self.button_test.pressed = not self.button_test.pressed
-            #     joueur.nb_points += 1
+            self.button_test.draw(self.screen)
+            if self.button_test.pressed and clicking:
+                self.button_test.pressed = not self.button_test.pressed
+                joueur.nb_points += 1
 
             pygame.display.update()
             self.clock.tick(60)
+
+
+class TextInput():
+    def __init__(self, title="Nouvelle entrée de texte", rect_pos=(20, 20)):
+        # Core attributes
+        self.toggle_return = False
+        self.text_margin = 10
+        self.active = False
+
+        # Text
+        self.base_font = pygame.font.Font(None, 24)
+        self.text_input = ""
+
+        # Title
+        self.title = title
+        self.title_color = "black"
+        self.title_surface = self.base_font.render(self.title, True, self.title_color)
+
+        # Rect for text input
+        self.rect_input = pygame.Rect(rect_pos,
+                                      (tuple(map(sum,
+                                                 zip(self.title_surface.get_size(),
+                                                     (0, self.base_font.get_linesize()))))))
+        self.default_color = "grey"
+        self.active_color = "white"
+        self.rect_color = self.default_color
+        self.default_rect_width = self.title_surface.get_width()
+
+        # Text input
+        self.text_color = "black"
+        self.text_surf = self.base_font.render(self.text_input, True, self.text_color)
+        self.text_rect = self.text_surf.get_rect(
+            midleft=tuple(map(sum, zip(self.rect_input.midleft, (self.text_margin, 0)))))
+
+    def show(self, screen):
+        pygame.draw.rect(screen, self.rect_color, self.rect_input, border_radius=self.rect_input.height)
+        screen.blit(self.text_surf, self.text_rect)
+        screen.blit(self.title_surface, (self.rect_input.x, self.rect_input.y - self.title_surface.get_height()))
+
+    def input(self, clicking, screen):
+        mx, my = pygame.mouse.get_pos()
+        # self.event_handler(event)
+        if self.rect_input.collidepoint(mx, my) and clicking:
+            self.active = not self.active
+        if self.active:
+            self.rect_color = self.active_color
+        else:
+            self.rect_color = self.default_color
+
+        self.rect_input.width = max(self.default_rect_width, self.text_surf.get_width() + self.text_margin * 2)
+        self.text_rect.midleft = tuple(map(sum, zip(self.rect_input.midleft, (self.text_margin, 0))))
+        # self.text_rect.top=self.rect_input.top+5
+        self.text_surf = self.base_font.render(self.text_input, True, self.text_color)
+        self.show(screen)
+
+        if self.toggle_return:
+            returned_text = self.text_input
+            self.text_input = ""
+            self.active = False
+            self.toggle_return = False
+            return returned_text
+
+    def event_handler(self, event):
+        if event.type == KEYDOWN:
+            if event.key == K_BACKSPACE and self.active:
+                self.text_input = self.text_input[:-1]
+            elif self.active:
+                self.text_input += event.unicode
+            if event.key == K_RETURN:
+                self.toggle_return = True
 
 
 def text_input():
