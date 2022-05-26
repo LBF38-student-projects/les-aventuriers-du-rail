@@ -80,7 +80,7 @@ class Joueur:
                       'wheat2', 'wheat3', 'wheat4', 'white', 'whitesmoke', 'yellow', 'yellow1', 'yellow2', 'yellow3',
                       'yellow4', 'yellowgreen']
 
-    # TODO: insérer toutes les couleurs possibles => cf. matplotlib.pyplot par exemple
+    # DONE: insérer toutes les couleurs possibles => cf. matplotlib.pyplot par exemple ou docs de pygame
     def __init__(self, nom_joueur, nom_couleur, points=0):
         self.nom_joueur: str = nom_joueur  # Nom du joueur
         self.wagons = 45  # Nombre de wagons maximum par joueur
