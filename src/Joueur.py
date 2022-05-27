@@ -102,7 +102,7 @@ class Joueur:
         self.route_prise = []
         self.IA=False # Permet de savoir si le joueur est un ordi ou non
 
-    # TODO: if color = random alors assigner une couleur random
+    # DONE: if color = random alors assigner une couleur random
 
     @property
     def main_wagon(self):

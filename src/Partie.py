@@ -1,11 +1,7 @@
 """Projet Informatique
 @authors: Mathis URIEN, Kenza BELAID"""
 
-# Imports :
-from Joueur import Joueur
-from Score import Score
-import matplotlib.pyplot as plt
-import random as r
+
 
 
 # TODO: penser à faire les tests unitaires sur les classes et méthodes
@@ -429,33 +425,36 @@ class Partie(Jeu):
         Définition des joueurs
         :return:
         """
-        self.nb_joueurs = input('Nombre de joueurs pour la partie')
-        for k in range(self.nb_joueurs):
-            nom = input('Nom du Joueur ' + str(k + 1))
-            couleur = input('Choisir sa couleur de Joueur parmi les suivantes :\n- blue\n- red\n - black \n - random')
-            self.les_joueurs[nom] = Joueur(nom, couleur)
+        self.nb_joueurs = len(ihm_partie.les_joueurs)
+        for player_input in ihm_partie.les_joueurs:
+            nom = player_input[0]
+            couleur = player_input[1]
+            if "IA" in nom:
+                self.les_joueurs[nom]=IA_player(nom,couleur)
+            else:
+                self.les_joueurs[nom] = Joueur(nom, couleur)
             self.ordre.append(nom)
-        # TODO : Demander le nb total de joueurs de la partie, nb joueurs humains. => compléter par des joueurs IAs
-        # TODO: vérifier que nb_joueurs est compris entre 2 et 5.
+        # DONE: Demander le nb total de joueurs de la partie, nb joueurs humains. => compléter par des joueurs IAs
+        # DONE: vérifier que nb_joueurs est compris entre 2 et 5. => vérifié dans l'IHM car on ne peut pas dépasser 5.
 
-    @property
-    def nb_joueurs(self):
-        """Accesseur en lecture du nombre de joueurs de la partie"""
-        return self.__nb_joueurs
-
-    @nb_joueurs.setter
-    def nb_joueurs(self, value):
-        """Accesseur en écriture du nombre de joueurs de la partie"""
-        #TODO: traiter le cas où la valeur n'est pas un int mais du texte par exemple
-
-        # if type(value) != int:
-        #     print("Indiquer un nombre.")
-        #     self.nb_joueurs = input("Nombre de joueurs pour la partie")
-        if int(value) not in range(2, 6):
-            print("Le nombre de joueurs doit être compris entre 2 et 5 pour lancer une partie.\nCela est différent du "
-                  "nombre de joueurs IAs.\nVeuillez rentrer à nouveau une valeur correcte.")
-            self.nb_joueurs = input("Nombre de joueurs pour la partie")
-        self.__nb_joueurs = int(value)
+    # @property
+    # def nb_joueurs(self):
+    #     """Accesseur en lecture du nombre de joueurs de la partie"""
+    #     return self.__nb_joueurs
+    #
+    # @nb_joueurs.setter
+    # def nb_joueurs(self, value):
+    #     """Accesseur en écriture du nombre de joueurs de la partie"""
+    #     #DONE: traiter le cas où la valeur n'est pas un int mais du texte par exemple. => solution dans l'IHM.
+    #
+    #     # if type(value) != int:
+    #     #     print("Indiquer un nombre.")
+    #     #     self.nb_joueurs = input("Nombre de joueurs pour la partie")
+    #     if int(value) not in range(2, 6):
+    #         print("Le nombre de joueurs doit être compris entre 2 et 5 pour lancer une partie.\nCela est différent du "
+    #               "nombre de joueurs IAs.\nVeuillez rentrer à nouveau une valeur correcte.")
+    #         self.nb_joueurs = input("Nombre de joueurs pour la partie")
+    #     self.__nb_joueurs = int(value)
 
     def rotation_joueur(self, index):
         """
@@ -472,16 +471,13 @@ class Partie(Jeu):
             self.ordre = temp_joueur
         return "L'ordre des joueurs est établi comme suit : \n" + self.liste_joueurs()
 
-    # def change_current_player(self):
-
-
     def choix_tour_joueur(self, ihm_partie):
         """
         Définit le tour des joueurs en fonction de celui qui a le plus voyagé puis selon sens horaire.
         :return:
         L'ordre des joueurs de la partie
         """
-        joueur_voyageur = input("Qui a le plus voyagé entre ces joueurs ? \n" + self.liste_joueurs())
+        joueur_voyageur = ihm_partie.joueur_le_plus_voyageur
         self.rotation_joueur(self.ordre.index(joueur_voyageur))
 
     def liste_joueurs(self):
@@ -499,19 +495,23 @@ class Partie(Jeu):
         Réalise 1 tour de tous les joueurs où chacun joue leur tour de jeu en fonction de toutes les actions possibles.
         :return:
         """
-        ihm_partie.launch(joueur)
-        print("C'est le tour de " + joueur.nom_joueur)
-        choix: int = int(input(
-            "Que voulez-vous faire ?\n" + "1. Prendre des cartes Wagon\n2. Prendre possession d'une route\n3. "
-                                          "Prendre des cartes Destination supplémentaires\nIndiquer le numéro "
-                                          "de l'action choisie"))
-        if choix == 1:
-            self.prendre_cartes_wagon(joueur, ihm_partie)
-        elif choix == 2:
-            self.prendre_route(joueur)
-        else:
-            print("Non disponible pour le moment")
-            # self.prendre_cartes_Destination()
+        """Les choix sont faits en direct par le joueur dans l'IHM.
+        Les fonctions de contrôle du jeu sont appelées dans la partie IHM."""
+        print(IhmJoueur(ihm_partie).launch_joueur(joueur))
+        return True
+        # print("C'est le tour de " + joueur.nom_joueur)
+        # choix: int = int(input(
+        #     "Que voulez-vous faire ?\n" + "1. Prendre des cartes Wagon\n2. Prendre possession d'une route\n3. "
+        #                                   "Prendre des cartes Destination supplémentaires\nIndiquer le numéro "
+        #                                   "de l'action choisie"))
+        # choix=1 # à lier avec l'IHM.
+        # if choix == 1:
+        #     self.prendre_cartes_wagon(joueur, ihm_partie)
+        # elif choix == 2:
+        #     self.prendre_route(joueur)
+        # else:
+        #     print("Non disponible pour le moment")
+        #     # self.prendre_cartes_Destination()
 
     @staticmethod
     def melange_cartes(pile_cartes: list):
@@ -584,56 +584,70 @@ class Partie(Jeu):
         plus prendre de cartes. Il ne peut donc que prendre possession d’une route ou tirer de nouvelles cartes 
         Destination. """
 
-        print("Voici les cartes sur la table :")
-        # TODO: Vérifier le cas pour les locomotives pr mélanger à nouveau si besoin
-        self.verif_locomotive()
-        for k in range(5):  # On montre les 5 premières cartes de la pile pour faire les cartes face visible.
-            print(self.pile_cartes_wagon[k])
-        print("Vous pouvez choisir 2 cartes")
-        visible = input("Voulez-vous une 1ère carte visible ? [y/n]") == "y"
-        nom_carte = ""
-        if visible:
-            nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
-            while nom_carte not in self.pile_cartes_wagon[0:5]:
-                print("Il faut que la carte soit parmi celles face visible.\nRecommencer.")
-                nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
+        "Version console" # Commenté pour éviter les inputs et arrêt de l'IHM.
+        # print("Voici les cartes sur la table :")
+        # DONE: Vérifier le cas pour les locomotives pr mélanger à nouveau si besoin => vérif_locomotive()
+        # self.verif_locomotive()
+        # for k in range(5):  # On montre les 5 premières cartes de la pile pour faire les cartes face visible.
+        #     print(self.pile_cartes_wagon[k])
+        # # print("Vous pouvez choisir 2 cartes")
+        # visible = input("Voulez-vous une 1ère carte visible ? [y/n]") == "y"
+        # nom_carte = ""
+        # if visible:
+        #     nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
+        #     while nom_carte not in self.pile_cartes_wagon[0:5]:
+        #         print("Il faut que la carte soit parmi celles face visible.\nRecommencer.")
+        #         nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
+        #     joueur.main_wagon[nom_carte] += 1
+        #     self.pile_cartes_wagon.pop(
+        #         self.pile_cartes_wagon.index(nom_carte))
+        #     # Pour l'instant, on enlève la première occurrence du nom_carte et non celle choisi parmi les 5. A vérifier.
+        #     print("Vous avez choisi la carte " + str(nom_carte))
+        # else:
+        #     carte = self.pile_cartes_wagon.pop(6)  # Car c'est la carte au-dessus de la pile après les cartes visibles.
+        #     joueur.main_wagon[carte] += 1
+        #     print("Vous avez pris une carte face cachée.")
+        #     # DONE: ajouter une fonctionnalité pour que le joueur puisse voir la carte sans que les autres la voient.
+        #     #  Solution : Faire un jeu contre IA ou faire plusieurs fenêtres ou jouer en LAN ou jouer en
+        #     #  ligne/multijoueur.
+        # if nom_carte != "locomotive":
+        #     for k in range(5):
+        #         print(self.pile_cartes_wagon[k])
+        #     visible = input("Voulez-vous une 2e carte visible ? [y/n]") == "y"
+        #     if visible:
+        #         nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
+        #         while nom_carte not in self.pile_cartes_wagon[0:5]:
+        #             print("Il faut que la carte soit parmi celles face visible.\nRecommencer.")
+        #             nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
+        #         joueur.main_wagon[nom_carte] += 1
+        #         self.pile_cartes_wagon.pop(self.pile_cartes_wagon.index(nom_carte))
+        #         # DONE: améliorer le retrait des cartes. Pour l'instant, on enlève la première occurrence du
+        #         #  nom_carte et non celle choisi parmi les 5. A vérifier.
+        #         print("Vous avez choisi la carte " + str(nom_carte))
+        #     else:
+        #         carte = self.pile_cartes_wagon.pop(6)  # Car c'est la carte au-dessus de la pile après celles visibles.
+        #         joueur.main_wagon[carte] += 1
+        #         print("Vous avez pris une carte face cachée.")
+        # print("Fin du tour.")
+
+        " Version pour l'IHM"
+        # Carte visible
+        if ihm_partie.visible_wagon:
+            nom_carte = ihm_partie.visible_wagon
             joueur.main_wagon[nom_carte] += 1
-            self.pile_cartes_wagon.pop(
-                self.pile_cartes_wagon.index(nom_carte))  # TODO: améliorer le retrait des cartes.
-            # Pour l'instant, on enlève la première occurrence du nom_carte et non celle choisi parmi les 5. A vérifier.
-            print("Vous avez choisi la carte " + str(nom_carte))
-        else:
-            carte = self.pile_cartes_wagon.pop(6)  # Car c'est la carte au-dessus de la pile après les cartes visibles.
-            joueur.main_wagon[carte] += 1
-            print("Vous avez pris une carte face cachée.")
-            # TODO: ajouter une fonctionnalité pour que le joueur puisse voir la carte sans que les autres la voient.
-            #  Solution : Faire un jeu contre IA ou faire plusieurs fenêtres ou jouer en LAN ou jouer en
-            #  ligne/multijoueur.
-        if nom_carte != "locomotive":
-            for k in range(5):
-                print(self.pile_cartes_wagon[k])
-            visible = input("Voulez-vous une 2e carte visible ? [y/n]") == "y"
-            if visible:
-                nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
-                while nom_carte not in self.pile_cartes_wagon[0:5]:
-                    print("Il faut que la carte soit parmi celles face visible.\nRecommencer.")
-                    nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
-                joueur.main_wagon[nom_carte] += 1
-                self.pile_cartes_wagon.pop(self.pile_cartes_wagon.index(nom_carte))
-                # TODO: améliorer le retrait des cartes. Pour l'instant, on enlève la première occurrence du
-                #  nom_carte et non celle choisi parmi les 5. A vérifier.
-                print("Vous avez choisi la carte " + str(nom_carte))
-            else:
-                carte = self.pile_cartes_wagon.pop(6)  # Car c'est la carte au-dessus de la pile après celles visibles.
-                joueur.main_wagon[carte] += 1
-                print("Vous avez pris une carte face cachée.")
-        print("Fin du tour.")
-        # TODO: vérifier que le joueur ne peut ajouter que 2 cartes au max. TODO: vérifier qu'il peut prendre 2
-        #  cartes au total.
-        # TODO: vérifier le cas où il prend une locomotive lorsque c'est face visible.
-        # TODO: vérifier le cas où il n'y a plus de cartes et qu'il faut mélanger la défausse.
+            return "locomotive" in nom_carte
+        # Carte face cachée
+        if ihm_partie.hide_wagon:
+            nom_carte = ihm_partie.hide_wagon
+            joueur.main_wagon[nom_carte] += 1
+            return False # Même si on tire une carte locomotive, cela compte quand même comme 1 seule carte tirée.
+
+        # DONE: vérifier que le joueur ne peut ajouter que 2 cartes au max.
+        # DONE: vérifier qu'il peut prendre 2 cartes au total.
+        # DONE: vérifier le cas où il prend une locomotive lorsque c'est face visible.
+        # DONE: vérifier le cas où il n'y a plus de cartes et qu'il faut mélanger la défausse. => dans verif_locomotive
         # TODO: vérifier le cas où toutes les cartes ont été prises par les joueurs. => option plus disponible tant
-        #  qu'il n'en défausse pas.
+        #  qu'il n'en défausse pas. => se fait tout seul ? car les cartes ne s'affichent plus ? à vérifier.
 
     def verif_locomotive(self):
         """
@@ -641,9 +655,14 @@ class Partie(Jeu):
         Sinon, défausse les 5 cartes et en remet 5.
         :return:
         """
+        n=len(self.pile_cartes_wagon)
         if self.pile_cartes_wagon[:5].count("locomotive") >= 3:
             for k in range(5):
                 self.defausse_wagon.append(self.pile_cartes_wagon.pop(0))
+            if n < 5: # renouvellement de la pile de cartes wagon
+                self.pile_cartes_wagon=self.pile_cartes_wagon\
+                                       +self.melange_americain(self.melange_cartes(self.defausse_wagon))
+                self.defausse_wagon.clear()
 
     def prendre_route(self, joueur):
         """
@@ -756,14 +775,19 @@ class Partie(Jeu):
         i = 0
         nom = self.ordre[i]
         joueur = self.les_joueurs[nom]
+        fin_tour=False
         while joueur.wagons > 2:
-            self.tour(joueur, ihm_partie)
-            if i == len(self.ordre) - 1:
-                i = 0
+            if not fin_tour:
+                fin_tour=self.tour(joueur, ihm_partie)
+
             else:
-                i += 1
-            nom = self.ordre[i]
-            joueur = self.les_joueurs[nom]
+                if i == len(self.ordre) - 1:
+                    i = 0
+                else:
+                    i += 1
+                nom = self.ordre[i]
+                joueur = self.les_joueurs[nom]
+                fin_tour=False
         self.rotation_joueur(i)
         for nom in self.ordre:
             self.tour(self.les_joueurs[nom], ihm_partie)
@@ -774,6 +798,12 @@ class Partie(Jeu):
         chaque joueur, en incluant celui-ci, joue encore un tour. À l’issue de ce dernier tour, le jeu s’arrête et 
         chacun compte ses points """
 
+# Imports :
+from Joueur import Joueur
+from Score import Score
+import matplotlib.pyplot as plt
+import random as r
+from interface import IhmJoueur
 
 if __name__ == '__main__':
     p = partie()

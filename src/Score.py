@@ -2,7 +2,8 @@
 @authors: Mathis URIEN, Kenza BELAID"""
 
 from Joueur import Joueur as jr
-from Partie import *
+# from Partie import Partie
+# TODO: check the imports to avoid looping imports.
 
 def conversion(nb_wagons):
     #convertit le nombre de wagons en nombre de points
