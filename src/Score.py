@@ -19,6 +19,60 @@ def conversion(nb_wagons):
     if nb_wagons == 6 :
         return 15
 
+
+graphe_villes = {}
+graphe_villes['Los Angeles'] = ['San Francisco','Las Vegas','Phoenix','El Paso']
+graphe_villes['San Francisco'] = ['Portland','Salt Lake City','Los Angeles']
+graphe_villes['Portland'] = ['Seattle','Salt Lake City','San Francisco']
+graphe_villes['Seattle'] = ['Portland','Helena','Vancouver','Calgary']
+graphe_villes['Vancouver'] = ['Seattle','Calgary']
+graphe_villes['Calgary'] = ['Winnipeg','Helena','Seattle','Vancouver']
+graphe_villes['Helena'] = ['Seattle','Calgary','Winnipeg','Duluth','Omaha', 'Denver','Salt Lake City']
+graphe_villes['Salt Lake City'] = ['Portland','San Francisco','Las Vegas','Denver','Helena']
+graphe_villes['Las Vegas'] = ['Salt Lake City','Los Angeles']
+graphe_villes['Phoenix'] = ['El Paso','Santa Fe','Los Angeles','Denver']
+graphe_villes['El Paso'] = ['Santa Fe','Phoenix','Los Angeles','Houston','Dallas','Oklahoma City']
+graphe_villes['Santa Fe'] = ['Phoenix','Denver','Oklahoma City','El Paso']
+graphe_villes['Denver'] = ['Santa Fe','Phoenix','Salt Lake City','Helena','Omaha','Kansas City','Oklahoma City']
+graphe_villes['Oklahoma City'] = ['Denver','Kansas City','Santa Fe','El Paso','Dallas','Little Rock']
+graphe_villes['Kansas City'] = ['Denver','Omaha','Saint Louis','Oklahoma City']
+graphe_villes['Omaha'] = ['Denver','Kansas City','Chicago','Duluth','Helena']
+graphe_villes['Duluth'] = ['Winnipeg','Helena','Sault Ste Marie','Toronto','Chicago','Omaha']
+graphe_villes['Sault Ste Marie'] = ['Winnipeg','Duluth','Toronto','Montreal']
+graphe_villes['Winnipeg'] = ['Calgary','Helena', 'Duluth','Sault Ste Marie']
+graphe_villes['Dallas'] = ['Houston','El Paso','Oklahoma City', 'Little Rock']
+graphe_villes['Houston'] = ['Dallas','El Paso','New Orleans']
+graphe_villes['New Orleans'] = ['Houston','Little Rock','Atlanta','Miami']
+graphe_villes['Little Rock'] = ['New Orleans','Dallas','Oklahoma City','Saint Louis','Nashville']
+graphe_villes['Saint Louis'] = ['Little Rock','Kansas City','Chicago','Pittsburgh','Nashville']
+graphe_villes['Chicago'] = ['Saint Louis','Omaha','Duluth','Toronto','Pittsburgh']
+graphe_villes['Nashville'] = ['Saint Louis','Pittsburgh','Little Rock','Atlanta','Raleigh']
+graphe_villes['Atlanta'] = ['Nashville','Raleigh','Charleston','New Orleans','Miami']
+graphe_villes['Miami'] = ['New Orleans','Atlanta','Charleston']
+graphe_villes['Charleston'] = ['Miami','Atlanta','Raleigh']
+graphe_villes['Pittsburgh'] = ['Washington','Raleigh','Nashville','Saint Louis','Chicago','Toronto','New York']
+graphe_villes['Toronto'] = ['Pittsburgh','Chicago','Duluth','Sault Ste Marie','Montreal']
+graphe_villes['Montreal'] = ['Boston','New York','Toronto','Sault Ste Marie']
+graphe_villes['Boston'] = ['Montreal','New York']
+graphe_villes['New York'] = ['Boston','Montreal','Pittsburgh','Washington']
+graphe_villes['Washington'] = ['New York','Pittsburgh','Raleigh']
+graphe_villes['Raleigh'] = ['Washington','Pittsburgh','Nashville','Atlanta','Charleston']
+
+
+def parcours_profondeur(graph, noeud):
+    dejaVu = [noeud]
+    A_visiter = [noeud]
+    while A_visiter:
+        noeud = A_visiter.pop()
+        print('En cours de visite :', noeud)
+        for voisin in graph[noeud]:
+            if voisin not in dejaVu:
+                dejaVu.append(voisin)
+                A_visiter.append(voisin)
+
+parcours_profondeur(graphe_villes, 'Toronto')
+
+
 class EnsembleDisjoint:
     """
     Cette classe permet de gérer les ensembles disjoints. Deux éléments sont
