@@ -969,13 +969,14 @@ class IhmJoueur:
                 nb_wagon.show(self.ihm_partie.screen)
 
             # screen.blit(dos_wagon, ((screen.get_width() + plateau.get_width()) // 2 + 10, 50))
-
+            # TODO: finaliser la fonctionnalité : prendre_route
             # Bouton pour la fin de tour
-            self.button_fin_tour.draw(self.ihm_partie.screen)
-            if self.button_fin_tour.pressed:
-                self.button_fin_tour.pressed = False
-                fin_tour = False
-                return f"Fin du tour de {joueur.nom_joueur}"
+            if fin_tour:
+                self.button_fin_tour.draw(self.ihm_partie.screen)
+                if self.button_fin_tour.pressed:
+                    self.button_fin_tour.pressed = False
+                    fin_tour = False
+                    return f"Fin du tour de {joueur.nom_joueur}"
 
             # Affichage du compteur de points
             pygame.draw.circle(self.ihm_partie.screen, "lightsteelblue", [self.ihm_partie.screen.get_width(), self.ihm_partie.screen.get_height()],
