@@ -310,7 +310,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.selection_voyageur.sizePolicy().hasHeightForWidth())
-        self.selection_voyageur.setMinimumSize(QtCore.QSize(200,20))
+        self.selection_voyageur.setMinimumSize(QtCore.QSize(200, 20))
         self.selection_voyageur.setSizePolicy(sizePolicy)
         self.selection_voyageur.setObjectName("selection_voyageur")
         self.selection_voyageur.addItem("")
@@ -1022,7 +1022,7 @@ class Ui_MainWindow(object):
         self.label_nb_joueurrs_tot.setText(_translate("MainWindow", "Nombre de joueurs pour la partie"))
         self.label_nb_joueurs_ia.setText(_translate("MainWindow", "Nombre de joueurs IAs"))
         self.label_voyageur.setText(_translate("MainWindow", "Qui a le plus voyagé entre ces joueurs ?"))
-        self.selection_voyageur.setItemText(0,_translate("MainWindow",""))
+        self.selection_voyageur.setItemText(0, _translate("MainWindow", ""))
         self.titre_nouvelle_partie.setText(_translate("MainWindow", "Nouvelle Partie"))
         self.label_nom4.setText(_translate("MainWindow", "Nom du joueur 4"))
         self.label_couleur4.setText(_translate("MainWindow", "Couleur du joueur 4"))
@@ -1101,11 +1101,12 @@ class Ui_MainWindow(object):
 
 
 # import resource_rc
-if __name__=='__main__':
-        import sys
-        app = QtWidgets.QApplication(sys.argv)
-        MainWindow = QtWidgets.QMainWindow()
-        ui = Ui_MainWindow()
-        ui.setupUi(MainWindow)
-        MainWindow.show()
-        sys.exit(app.exec_())
+if __name__ == '__main__':
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
