@@ -436,7 +436,7 @@ class IhmPartie:
         self.wagon_vert = pygame.image.load("img/wagon_vert.jpg")
         self.locomotive = pygame.image.load("img/locomotive.jpg")
         self.dos_wagon = pygame.image.load("img/dos_wagon.jpg")
-        self.dos_wagon = pygame.transform.rotate(self.dos_wagon, 90)
+        # self.dos_wagon = pygame.transform.rotate(self.dos_wagon, 90)
 
         # Cartes Destination
         self.los_angeles_new_york = pygame.image.load("img/los_angeles_new_york.jpg")

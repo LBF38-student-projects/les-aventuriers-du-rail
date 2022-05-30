@@ -15,7 +15,7 @@ class Joueur:
     Couleur_joueur = ['aliceblue', 'antiquewhite', 'antiquewhite1', 'antiquewhite2', 'antiquewhite3', 'antiquewhite4',
                       'aqua', 'aquamarine', 'aquamarine1', 'aquamarine2', 'aquamarine3', 'aquamarine4', 'azure',
                       'azure1', 'azure3', 'azure2', 'azure4', 'beige', 'bisque', 'bisque1', 'bisque2', 'bisque3',
-                      'bisque4', 'black', 'blanchedalmond', 'blue', 'blue1', 'blue2', 'blue3', 'blue4', 'blueviolet',
+                      'bisque4', 'black', 'blanchedalmond', "blue",'blue', 'blue1', 'blue2', 'blue3', 'blue4', 'blueviolet',
                       'brown', 'brown1', 'brown2', 'brown3', 'brown4', 'burlywood', 'burlywood1', 'burlywood2',
                       'burlywood3', 'burlywood4', 'cadetblue', 'cadetblue1', 'cadetblue2', 'cadetblue3', 'cadetblue4',
                       'chartreuse', 'chartreuse1', 'chartreuse2', 'chartreuse3', 'chartreuse4', 'chocolate',
@@ -79,7 +79,15 @@ class Joueur:
                       'violet', 'violetred', 'violetred1', 'violetred2', 'violetred3', 'violetred4', 'wheat', 'wheat1',
                       'wheat2', 'wheat3', 'wheat4', 'white', 'whitesmoke', 'yellow', 'yellow1', 'yellow2', 'yellow3',
                       'yellow4', 'yellowgreen']
+    convert_color_id={
+        "bleu":"blue",
+        "rouge":"red",
+        "vert":"green",
+        "jaune":"yellow",
+        "orange":"orange",
+        "personnalisée":"random" # TODO: à modifier dans la phase améliorations. => color picker.
 
+    }
     # DONE: insérer toutes les couleurs possibles => cf. matplotlib.pyplot par exemple ou docs de pygame
     def __init__(self, nom_joueur, nom_couleur, points=0):
         self.nom_joueur: str = nom_joueur  # Nom du joueur
@@ -100,7 +108,7 @@ class Joueur:
         self.main_destination = []  # Réunit toutes les cartes Objectifs/Destination du joueur. Ne contient que les
         # noms des cartes.
         self.route_prise = []
-        self.IA=False # Permet de savoir si le joueur est un ordi ou non
+        self.IA = False  # Permet de savoir si le joueur est un ordi ou non
 
     # DONE: if color = random alors assigner une couleur random
 
@@ -133,8 +141,10 @@ class Joueur:
         """
         assert type(nom_couleur) == str
         if "random" in nom_couleur:
-            self.__couleur = self.Couleur_joueur.pop(random.randint(0, len(self.Couleur_joueur)-1))
+            self.__couleur = self.Couleur_joueur.pop(random.randint(0, len(self.Couleur_joueur) - 1))
         else:
+            if nom_couleur in self.convert_color_id.keys():
+                nom_couleur=self.convert_color_id[nom_couleur]
             self.__couleur = nom_couleur
             self.Couleur_joueur.pop(self.Couleur_joueur.index(nom_couleur))
 
@@ -142,12 +152,32 @@ class Joueur:
 class IA_player(Joueur):
     """Classe qui contient plusieurs modèles de joueurs IAs. A voir selon l'implémentation."""
 
-    def __init__(self, nom_joueur="IA player", nom_couleur="random", points=0):
+    def __init__(self, nom_joueur="IA player", nom_couleur="random", IA_level="IA aléatoire", points=0):
         super().__init__(nom_joueur, nom_couleur, points)
+        # Difficulté de l'IA : échelle de 0 à 3. IA novice, IA normal, IA expert.
+        # Pour IA aléatoire : difficulty = -1.
+        self.levels={
+            "IA aléatoire": 0,
+            "IA novice": 1,
+            "IA normal": 2,
+            "IA expert": 3,
+        }
+        self.difficulty = IA_level
 
-    def choix_aléatoire(self):
+    @property
+    def difficulty(self):
+        return self._difficulty
+
+    @difficulty.setter
+    def difficulty(self, value):
+        self._difficulty = self.levels[value]
+
+    def choix_aleatoire(self):
         """Choisit aléatoirement ses choix"""
-        choix = rd.randint(1, 2)
+        if self.difficulty == -1:
+            choix = rd.randint(1, 2)
+        else:
+            choix = 3
         return choix
 
 

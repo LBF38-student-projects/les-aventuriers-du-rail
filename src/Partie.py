@@ -6,6 +6,8 @@
 
 # TODO: penser à faire les tests unitaires sur les classes et méthodes
 
+
+
 class Jeu(object):
     """Classe qui met en place les parties immuables du jeu pour ensuite être utilisé dans chaque partie."""
 
@@ -818,12 +820,13 @@ class Partie_qt(Jeu):
         Définition des joueurs
         :return:
         """
-        self.nb_joueurs = len(ihm_partie.les_joueurs)
-        for player_input in ihm_partie.les_joueurs:
+        self.nb_joueurs = ihm_partie.nb_joueurs_tot
+        for player_input in ihm_partie.les_joueurs[:self.nb_joueurs]:
             nom = player_input[0]
             couleur = player_input[1]
-            if "IA" in nom:
-                self.les_joueurs[nom] = IA_player(nom, couleur)
+            IA_level=player_input[2]
+            if IA_level:
+                self.les_joueurs[nom] = IA_player(nom, couleur, IA_level)
             else:
                 self.les_joueurs[nom] = Joueur(nom, couleur)
             self.ordre.append(nom)
@@ -890,8 +893,10 @@ class Partie_qt(Jeu):
         """
         """Les choix sont faits en direct par le joueur dans l'IHM.
         Les fonctions de contrôle du jeu sont appelées dans la partie IHM."""
-        print(IhmJoueur(ihm_partie).launch_joueur(joueur))
-        return True
+        ihm_partie.tour_joueur(joueur)
+        # return False
+        # ihm_partie.show()
+        # return False
         # print("C'est le tour de " + joueur.nom_joueur)
         # choix: int = int(input(
         #     "Que voulez-vous faire ?\n" + "1. Prendre des cartes Wagon\n2. Prendre possession d'une route\n3. "
@@ -1024,6 +1029,7 @@ class Partie_qt(Jeu):
         # print("Fin du tour.")
 
         " Version pour l'IHM"
+        self.update_wagons_stack()
         # Carte visible
         if ihm_partie.visible_wagon:
             nom_carte = ihm_partie.visible_wagon
@@ -1042,20 +1048,18 @@ class Partie_qt(Jeu):
         # TODO: vérifier le cas où toutes les cartes ont été prises par les joueurs. => option plus disponible tant
         #  qu'il n'en défausse pas. => se fait tout seul ? car les cartes ne s'affichent plus ? à vérifier.
 
-    def verif_locomotive(self):
+    def update_wagons_stack(self):
         """
-        Vérifie que les cartes face visible ne présentent pas plus de 3 cartes locomotives.
-        Sinon, défausse les 5 cartes et en remet 5.
-        :return:
+        Update the wagons' stack according to rules.
         """
         n = len(self.pile_cartes_wagon)
         if self.pile_cartes_wagon[:5].count("locomotive") >= 3:
             for k in range(5):
                 self.defausse_wagon.append(self.pile_cartes_wagon.pop(0))
-            if n < 5:  # renouvellement de la pile de cartes wagon
-                self.pile_cartes_wagon = self.pile_cartes_wagon \
-                                         + self.melange_americain(self.melange_cartes(self.defausse_wagon))
-                self.defausse_wagon.clear()
+        if n < 5:  # renouvellement de la pile de cartes wagon
+            self.pile_cartes_wagon = self.pile_cartes_wagon \
+                                     + self.melange_americain(self.melange_cartes(self.defausse_wagon))
+            self.defausse_wagon.clear()
 
     def prendre_route(self, joueur):
         """
@@ -1110,7 +1114,7 @@ class Partie_qt(Jeu):
                     couleur)  # à voir : on a plusieurs solutions pour la défausse des cartes.
             # retrait des wagons de la main du joueur :
             joueur.main_wagon[couleur] -= route[1]
-            # TODO: faire un accesseur en écriture pour vérifier qu'aucune entrée de wagons soient négatives.
+            # DONE: faire un accesseur en écriture pour vérifier qu'aucune entrée de wagons soient négatives.
             # ajout de la route au joueur :
             joueur.route_prise.append(nom_route)
             print("Vous avez pris la route de {} à {}".format(nom_route[0], nom_route[1]))
@@ -1152,6 +1156,7 @@ class Partie_qt(Jeu):
         fait tourner une partie complète du jeu. du début à la fin.
         :return:
         """
+        print("Préparation de la partie")
         self.debut_partie(ihm_partie)
         self.preparation_partie()
         """
@@ -1171,7 +1176,9 @@ class Partie_qt(Jeu):
         fin_tour = False
         while joueur.wagons > 2:
             if not fin_tour:
+                print(f"Tour du joueur n°{i}")
                 fin_tour = self.tour(joueur, ihm_partie)
+                # time.sleep(10)
             else:
                 if i == len(self.ordre) - 1:
                     i = 0
@@ -1181,8 +1188,10 @@ class Partie_qt(Jeu):
                 joueur = self.les_joueurs[nom]
                 fin_tour = False
         self.rotation_joueur(i)
+        print("Dernier tour")
         for nom in self.ordre:
-            self.tour(self.les_joueurs[nom], ihm_partie)
+            fin_tour=self.tour(self.les_joueurs[nom], ihm_partie)
+        ihm_partie.ui.stackedWidget.setCurrentWidget(ihm_partie.ui.Fin_partie)
         print("Fin de partie\nAffichage du score bientôt disponible")
         """
         Fin du jeu
@@ -1196,6 +1205,7 @@ from Score import Score
 import matplotlib.pyplot as plt
 import random as r
 from interface import IhmJoueur
+import time
 
 if __name__ == '__main__':
     p = partie()
