@@ -71,7 +71,7 @@ font: 20pt &quot;K22 Didoni Swash&quot;;
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="Menu_principal">
        <property name="styleSheet">
@@ -708,6 +708,11 @@ width: 100;
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <item>
+             <property name="text">
+              <string/>
+             </property>
+            </item>
             <item>
              <property name="text">
               <string>Ajouter le nom des joueurs dynamiquement</string>
@@ -1830,45 +1835,9 @@ border-style:solid;</string>
          </layout>
         </item>
        </layout>
-       <zorder>emplacement_carte</zorder>
-       <zorder>destination_1</zorder>
-       <zorder>autre_j1</zorder>
-       <zorder>autre_j2</zorder>
-       <zorder>autre_j3</zorder>
-       <zorder>autre_j4</zorder>
-       <zorder>destination_2</zorder>
-       <zorder>destination_3</zorder>
-       <zorder>wagon1</zorder>
-       <zorder>wagon2</zorder>
-       <zorder>wagon3</zorder>
-       <zorder>wagon4</zorder>
-       <zorder>wagon5</zorder>
-       <zorder>destination_1</zorder>
-       <zorder>destination_2</zorder>
-       <zorder>destination_3</zorder>
-       <zorder>layoutWidget_7</zorder>
-       <zorder>label_29</zorder>
-       <zorder>label_30</zorder>
-       <zorder>label_31</zorder>
-       <zorder>label_32</zorder>
-       <zorder>label_33</zorder>
-       <zorder>label_34</zorder>
-       <zorder>label_35</zorder>
-       <zorder>label_36</zorder>
-       <zorder>label_37</zorder>
-       <zorder>label_interaction_joueur</zorder>
-       <zorder>input_interaction</zorder>
-       <zorder>label_21</zorder>
-       <zorder>lineEdit_7</zorder>
-       <zorder>horizontalSpacer_4</zorder>
-       <zorder>horizontalSpacer_5</zorder>
-       <zorder>spacer_droit</zorder>
-       <zorder>spacer_gauche</zorder>
        <zorder></zorder>
        <zorder>pioche_wagon</zorder>
        <zorder>pioche_destination</zorder>
-       <zorder>layoutWidget_12</zorder>
-       <zorder></zorder>
        <zorder>spacer_gauche_2</zorder>
        <zorder>titre_nom_joueur</zorder>
        <zorder>spacer_droit_2</zorder>
