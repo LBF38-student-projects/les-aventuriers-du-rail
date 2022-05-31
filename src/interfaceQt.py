@@ -112,6 +112,15 @@ class MonAppli(QtWidgets.QMainWindow):
         self.ui.wagon5.mouseReleaseEvent = self.prendre_wagon5
         self.ui.pioche_wagon.mouseReleaseEvent = self.prendre_pioche_wagon
 
+
+    def affichage_route_prise(self,joueur,route_prise):
+        """
+        Affiche une route prise sur la carte des USA.
+        """
+        # TODO: draw straight lines between each city of the taken road.
+        pass
+
+
     def prendre_wagon1(self,event):
         self.partie.pile_cartes_wagon.pop(0)
         self.update_wagon_stack()
@@ -448,6 +457,12 @@ class MonAppli(QtWidgets.QMainWindow):
         """
         # On initialise/réinitialise les variables pour l'affichage du joueur actuel.
         self.ui.titre_nom_joueur.setText(joueur.nom_joueur)
+        self.ui.titre_nom_joueur.setStyleSheet(f"background-color:rgb(121, 255, 251);\n"
+                                            "border-radius:20;\n"
+                                            "border-color:rgb(50,50,50);\n"
+                                            "border-width:2;\n"
+                                            "border-style:solid;")
+        # FIXME: définir une fonction pour convertir la couleur du joueur
         self.ui.score_joueur.setText(str(joueur.nb_points))
         self.update_main_joueur(joueur)
         self.update_main_destination(joueur)
@@ -532,3 +547,43 @@ if __name__ == "__main__":
     window = MonAppli()
     window.show()
     app.exec_()
+
+    # Tests
+
+    # # Code pour afficher un graphique dans un QGraphicView.
+    # from PyQt5 import QtWidgets
+    #
+    # import matplotlib.pyplot as plt
+    # from matplotlib.figure import Figure
+    # from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+    #
+    # import numpy as np
+    #
+    # app = QtWidgets.QApplication(sys.argv)
+    #
+    # scene = QtWidgets.QGraphicsScene()
+    # view = QtWidgets.QGraphicsView(scene)
+    #
+    # figure = Figure()
+    # axes = figure.gca()
+    # # axes.set_title("My Plot")
+    # x = np.linspace(1, 10)
+    # y = np.linspace(1, 10)
+    # y1 = np.linspace(11, 20)
+    # axes.plot(x, y, "-k", label="first one")
+    # axes.plot(x, y1, "-b", label="second one")
+    # axes.axis(False)
+    # # axes.legend()
+    # # axes.grid(True)
+    #
+    # canvas = FigureCanvas(figure)
+    # proxy_widget = scene.addWidget(canvas)
+    # # or
+    # # proxy_widget = QtWidgets.QGraphicsProxyWidget()
+    # # proxy_widget.setWidget(canvas)
+    # # scene.addItem(proxy_widget)
+    #
+    # view.resize(640, 480)
+    # view.show()
+    #
+    # sys.exit(app.exec_())

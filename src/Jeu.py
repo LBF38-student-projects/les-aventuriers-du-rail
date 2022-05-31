@@ -342,7 +342,11 @@ class Jeu():
         Affiche un point pour chaque ville avec le nom en dessous
         Relie chaque ville par un trait gris quand non occupé
         """
-        plateau = plt.figure()
+        # plateau = plt.figure()
+        fig, ax = plt.subplots()
+        plt.rcParams["figure.figsize"] = [7.00, 3.50]
+        plt.rcParams["figure.autolayout"] = True
+        im = plt.imread("img/carte_usa.jpg")
 
         """Affichage des liens entre les villes :"""
         for ville in self.liens_villes.keys():
@@ -350,16 +354,30 @@ class Jeu():
             for ville2 in self.liens_villes[ville].keys():
                 nom_lien, couleur_lien = ville2, self.liens_villes[ville][ville2][0]
                 x_liens, y_liens = self.villes[nom_lien]
-                plt.plot((x_ville, x_liens), (y_ville, y_liens), couleur_lien, linewidth=5)
+                rx=603/36
+                ry=380/23
+                plt.plot((x_ville*rx, x_liens*rx), (y_ville*ry, y_liens*ry), color=couleur_lien,linewidth=5)
+                # Pour les lignes en tirets : linestyle="dashed"
         """Affichage des points + noms des villes :"""
         for ville in self.villes.keys():
             x, y = self.villes[ville]
-            plt.plot(x, y, 'ro')
-            plt.text(x - 1, y - 1, ville)
+            rx=603/36
+            ry=380/23
+            plt.plot(x*rx, y*ry, 'ro')
+            plt.text((x - 1)*rx, (y - 1)*ry, ville)
         """Arrière-plan du plateau :"""
-        ax = plt.axes()
-        ax.set_facecolor('lightgrey')
-        return plateau
+        # ax = plt.axes()
+        # ax.set_facecolor('lightgrey')
+        # ax.imshow(im, extent=[1,36,1,22.7])
+        ax.imshow(im, extent=[0,603,0,380])
+        plt.axis(False)
+
+        # im = ax.imshow(im)
+        # format image: 603x380
+        # Grille pour les points du graphe: 36x22.5
+        # Rapport : 1.6
+        plt.show()
+        # return plateau
 
     def melange_cartes(self, cartes):
         """

@@ -174,7 +174,7 @@ class IA_player(Joueur):
 
     def choix_aleatoire(self):
         """Choisit aléatoirement ses choix"""
-        if self.difficulty == -1:
+        if self.difficulty == 0:
             choix = rd.randint(1, 2)
         else:
             choix = 3
