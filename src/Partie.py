@@ -2,10 +2,7 @@
 @authors: Mathis URIEN, Kenza BELAID"""
 
 
-
-
 # TODO: penser à faire les tests unitaires sur les classes et méthodes
-
 
 
 class Jeu(object):
@@ -432,7 +429,7 @@ class Partie(Jeu):
             nom = player_input[0]
             couleur = player_input[1]
             if "IA" in nom:
-                self.les_joueurs[nom]=IA_player(nom,couleur)
+                self.les_joueurs[nom] = IA_player(nom, couleur)
             else:
                 self.les_joueurs[nom] = Joueur(nom, couleur)
             self.ordre.append(nom)
@@ -586,7 +583,7 @@ class Partie(Jeu):
         plus prendre de cartes. Il ne peut donc que prendre possession d’une route ou tirer de nouvelles cartes 
         Destination. """
 
-        "Version console" # Commenté pour éviter les inputs et arrêt de l'IHM.
+        "Version console"  # Commenté pour éviter les inputs et arrêt de l'IHM.
         # print("Voici les cartes sur la table :")
         # DONE: Vérifier le cas pour les locomotives pr mélanger à nouveau si besoin => vérif_locomotive()
         # self.verif_locomotive()
@@ -642,7 +639,7 @@ class Partie(Jeu):
         if ihm_partie.hide_wagon:
             nom_carte = ihm_partie.hide_wagon
             joueur.main_wagon[nom_carte] += 1
-            return False # Même si on tire une carte locomotive, cela compte quand même comme 1 seule carte tirée.
+            return False  # Même si on tire une carte locomotive, cela compte quand même comme 1 seule carte tirée.
 
         # DONE: vérifier que le joueur ne peut ajouter que 2 cartes au max.
         # DONE: vérifier qu'il peut prendre 2 cartes au total.
@@ -657,13 +654,13 @@ class Partie(Jeu):
         Sinon, défausse les 5 cartes et en remet 5.
         :return:
         """
-        n=len(self.pile_cartes_wagon)
+        n = len(self.pile_cartes_wagon)
         if self.pile_cartes_wagon[:5].count("locomotive") >= 3:
             for k in range(5):
                 self.defausse_wagon.append(self.pile_cartes_wagon.pop(0))
-            if n < 5: # renouvellement de la pile de cartes wagon
-                self.pile_cartes_wagon=self.pile_cartes_wagon\
-                                       +self.melange_americain(self.melange_cartes(self.defausse_wagon))
+            if n < 5:  # renouvellement de la pile de cartes wagon
+                self.pile_cartes_wagon = self.pile_cartes_wagon \
+                                         + self.melange_americain(self.melange_cartes(self.defausse_wagon))
                 self.defausse_wagon.clear()
 
     def prendre_route(self, joueur):
@@ -777,10 +774,10 @@ class Partie(Jeu):
         i = 0
         nom = self.ordre[i]
         joueur = self.les_joueurs[nom]
-        fin_tour=False
+        fin_tour = False
         while joueur.wagons > 2:
             if not fin_tour:
-                fin_tour=self.tour(joueur, ihm_partie)
+                fin_tour = self.tour(joueur, ihm_partie)
             else:
                 if i == len(self.ordre) - 1:
                     i = 0
@@ -788,7 +785,7 @@ class Partie(Jeu):
                     i += 1
                 nom = self.ordre[i]
                 joueur = self.les_joueurs[nom]
-                fin_tour=False
+                fin_tour = False
         self.rotation_joueur(i)
         for nom in self.ordre:
             self.tour(self.les_joueurs[nom], ihm_partie)
@@ -824,7 +821,7 @@ class Partie_qt(Jeu):
         for player_input in ihm_partie.les_joueurs[:self.nb_joueurs]:
             nom = player_input[0]
             couleur = player_input[1]
-            IA_level=player_input[2]
+            IA_level = player_input[2]
             if IA_level:
                 self.les_joueurs[nom] = IA_player(nom, couleur, IA_level)
             else:
@@ -832,25 +829,6 @@ class Partie_qt(Jeu):
             self.ordre.append(nom)
         # DONE: Demander le nb total de joueurs de la partie, nb joueurs humains. => compléter par des joueurs IAs
         # DONE: vérifier que nb_joueurs est compris entre 2 et 5. => vérifié dans l'IHM car on ne peut pas dépasser 5.
-
-    # @property
-    # def nb_joueurs(self):
-    #     """Accesseur en lecture du nombre de joueurs de la partie"""
-    #     return self.__nb_joueurs
-    #
-    # @nb_joueurs.setter
-    # def nb_joueurs(self, value):
-    #     """Accesseur en écriture du nombre de joueurs de la partie"""
-    #     #DONE: traiter le cas où la valeur n'est pas un int mais du texte par exemple. => solution dans l'IHM.
-    #
-    #     # if type(value) != int:
-    #     #     print("Indiquer un nombre.")
-    #     #     self.nb_joueurs = input("Nombre de joueurs pour la partie")
-    #     if int(value) not in range(2, 6):
-    #         print("Le nombre de joueurs doit être compris entre 2 et 5 pour lancer une partie.\nCela est différent du "
-    #               "nombre de joueurs IAs.\nVeuillez rentrer à nouveau une valeur correcte.")
-    #         self.nb_joueurs = input("Nombre de joueurs pour la partie")
-    #     self.__nb_joueurs = int(value)
 
     def rotation_joueur(self, index):
         """
@@ -879,7 +857,7 @@ class Partie_qt(Jeu):
     def liste_joueurs(self):
         """
         Renvoie la liste des joueurs en partie dans l'ordre de leur tour.
-        :return:
+        Pour la phase de test du jeu sur console/terminal.
         """
         liste_joueurs = ""
         for joueur in self.ordre:
@@ -1045,8 +1023,9 @@ class Partie_qt(Jeu):
         # DONE: vérifier qu'il peut prendre 2 cartes au total.
         # DONE: vérifier le cas où il prend une locomotive lorsque c'est face visible.
         # DONE: vérifier le cas où il n'y a plus de cartes et qu'il faut mélanger la défausse. => dans verif_locomotive
-        # TODO: vérifier le cas où toutes les cartes ont été prises par les joueurs. => option plus disponible tant
-        #  qu'il n'en défausse pas. => se fait tout seul ? car les cartes ne s'affichent plus ? à vérifier.
+        # DONE: vérifier le cas où toutes les cartes ont été prises par les joueurs. => option plus disponible tant
+        #  qu'il n'en défausse pas. => se fait tout seul ? car les cartes ne s'affichent plus ? Oui. Ne s'affiche plus
+        #  car tout dans la défausse.
 
     def update_wagons_stack(self):
         """
@@ -1056,7 +1035,7 @@ class Partie_qt(Jeu):
         if self.pile_cartes_wagon[:5].count("locomotive") >= 3:
             for k in range(5):
                 self.defausse_wagon.append(self.pile_cartes_wagon.pop(0))
-        if n < 5:  # renouvellement de la pile de cartes wagon
+        if n < 5 and self.defausse_wagon:  # renouvellement de la pile de cartes wagon
             self.pile_cartes_wagon = self.pile_cartes_wagon \
                                      + self.melange_americain(self.melange_cartes(self.defausse_wagon))
             self.defausse_wagon.clear()
@@ -1111,7 +1090,7 @@ class Partie_qt(Jeu):
             # défausse des cartes de la main vers la défausse
             for k in range(route[1]):
                 self.defausse_wagon.append(
-                    couleur)  # à voir : on a plusieurs solutions pour la défausse des cartes.
+                    couleur)
             # retrait des wagons de la main du joueur :
             joueur.main_wagon[couleur] -= route[1]
             # DONE: faire un accesseur en écriture pour vérifier qu'aucune entrée de wagons soient négatives.
@@ -1190,7 +1169,7 @@ class Partie_qt(Jeu):
         self.rotation_joueur(i)
         print("Dernier tour")
         for nom in self.ordre:
-            fin_tour=self.tour(self.les_joueurs[nom], ihm_partie)
+            fin_tour = self.tour(self.les_joueurs[nom], ihm_partie)
         ihm_partie.ui.stackedWidget.setCurrentWidget(ihm_partie.ui.Fin_partie)
         print("Fin de partie\nAffichage du score bientôt disponible")
         """
@@ -1198,6 +1177,7 @@ class Partie_qt(Jeu):
         Lorsque la réserve de wagons d’un joueur est de 0, 1 ou 2 wagons après avoir joué son tour, 
         chaque joueur, en incluant celui-ci, joue encore un tour. À l’issue de ce dernier tour, le jeu s’arrête et 
         chacun compte ses points """
+
 
 # Imports :
 from Joueur import *
