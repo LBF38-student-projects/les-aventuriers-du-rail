@@ -11,6 +11,8 @@ from PySide2.QtCore import (QCoreApplication, QMetaObject, QSize, Qt, QPoint)
 from PySide2.QtGui import (QFont,
                            QIcon, QPixmap, QMouseEvent)
 from PySide2.QtWidgets import *
+from matplotlib.backends.backend_template import FigureCanvas
+
 from menu_principal import *
 from Joueur import *
 from Partie import Partie_qt
@@ -126,36 +128,39 @@ class MonAppli(QMainWindow):
 
         self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal)
 
-    def affichage_route_prise(self, joueur, route_prise):
+    def update_route(self):
         """
-        Affiche une route prise sur la carte des USA.
+        Affiche le plateau et les routes.
         """
+        scene = QGraphicsScene(self.ui.emplacement_carte)
+        canvas = FigureCanvas(self.partie.show_plateau())
+        scene.addWidget(canvas)
+        self.ui.emplacement_carte(scene)
+
         # TODO: draw straight lines between each city of the taken road.
-        pass
+
+    def prendre_wagon(self, idx, visible):
+        self.partie.prendre_cartes_wagon(idx, visible)
+        self.update_wagon_stack()
+        self.update_main_joueur(self.partie.current_player)
 
     def prendre_wagon1(self, event):
-        self.partie.pile_cartes_wagon.pop(0)
-        self.update_wagon_stack()
+        self.prendre_wagon(0, True)
 
     def prendre_wagon2(self, event):
-        self.partie.pile_cartes_wagon.pop(1)
-        self.update_wagon_stack()
+        self.prendre_wagon(1, True)
 
     def prendre_wagon3(self, event):
-        self.partie.pile_cartes_wagon.pop(2)
-        self.update_wagon_stack()
+        self.prendre_wagon(2, True)
 
     def prendre_wagon4(self, event):
-        self.partie.pile_cartes_wagon.pop(3)
-        self.update_wagon_stack()
+        self.prendre_wagon(3, True)
 
     def prendre_wagon5(self, event):
-        self.partie.pile_cartes_wagon.pop(4)
-        self.update_wagon_stack()
+        self.prendre_wagon(4, True)
 
     def prendre_pioche_wagon(self, event):
-        self.partie.pile_cartes_wagon.pop(5)
-        self.update_wagon_stack()
+        self.prendre_wagon(5, False)
 
     def print_value(self, event):
         print(f"clicked: {event}")
@@ -444,6 +449,7 @@ class MonAppli(QMainWindow):
         self.update_main_destination(joueur)
         self.update_wagon_stack()
         self.update_autres_joueurs(joueur)
+        self.update_route()
 
         # On cache et remplace les interactions avec le joueur par les buttons fin_tour ou fin_partie
         # si le tour ou la partie est fini.

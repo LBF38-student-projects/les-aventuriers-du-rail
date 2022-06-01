@@ -908,6 +908,7 @@ class IhmJoueur:
                     self.visible_wagon = self.ihm_partie.partie.pile_cartes_wagon.pop(k)
                     self.interaction_joueur.title = f"Vous avez tiré un wagon {self.visible_wagon}"
                     # print("Carte visible")
+
             # Ajout des cartes à la main du joueur et vérif des cartes selon règle du jeu.
             if self.count_wagon_card < 2 and (self.hide_wagon or self.visible_wagon):
                 locomotive = self.ihm_partie.partie.prendre_cartes_wagon(joueur, self)

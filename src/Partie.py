@@ -356,31 +356,27 @@ class Jeu(object):
         im = plt.imread("img/carte_usa.jpg")
 
         """Affichage des liens entre les villes :"""
-        for ville in self.liens_villes.keys():
-            x_ville, y_ville = self.villes[ville]
-            for ville2 in self.liens_villes[ville].keys():
-                nom_lien, couleur_lien = ville2, self.liens_villes[ville][ville2][0]
-                x_liens, y_liens = self.villes[nom_lien]
-                rx = 603 / 36
-                ry = 380 / 23
-                plt.plot((x_ville * rx, x_liens * rx), (y_ville * ry, y_liens * ry), color=couleur_lien, linewidth=5)
-                # Pour les lignes en tirets : linestyle="dashed"
-        """Affichage des points + noms des villes :"""
-        for ville in self.villes.keys():
-            x, y = self.villes[ville]
+        for nom_ville, ville in self.villes.items():
+            x_ville, y_ville = ville.coords
             rx = 603 / 36
             ry = 380 / 23
-            plt.plot(x * rx, y * ry, 'ro')
-            plt.text((x - 1) * rx, (y - 1) * ry, ville)
+            for nom_lien, value in ville.liens.items():
+                couleur_lien, nb_wagons_lien = value
+                x_liens, y_liens = self.villes[nom_lien].coords
+                plt.plot((x_ville * rx, x_liens * rx), (y_ville * ry, y_liens * ry), color=couleur_lien, linewidth=5)
+                # Pour les lignes en tirets : linestyle="dashed"
+            plt.plot(x_ville * rx, y_ville * ry, 'ro')
+            plt.text((x_ville - 1) * rx, (y_ville - 1) * ry, nom_ville)
         """Arrière-plan du plateau :"""
         # ax.imshow(im, extent=[1,36,1,22.7])
         ax.imshow(im, extent=[0, 603, 0, 380])
         plt.axis(False)
-        plt.show()
+        # plt.show()
         # im = ax.imshow(im)
         # format image: 603x380
         # Grille pour les points du graphe: 36x22.5
         # Rapport : 1.6
+        return fig
 
 
 class Ville(object):
@@ -809,6 +805,7 @@ class Partie_qt(Jeu):
 
     def __init__(self):
         super().__init__()
+        self.count_wagon_card = 0
         self.idx_current_player = 0
         self.current_player_name = ""
         self.current_player: Joueur = None
@@ -909,7 +906,7 @@ class Partie_qt(Jeu):
             p1.insert(index, carte)
         return p1
 
-    def prendre_cartes_wagon(self, joueur, ihm_partie):
+    def prendre_cartes_wagon(self, idx_carte_prise, carte_visible):
         """
          1. Prendre des cartes Wagon :
         – le joueur peut prendre 2 cartes Wagon.
@@ -944,73 +941,19 @@ class Partie_qt(Jeu):
         plus prendre de cartes. Il ne peut donc que prendre possession d’une route ou tirer de nouvelles cartes 
         Destination. """
 
-        "Version console"  # Commenté pour éviter les inputs et arrêt de l'IHM.
-        # print("Voici les cartes sur la table :")
-        # DONE: Vérifier le cas pour les locomotives pr mélanger à nouveau si besoin => vérif_locomotive()
-        # self.verif_locomotive()
-        # for k in range(5):  # On montre les 5 premières cartes de la pile pour faire les cartes face visible.
-        #     print(self.pile_cartes_wagon[k])
-        # # print("Vous pouvez choisir 2 cartes")
-        # visible = input("Voulez-vous une 1ère carte visible ? [y/n]") == "y"
-        # nom_carte = ""
-        # if visible:
-        #     nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
-        #     while nom_carte not in self.pile_cartes_wagon[0:5]:
-        #         print("Il faut que la carte soit parmi celles face visible.\nRecommencer.")
-        #         nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
-        #     joueur.main_wagon[nom_carte] += 1
-        #     self.pile_cartes_wagon.pop(
-        #         self.pile_cartes_wagon.index(nom_carte))
-        #     # Pour l'instant, on enlève la première occurrence du nom_carte et non celle choisi parmi les 5. A vérifier.
-        #     print("Vous avez choisi la carte " + str(nom_carte))
-        # else:
-        #     carte = self.pile_cartes_wagon.pop(6)  # Car c'est la carte au-dessus de la pile après les cartes visibles.
-        #     joueur.main_wagon[carte] += 1
-        #     print("Vous avez pris une carte face cachée.")
-        #     # DONE: ajouter une fonctionnalité pour que le joueur puisse voir la carte sans que les autres la voient.
-        #     #  Solution : Faire un jeu contre IA ou faire plusieurs fenêtres ou jouer en LAN ou jouer en
-        #     #  ligne/multijoueur.
-        # if nom_carte != "locomotive":
-        #     for k in range(5):
-        #         print(self.pile_cartes_wagon[k])
-        #     visible = input("Voulez-vous une 2e carte visible ? [y/n]") == "y"
-        #     if visible:
-        #         nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
-        #         while nom_carte not in self.pile_cartes_wagon[0:5]:
-        #             print("Il faut que la carte soit parmi celles face visible.\nRecommencer.")
-        #             nom_carte = input("Quelle carte voulez-vous ? Indiquer un nom de carte parmi celle visible.")
-        #         joueur.main_wagon[nom_carte] += 1
-        #         self.pile_cartes_wagon.pop(self.pile_cartes_wagon.index(nom_carte))
-        #         # DONE: améliorer le retrait des cartes. Pour l'instant, on enlève la première occurrence du
-        #         #  nom_carte et non celle choisi parmi les 5. A vérifier.
-        #         print("Vous avez choisi la carte " + str(nom_carte))
-        #     else:
-        #         carte = self.pile_cartes_wagon.pop(6)  # Car c'est la carte au-dessus de la pile après celles visibles.
-        #         joueur.main_wagon[carte] += 1
-        #         print("Vous avez pris une carte face cachée.")
-        # print("Fin du tour.")
-
         " Version pour l'IHM"
-        # FIXME: lier à la nouvelle version d'IHM.
+        # FIXED: adaptation à la nouvelle IHM.
         self.update_wagons_stack()
-        # Carte visible
-        if ihm_partie.visible_wagon:
-            nom_carte = ihm_partie.visible_wagon
-            joueur.main_wagon[nom_carte] += 1
-            return "locomotive" in nom_carte
-        # Carte face cachée
-        if ihm_partie.hide_wagon:
-            nom_carte = ihm_partie.hide_wagon
-            joueur.main_wagon[nom_carte] += 1
-            return False  # Même si on tire une carte locomotive, cela compte quand même comme 1 seule carte tirée.
-
-        # DONE: vérifier que le joueur ne peut ajouter que 2 cartes au max.
-        # DONE: vérifier qu'il peut prendre 2 cartes au total.
-        # DONE: vérifier le cas où il prend une locomotive lorsque c'est face visible.
-        # DONE: vérifier le cas où il n'y a plus de cartes et qu'il faut mélanger la défausse. => dans verif_locomotive
-        # DONE: vérifier le cas où toutes les cartes ont été prises par les joueurs. => option plus disponible tant
-        #  qu'il n'en défausse pas. => se fait tout seul ? car les cartes ne s'affichent plus ? Oui. Ne s'affiche plus
-        #  car tout dans la défausse.
+        if self.count_wagon_card < 2:
+            carte_prise = self.pile_cartes_wagon.pop(idx_carte_prise)
+            if "locomotive" in carte_prise and carte_visible:
+                if self.count_wagon_card == 1:
+                    return self.pile_cartes_wagon.insert(idx_carte_prise, "locomotive")
+                self.count_wagon_card += 2
+                self.current_player.main_wagon[carte_prise] += 1
+            else:
+                self.count_wagon_card += 1
+                self.current_player.main_wagon[carte_prise] += 1
 
     def update_wagons_stack(self):
         """
@@ -1163,7 +1106,8 @@ class Partie_qt(Jeu):
         This is a turn.
         Lance le tour du joueur actuel et son IHM correspondant.
         """
-        # Appel de l'ihm pour lancer le tour du joueur.
+        # initialisation des paramètres pour les actions du joueur
+        self.count_wagon_card = 0
         ihm_partie.tour_joueur(self.current_player)
         print(f"Turn of {self.current_player.nom_joueur}")
 
@@ -1206,9 +1150,10 @@ from interface import IhmJoueur
 import time
 
 if __name__ == '__main__':
-    p = partie()
+    # p = partie()
     # j = Jeu()
     # p.partie()
+    print("hello world")
 
 # A conserver au cas où, pour plus tard :
 
