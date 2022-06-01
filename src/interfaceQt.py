@@ -18,12 +18,15 @@ import numpy as np
 # créée avec QT Designer. Nous configurons après l'interface utilisateur
 # dans le constructeur (la méthode init()) de notre classe
 
+# TODO: maj de menu_principal.py en fonction des nouvelles modifs du fichier éponyme du dossier Qt Designer.
+#  => comparer les fichiers.
+
 class MonAppli(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.les_wagons = [self.ui.wagon1, self.ui.wagon2, self.ui.wagon3, self.ui.wagon4, self.ui.wagon5]
+        self.pioche_wagons = [self.ui.wagon1, self.ui.wagon2, self.ui.wagon3, self.ui.wagon4, self.ui.wagon5]
         self.les_destinations = [self.ui.destination_1, self.ui.destination_2, self.ui.destination_3]
         self.autres_joueurs = [self.ui.autre_j1, self.ui.autre_j2, self.ui.autre_j3, self.ui.autre_j4]
         self.img_destinations = {
@@ -60,7 +63,6 @@ class MonAppli(QtWidgets.QMainWindow):
             'Seattle to Los Angeles': 'img/seattle_los_angeles.jpg'
         }
         self.img_wagons = {
-            "dos": "img/dos_wagon.jpg",
             "blanc": "img/wagon_blanc.jpg",
             "bleu": "img/wagon_bleu.jpg",
             "jaune": "img/wagon_jaune.jpg",
@@ -69,7 +71,8 @@ class MonAppli(QtWidgets.QMainWindow):
             "rose": "img/wagon_rose.jpg",
             "rouge": "img/wagon_rouge.jpg",
             "vert": "img/wagon_vert.jpg",
-            "locomotive": "img/locomotive.jpg"
+            "locomotive": "img/locomotive.jpg",
+            "dos": "img/dos_wagon.jpg"
         }
         "Navigations entre les pages"
         # Buttons de l'écran Menu Principal
@@ -85,8 +88,7 @@ class MonAppli(QtWidgets.QMainWindow):
         # => utile pour la fin de tour et la fin de partie.
         self.create_button_fin_partie()
         self.create_button_fin_tour()
-        self.create_label_nb_wagons(5)
-        self.ui.button_fin_tour.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Joueur))
+        self.ui.button_fin_tour.clicked.connect(lambda: self.)
         # Connexion du button fin_partie avec écran Fin de partie
         self.ui.button_fin_partie.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Fin_partie))
         # Buttons de l'écran Fin de Partie
@@ -112,16 +114,14 @@ class MonAppli(QtWidgets.QMainWindow):
         self.ui.wagon5.mouseReleaseEvent = self.prendre_wagon5
         self.ui.pioche_wagon.mouseReleaseEvent = self.prendre_pioche_wagon
 
-
-    def affichage_route_prise(self,joueur,route_prise):
+    def affichage_route_prise(self, joueur, route_prise):
         """
         Affiche une route prise sur la carte des USA.
         """
         # TODO: draw straight lines between each city of the taken road.
         pass
 
-
-    def prendre_wagon1(self,event):
+    def prendre_wagon1(self, event):
         self.partie.pile_cartes_wagon.pop(0)
         self.update_wagon_stack()
 
@@ -129,19 +129,19 @@ class MonAppli(QtWidgets.QMainWindow):
         self.partie.pile_cartes_wagon.pop(1)
         self.update_wagon_stack()
 
-    def prendre_wagon3(self,event):
+    def prendre_wagon3(self, event):
         self.partie.pile_cartes_wagon.pop(2)
         self.update_wagon_stack()
 
-    def prendre_wagon4(self,event):
+    def prendre_wagon4(self, event):
         self.partie.pile_cartes_wagon.pop(3)
         self.update_wagon_stack()
 
-    def prendre_wagon5(self,event):
+    def prendre_wagon5(self, event):
         self.partie.pile_cartes_wagon.pop(4)
         self.update_wagon_stack()
 
-    def prendre_pioche_wagon(self,event):
+    def prendre_pioche_wagon(self, event):
         self.partie.pile_cartes_wagon.pop(5)
         self.update_wagon_stack()
 
@@ -343,7 +343,14 @@ class MonAppli(QtWidgets.QMainWindow):
         """
         Update the current player's wagons cards display.
         """
-        pass
+        self.ui_main_wagons = [self.ui.main_wagon1, self.ui.main_wagon2, self.ui.main_wagon3, self.ui.main_wagon4,
+                               self.ui.main_wagon5, self.ui.main_wagon6, self.ui.main_wagon7, self.ui.main_wagon8,
+                               self.ui.main_wagon9]
+        ordre_couleur = list(self.img_wagons)[:-1]
+        for u, ui_wagon in enumerate(self.ui_main_wagons):
+            couleur = ordre_couleur[u]
+            ui_wagon.setStyleSheet(f"background-image:url({couleur})")
+            ui_wagon.setText(f"{joueur.main_wagon[couleur]}")
 
     def update_main_destination(self, joueur):
         """
@@ -367,9 +374,9 @@ class MonAppli(QtWidgets.QMainWindow):
         Update the wagon stack. Shuffle the deck if necessary.
         """
         self.hide_wagons()
-        self.partie.update_wagons_stack() # On vérifie pour les locomotives et refait la pile si tout dans la défausse.
-        for w, wagon in enumerate(self.les_wagons):
-            if self.partie.pile_cartes_wagon and w<len(self.partie.pile_cartes_wagon):
+        self.partie.update_wagons_stack()  # On vérifie pour les locomotives et refait la pile si tout dans la défausse.
+        for w, wagon in enumerate(self.pioche_wagons):
+            if self.partie.pile_cartes_wagon and w < len(self.partie.pile_cartes_wagon):
                 wagon_path = self.img_wagons[self.partie.pile_cartes_wagon[w]]
                 wagon.setPixmap(QtGui.QPixmap(wagon_path))
                 wagon.show()
@@ -380,7 +387,7 @@ class MonAppli(QtWidgets.QMainWindow):
         """
         Hide all wagons cards
         """
-        for wagon in self.les_wagons:
+        for wagon in self.pioche_wagons:
             wagon.hide()
 
     def hide_autres_joueurs(self):
@@ -403,19 +410,6 @@ class MonAppli(QtWidgets.QMainWindow):
             self.autres_joueurs[p].setText(plain_text)
             self.autres_joueurs[p].show()
 
-    def create_label_nb_wagons(self,nb_wagons):
-        self.ui.main_nb_wagon1 = QtWidgets.QLabel(self.ui.Joueur)
-        self.ui.main_nb_wagon1.setMinimumSize(QtCore.QSize(100, 64))
-        font = QtGui.QFont()
-        font.setPointSize(16)
-        font.setBold(True)
-        font.setWeight(75)
-        self.ui.main_nb_wagon1.setFont(font)
-        self.ui.main_nb_wagon1.setText(f"{nb_wagons}")
-        self.ui.main_nb_wagon1.setObjectName("main_nb_wagon1")
-        self.ui.main_nb_wagon1.move(QtCore.QPoint(self.ui.main_wagon1.width(),self.ui.main_wagon1.height()))
-        # FIXME: bien positionner le label
-
     def create_button_fin_tour(self):
         """
         Création du bouton fin de tour pour que le joueur puisse déclarer qu'il a fini son tour.
@@ -431,8 +425,8 @@ class MonAppli(QtWidgets.QMainWindow):
         self.ui.button_fin_tour.setObjectName("button_fin_tour")
         _translate = QtCore.QCoreApplication.translate
         self.ui.button_fin_tour.setText(_translate("MainWindow", "Fin de tour"))
-        self.ui.button_fin_tour.move(QtCore.QPoint(self.x()+500,self.y()))
-        print(f"button fin tour: {self.x()+20,self.y(),self.size().height()}")
+        self.ui.button_fin_tour.move(QtCore.QPoint(self.x() + 500, self.y()))
+        print(f"button fin tour: {self.x() + 20, self.y(), self.size().height()}")
 
     def create_button_fin_partie(self):
         """
@@ -457,12 +451,13 @@ class MonAppli(QtWidgets.QMainWindow):
         """
         # On initialise/réinitialise les variables pour l'affichage du joueur actuel.
         self.ui.titre_nom_joueur.setText(joueur.nom_joueur)
-        self.ui.titre_nom_joueur.setStyleSheet(f"background-color:rgb(121, 255, 251);\n"
-                                            "border-radius:20;\n"
-                                            "border-color:rgb(50,50,50);\n"
-                                            "border-width:2;\n"
-                                            "border-style:solid;")
-        # FIXME: définir une fonction pour convertir la couleur du joueur
+        self.ui.titre_nom_joueur.setStyleSheet(f"background-color:{joueur.couleur};\n"
+                                               "border-radius:20;\n"
+                                               "border-color:rgb(50,50,50);\n"
+                                               "border-width:2;\n"
+                                               "border-style:solid;")
+        # DONE: définir une fonction pour convertir la couleur du joueur.
+        # => déjà pris en charge nativement. Nom de la couleur en anglais.
         self.ui.score_joueur.setText(str(joueur.nb_points))
         self.update_main_joueur(joueur)
         self.update_main_destination(joueur)
@@ -485,6 +480,15 @@ class MonAppli(QtWidgets.QMainWindow):
         """
         return not self.fin_tour
 
+    def partie(self,idx):
+        """
+        Lance une partie complète.
+        """
+        # Changement de joueur actuel
+        idx += 1
+        idx = idx % len(self.partie.ordre)
+        joueur = self.partie.ordre[idx]
+
     def start_game(self):
         """
         fait tourner une partie complète du jeu. du début à la fin.
@@ -495,13 +499,12 @@ class MonAppli(QtWidgets.QMainWindow):
         self.partie.choix_tour_joueur(self)
         #
         # Main boucle for the game
-        i = 0
-        nom = self.partie.ordre[i]
-        joueur = self.partie.les_joueurs[nom]
-        print(joueur)
+        i=0
+        nom = self.partie.ordre[self.index_current_player]
+        currentPlayer = self.partie.les_joueurs[nom]
         # print("premier tour test")
         # # self.partie.tour(joueur,self)
-        self.tour_joueur(joueur)
+        self.tour_joueur(currentPlayer)
         # print("fin premier tour test")
         # self.ui.stackedWidget.setCurrentWidget(self.ui.Joueur)
         # fin_tour = False
