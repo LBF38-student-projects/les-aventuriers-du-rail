@@ -15,7 +15,8 @@ class Joueur:
     Couleur_joueur = ['aliceblue', 'antiquewhite', 'antiquewhite1', 'antiquewhite2', 'antiquewhite3', 'antiquewhite4',
                       'aqua', 'aquamarine', 'aquamarine1', 'aquamarine2', 'aquamarine3', 'aquamarine4', 'azure',
                       'azure1', 'azure3', 'azure2', 'azure4', 'beige', 'bisque', 'bisque1', 'bisque2', 'bisque3',
-                      'bisque4', 'black', 'blanchedalmond', "blue",'blue', 'blue1', 'blue2', 'blue3', 'blue4', 'blueviolet',
+                      'bisque4', 'black', 'blanchedalmond', "blue", 'blue', 'blue1', 'blue2', 'blue3', 'blue4',
+                      'blueviolet',
                       'brown', 'brown1', 'brown2', 'brown3', 'brown4', 'burlywood', 'burlywood1', 'burlywood2',
                       'burlywood3', 'burlywood4', 'cadetblue', 'cadetblue1', 'cadetblue2', 'cadetblue3', 'cadetblue4',
                       'chartreuse', 'chartreuse1', 'chartreuse2', 'chartreuse3', 'chartreuse4', 'chocolate',
@@ -79,15 +80,16 @@ class Joueur:
                       'violet', 'violetred', 'violetred1', 'violetred2', 'violetred3', 'violetred4', 'wheat', 'wheat1',
                       'wheat2', 'wheat3', 'wheat4', 'white', 'whitesmoke', 'yellow', 'yellow1', 'yellow2', 'yellow3',
                       'yellow4', 'yellowgreen']
-    convert_color_id={
-        "bleu":"blue",
-        "rouge":"red",
-        "vert":"green",
-        "jaune":"yellow",
-        "orange":"orange",
-        "personnalisée":"random" # TODO: à modifier dans la phase améliorations. => color picker.
+    convert_color_id = {
+        "bleu": "blue",
+        "rouge": "red",
+        "vert": "green",
+        "jaune": "yellow",
+        "orange": "orange",
+        "personnalisée": "random"  # TODO: à modifier dans la phase améliorations. => color picker.
 
     }
+
     # DONE: insérer toutes les couleurs possibles => cf. matplotlib.pyplot par exemple ou docs de pygame
     def __init__(self, nom_joueur, nom_couleur, points=0):
         self.nom_joueur: str = nom_joueur  # Nom du joueur
@@ -144,7 +146,7 @@ class Joueur:
             self.__couleur = self.Couleur_joueur.pop(random.randint(0, len(self.Couleur_joueur) - 1))
         else:
             if nom_couleur in self.convert_color_id.keys():
-                nom_couleur=self.convert_color_id[nom_couleur]
+                nom_couleur = self.convert_color_id[nom_couleur]
             self.__couleur = nom_couleur
             self.Couleur_joueur.pop(self.Couleur_joueur.index(nom_couleur))
 
@@ -156,7 +158,7 @@ class IA_player(Joueur):
         super().__init__(nom_joueur, nom_couleur, points)
         # Difficulté de l'IA : échelle de 0 à 3. IA novice, IA normal, IA expert.
         # Pour IA aléatoire : difficulty = -1.
-        self.levels={
+        self.levels = {
             "IA aléatoire": 0,
             "IA novice": 1,
             "IA normal": 2,
@@ -172,13 +174,46 @@ class IA_player(Joueur):
     def difficulty(self, value):
         self._difficulty = self.levels[value]
 
-    def choix_aleatoire(self):
-        """Choisit aléatoirement ses choix"""
+    def prendre_wagon(self):
+        """
+        Fonction pour réaliser l'action "prendre des cartes wagons" pour l'IA de niveau aléatoire.
+        """
         if self.difficulty == 0:
-            choix = rd.randint(1, 2)
-        else:
-            choix = 3
-        return choix
+            print("prendre_wagon: difficulty 0")
+        # A compléter
+        pass
+
+    def prendre_route(self):
+        """
+        Fonction pour réaliser l'action "prendre des cartes wagons" pour l'IA de niveau aléatoire.
+        """
+        if self.difficulty == 0:
+            print("prendre_route: difficulty 0")
+        # A compléter
+        pass
+
+    def prendre_destinations(self):
+        """
+        Fonction pour réaliser l'action "prendre des cartes wagons" pour l'IA de niveau aléatoire.
+        """
+        if self.difficulty == 0:
+            print("difficulty 0")
+        # A compléter
+        pass
+
+    def tour(self):
+        """
+        Réalise le tour de l'IA. Prend en compte le level défini. Les actions sont en fonction.
+        """
+        if self.difficulty == 0:
+            choix = rd.randint(1, 3)
+            if choix == 1:
+                self.prendre_wagon()
+            if choix == 2:
+                self.prendre_route()
+            if choix == 3:
+                self.prendre_destinations()
+        # A compléter pour les autres niveaux.
 
 
 if __name__ == '__main__':

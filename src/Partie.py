@@ -343,14 +343,17 @@ class Jeu(object):
             for key2, value2 in self.liens_villes[key1].items():
                 self.villes[key1].ajout_liens(key2, value2[0], value2[1])
 
-    def plateau(self):
+    def show_plateau(self):
         """
         Définit le plateau du jeu
         => Construit le graphe des villes
         Affiche un point pour chaque ville avec le nom en dessous
         Relie chaque ville par un trait gris quand non occupé
         """
-        plateau = plt.figure()
+        fig, ax = plt.subplots()
+        plt.rcParams["figure.figsize"] = [7.00, 3.50]
+        plt.rcParams["figure.autolayout"] = True
+        im = plt.imread("img/carte_usa.jpg")
 
         """Affichage des liens entre les villes :"""
         for ville in self.liens_villes.keys():
@@ -358,23 +361,26 @@ class Jeu(object):
             for ville2 in self.liens_villes[ville].keys():
                 nom_lien, couleur_lien = ville2, self.liens_villes[ville][ville2][0]
                 x_liens, y_liens = self.villes[nom_lien]
-                plt.plot((x_ville, x_liens), (y_ville, y_liens), couleur_lien, linewidth=5)
+                rx = 603 / 36
+                ry = 380 / 23
+                plt.plot((x_ville * rx, x_liens * rx), (y_ville * ry, y_liens * ry), color=couleur_lien, linewidth=5)
+                # Pour les lignes en tirets : linestyle="dashed"
         """Affichage des points + noms des villes :"""
         for ville in self.villes.keys():
             x, y = self.villes[ville]
-            plt.plot(x, y, 'ro')
-            plt.text(x - 1, y - 1, ville)
+            rx = 603 / 36
+            ry = 380 / 23
+            plt.plot(x * rx, y * ry, 'ro')
+            plt.text((x - 1) * rx, (y - 1) * ry, ville)
         """Arrière-plan du plateau :"""
-        ax = plt.axes()
-        ax.set_facecolor('lightgrey')
-        return plateau
-
-    def capture_route(self):
-        """
-        Capture la route si le joueur a suffisamment de cartes wagon selon la couleur de la route.
-        :return:
-        """
-        return "A implémenter"
+        # ax.imshow(im, extent=[1,36,1,22.7])
+        ax.imshow(im, extent=[0, 603, 0, 380])
+        plt.axis(False)
+        plt.show()
+        # im = ax.imshow(im)
+        # format image: 603x380
+        # Grille pour les points du graphe: 36x22.5
+        # Rapport : 1.6
 
 
 class Ville(object):
@@ -803,6 +809,7 @@ class Partie_qt(Jeu):
 
     def __init__(self):
         super().__init__()
+        self.LAST_TURN = False
         self.les_joueurs = {}  # Dictionnaire contenant tous les noms + objet Joueur de la partie.
         self.ordre = []  # Liste de l'ordre dans lequel joue les joueurs. Contient le nom de chaque joueur dans l'ordre.
         self.nb_joueurs: int = 5
@@ -863,31 +870,6 @@ class Partie_qt(Jeu):
         for joueur in self.ordre:
             liste_joueurs += joueur + "\n"
         return liste_joueurs
-
-    def tour(self, joueur, ihm_partie):
-        """
-        Réalise 1 tour de tous les joueurs où chacun joue leur tour de jeu en fonction de toutes les actions possibles.
-        :return:
-        """
-        """Les choix sont faits en direct par le joueur dans l'IHM.
-        Les fonctions de contrôle du jeu sont appelées dans la partie IHM."""
-        ihm_partie.tour_joueur(joueur)
-        # return False
-        # ihm_partie.show()
-        # return False
-        # print("C'est le tour de " + joueur.nom_joueur)
-        # choix: int = int(input(
-        #     "Que voulez-vous faire ?\n" + "1. Prendre des cartes Wagon\n2. Prendre possession d'une route\n3. "
-        #                                   "Prendre des cartes Destination supplémentaires\nIndiquer le numéro "
-        #                                   "de l'action choisie"))
-        # choix=1 # à lier avec l'IHM.
-        # if choix == 1:
-        #     self.prendre_cartes_wagon(joueur, ihm_partie)
-        # elif choix == 2:
-        #     self.prendre_route(joueur)
-        # else:
-        #     print("Non disponible pour le moment")
-        #     # self.prendre_cartes_Destination()
 
     @staticmethod
     def melange_cartes(pile_cartes: list):
@@ -1130,6 +1112,39 @@ class Partie_qt(Jeu):
             for i in range(3):
                 joueur.main_destination.append(self.pile_cartes_destination.pop(0))
 
+    def change_current_player(self, idx):
+        # Changement de joueur actuel
+        idx += 1
+        idx = idx % len(self.ordre)
+        return self.ordre[idx]
+
+    def change_turn(self, idx, current_player):
+        if current_player.wagons < 2:
+            self.LAST_TURN=True
+            return self.last_turn(current_player)
+        if self.LAST_TURN and idx==len(self.ordre):
+            return self.end_game()
+        current_player = self.change_current_player(idx)
+        self.turn(current_player)
+
+    def last_turn(self, current_player):
+        idx=self.ordre.index(current_player)
+        self.rotation_joueur(idx)
+        idx = self.ordre.index(current_player)
+        self.turn(current_player)
+
+    def end_game(self):
+        """
+        Fin de partie.
+        """
+        print("This is the endgame.")
+
+    def turn(self,current_player):
+        """
+        This is a turn.
+        """
+        print(f"Turn of {current_player.nom}")
+
     def partie(self, ihm_partie):
         """
         fait tourner une partie complète du jeu. du début à la fin.
@@ -1152,6 +1167,7 @@ class Partie_qt(Jeu):
         i = 0
         nom = self.ordre[i]
         joueur = self.les_joueurs[nom]
+
         fin_tour = False
         while joueur.wagons > 2:
             if not fin_tour:
