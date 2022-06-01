@@ -809,6 +809,9 @@ class Partie_qt(Jeu):
 
     def __init__(self):
         super().__init__()
+        self.idx_current_player = 0
+        self.current_player_name = ""
+        self.current_player: Joueur = None
         self.LAST_TURN = False
         self.les_joueurs = {}  # Dictionnaire contenant tous les noms + objet Joueur de la partie.
         self.ordre = []  # Liste de l'ordre dans lequel joue les joueurs. Contient le nom de chaque joueur dans l'ordre.
@@ -817,7 +820,6 @@ class Partie_qt(Jeu):
         # Définit l'ordre des cartes wagons. C'est la pile de cartes.
         self.pile_cartes_destination = [destination for destination in self.carte_destination.keys()]
         self.defausse_wagon = []
-        # self.current_player=self.change_current_player()
 
     def debut_partie(self, ihm_partie):
         """
@@ -828,9 +830,9 @@ class Partie_qt(Jeu):
         for player_input in ihm_partie.les_joueurs[:self.nb_joueurs]:
             nom = player_input[0]
             couleur = player_input[1]
-            IA_level = player_input[2]
-            if IA_level:
-                self.les_joueurs[nom] = IA_player(nom, couleur, IA_level)
+            ia_level = player_input[2]
+            if ia_level:
+                self.les_joueurs[nom] = IA_player(nom, couleur, ia_level)
             else:
                 self.les_joueurs[nom] = Joueur(nom, couleur)
             self.ordre.append(nom)
@@ -879,7 +881,7 @@ class Partie_qt(Jeu):
         :return:
         """
         n = len(pile_cartes)
-        for k in range(n):
+        for K in range(n):
             index1, index2 = r.randint(0, n - 1), r.randint(0, n - 1)
             pile_cartes[index1], pile_cartes[index2] = pile_cartes[index2], pile_cartes[index1]
         return pile_cartes
@@ -989,6 +991,7 @@ class Partie_qt(Jeu):
         # print("Fin du tour.")
 
         " Version pour l'IHM"
+        # FIXME: lier à la nouvelle version d'IHM.
         self.update_wagons_stack()
         # Carte visible
         if ihm_partie.visible_wagon:
@@ -1058,6 +1061,7 @@ class Partie_qt(Jeu):
         possession de l’une des 2 routes disponibles, la route restante
         demeurant fermée jusqu’à la fin de la partie.
         """
+        # FIXME: lier à la nouvelle IHM.
         nom_route = [input("Quelle route voulez-vous prendre ? Indiquer le nom de la première ville."),
                      input("Indiquer le nom de la seconde ville")]
         # TODO: pour l'IHM, faire en fonction des cliques du joueur sur la carte pour relier les 2.
@@ -1080,8 +1084,8 @@ class Partie_qt(Jeu):
             joueur.route_prise.append(nom_route)
             print("Vous avez pris la route de {} à {}".format(nom_route[0], nom_route[1]))
             # calcul des points gagnés :
-            pts = Score.calcul_pts_route(joueur)
-            print("Vous avez gagné {} points".format(pts))
+            # pts = Score.calcul_pts_route(joueur)
+            # print(f"Vous avez gagné {pts} points")
             # TODO: implémenter la méthode du calcul du score en fonction du nb de wagons posés. cf. Classe Score.
             # Score.points() => à corriger en fonction de l'implémentation
 
@@ -1112,38 +1116,56 @@ class Partie_qt(Jeu):
             for i in range(3):
                 joueur.main_destination.append(self.pile_cartes_destination.pop(0))
 
-    def change_current_player(self, idx):
+    def change_current_player(self):
+        """
+        Incrémente l'index du joueur actuel en bouclant par rapport aux nb de joueurs. (%len(self.ordre))
+        Renvoie le nom du joueur actuel suivant.
+        """
         # Changement de joueur actuel
-        idx += 1
-        idx = idx % len(self.ordre)
-        return self.ordre[idx]
+        self.idx_current_player += 1
+        self.idx_current_player = self.idx_current_player % len(self.ordre)
+        self.current_player_name=self.ordre[self.idx_current_player]
+        self.current_player=self.les_joueurs[self.current_player_name]
 
-    def change_turn(self, idx, current_player):
-        if current_player.wagons < 2:
-            self.LAST_TURN=True
-            return self.last_turn(current_player)
-        if self.LAST_TURN and idx==len(self.ordre):
-            return self.end_game()
-        current_player = self.change_current_player(idx)
-        self.turn(current_player)
+    def change_turn(self, ihm_partie):
+        """
+        Change de tour de joueur actuel.
+        Vérifie si ce n'est pas le dernier tour ou la fin de la partie.
+        Lance l'action en fonction de ces conditions. (last_turn, end_game,turn)
+        """
+        if self.current_player.wagons < 2:
+            self.LAST_TURN = True
+            return self.last_turn(ihm_partie)
+        if self.LAST_TURN and self.idx_current_player == len(self.ordre):
+            return self.end_game(ihm_partie)
+        self.change_current_player()
+        self.turn(ihm_partie)
 
-    def last_turn(self, current_player):
-        idx=self.ordre.index(current_player)
-        self.rotation_joueur(idx)
-        idx = self.ordre.index(current_player)
-        self.turn(current_player)
+    def last_turn(self, ihm_partie):
+        self.idx_current_player = self.ordre.index(self.current_player_name)
+        self.rotation_joueur(self.idx_current_player)
+        self.idx_current_player = self.ordre.index(self.current_player_name)
+        self.change_current_player()
+        self.turn(ihm_partie)
 
-    def end_game(self):
+    def end_game(self, ihm_partie):
         """
         Fin de partie.
+        Affiche le bouton pour finir la partie et bloque toutes les actions possibles par le joueur.
+        Cache le bouton de fin de tour.
         """
+        ihm_partie.fin_partie()
+        # Affichage du bouton Fin de Partie pour indiquer que la partie est finie.
         print("This is the endgame.")
 
-    def turn(self,current_player):
+    def turn(self, ihm_partie):
         """
         This is a turn.
+        Lance le tour du joueur actuel et son IHM correspondant.
         """
-        print(f"Turn of {current_player.nom}")
+        # Appel de l'ihm pour lancer le tour du joueur.
+        ihm_partie.tour_joueur(self.current_player)
+        print(f"Turn of {self.current_player.nom_joueur}")
 
     def partie(self, ihm_partie):
         """
@@ -1164,30 +1186,10 @@ class Partie_qt(Jeu):
         2. Prendre possession d’une route
         3. Prendre des cartes Destination supplémentaires
         """
-        i = 0
-        nom = self.ordre[i]
-        joueur = self.les_joueurs[nom]
-
-        fin_tour = False
-        while joueur.wagons > 2:
-            if not fin_tour:
-                print(f"Tour du joueur n°{i}")
-                fin_tour = self.tour(joueur, ihm_partie)
-                # time.sleep(10)
-            else:
-                if i == len(self.ordre) - 1:
-                    i = 0
-                else:
-                    i += 1
-                nom = self.ordre[i]
-                joueur = self.les_joueurs[nom]
-                fin_tour = False
-        self.rotation_joueur(i)
-        print("Dernier tour")
-        for nom in self.ordre:
-            fin_tour = self.tour(self.les_joueurs[nom], ihm_partie)
-        ihm_partie.ui.stackedWidget.setCurrentWidget(ihm_partie.ui.Fin_partie)
-        print("Fin de partie\nAffichage du score bientôt disponible")
+        self.idx_current_player = 0
+        self.current_player_name = self.ordre[self.idx_current_player]
+        self.current_player = self.les_joueurs[self.current_player_name]
+        self.turn(ihm_partie)
         """
         Fin du jeu
         Lorsque la réserve de wagons d’un joueur est de 0, 1 ou 2 wagons après avoir joué son tour, 
