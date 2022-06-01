@@ -89,7 +89,7 @@ class Score():
         return self.partie.liens_villes[nom_ville1][nom_ville2][1]
 
     def get_infos_liaison(self,nom_ville1,nom_ville2):
-        return (self.get_id_ville(nom_ville1),self.get_id_ville(nom_ville2),self.get_lien_villes(nom_ville1,nom_ville2))
+        return self.get_id_ville(nom_ville1), self.get_id_ville(nom_ville2), self.get_lien_villes(nom_ville1, nom_ville2)
 
     def calcul_pts_destinations(self, joueur):
         joueur.nb_points = 0

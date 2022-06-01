@@ -6,12 +6,17 @@ Modified on Sun May 30 03:22:00 2022
 @author: Mathis URIEN
 """
 import os
-import sys
-from PyQt5 import QtGui, QtCore, QtWidgets, uic
+# import sys
+from PySide2.QtCore import (QCoreApplication, QMetaObject, QSize, Qt, QPoint)
+from PySide2.QtGui import (QFont,
+                           QIcon, QPixmap, QMouseEvent)
+from PySide2.QtWidgets import *
 from menu_principal import *
 from Joueur import *
 from Partie import Partie_qt
-import numpy as np
+
+
+# import numpy as np
 
 
 # l'approche par héritage simple de la classe QMainWindow (même type de notre fenêtre
@@ -21,7 +26,7 @@ import numpy as np
 # TODO: maj de menu_principal.py en fonction des nouvelles modifs du fichier éponyme du dossier Qt Designer.
 #  => comparer les fichiers.
 
-class MonAppli(QtWidgets.QMainWindow):
+class MonAppli(QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -74,31 +79,36 @@ class MonAppli(QtWidgets.QMainWindow):
             "locomotive": "img/locomotive.jpg",
             "dos": "img/dos_wagon.jpg"
         }
+        self.partie: Partie_qt = None
+
         "Navigations entre les pages"
         # Buttons de l'écran Menu Principal
         self.ui.button_nouvelle_partie.clicked.connect(self.commencer_partie)
         self.ui.button_regles_jeu.clicked.connect(lambda: self.ouvrir_regles())
         self.ui.button_options.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Options))
         self.ui.button_credits.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Credits))
+
         # Buttons de l'écran Nouvelle Partie
-        self.ui.button_commencer.clicked.connect(self.start_game)
+        self.ui.button_commencer.clicked.connect(lambda:self.partie.partie(self))
         self.ui.button_retour.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal))
+
         # Buttons de l'écran Joueur
         # Création des boutons pour la fin de partie et la fin de tour.
         # => utile pour la fin de tour et la fin de partie.
-        self.create_button_fin_partie()
-        self.create_button_fin_tour()
-        self.ui.button_fin_tour.clicked.connect(lambda: self.)
+        self.ui.button_fin_tour.clicked.connect(lambda: self.partie.change_turn(self))
         # Connexion du button fin_partie avec écran Fin de partie
         self.ui.button_fin_partie.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Fin_partie))
+
         # Buttons de l'écran Fin de Partie
         self.ui.button_menu.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal))
         self.ui.button_nouvelle_partie_3.clicked.connect(lambda: self.commencer_partie())
         self.ui.button_statistiques.clicked.connect(lambda: self.show_stats())
+
         # Buttons de l'écran Options
         self.ui.button_credits_3.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Credits))
         self.ui.button_nouvelle_partie_4.clicked.connect(lambda: self.commencer_partie())
         self.ui.button_retour_2.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal))
+
         # Buttons de l'écran Crédits
         self.ui.button_retour_3.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal))
 
@@ -113,6 +123,8 @@ class MonAppli(QtWidgets.QMainWindow):
         self.ui.wagon4.mouseReleaseEvent = self.prendre_wagon4
         self.ui.wagon5.mouseReleaseEvent = self.prendre_wagon5
         self.ui.pioche_wagon.mouseReleaseEvent = self.prendre_pioche_wagon
+
+        self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal)
 
     def affichage_route_prise(self, joueur, route_prise):
         """
@@ -148,7 +160,7 @@ class MonAppli(QtWidgets.QMainWindow):
     def print_value(self, event):
         print(f"clicked: {event}")
 
-    def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
+    def mousePressEvent(self, event: QMouseEvent) -> None:
         print(event.pos())
         if self.ui.wagon1.mousePressEvent(event):
             print("Wagon 1 clicked")
@@ -252,8 +264,9 @@ class MonAppli(QtWidgets.QMainWindow):
         self.ui.selection_voyageur.show()
 
     def update_selection_voyageur(self):
+        self.ui.selection_voyageur.clear()
         for index, joueur in enumerate(self.les_joueurs[:self.nb_joueurs_tot]):
-            self.ui.selection_voyageur.setItemText(index + 1, joueur[0])
+            self.ui.selection_voyageur.addItem(joueur[0])
 
     def get_first_player(self):
         """
@@ -290,7 +303,7 @@ class MonAppli(QtWidgets.QMainWindow):
         """
         Initialise/Réinitialise la variable d'instance les_joueurs
         """
-        self.les_joueurs = [[f"Joueur IA n°{k + 1}", "random", False] for k in
+        self.les_joueurs = [[f"Joueur {k + 1}", "random", False] for k in
                             range(5)]
 
     def hide_inputs(self):
@@ -349,8 +362,8 @@ class MonAppli(QtWidgets.QMainWindow):
         ordre_couleur = list(self.img_wagons)[:-1]
         for u, ui_wagon in enumerate(self.ui_main_wagons):
             couleur = ordre_couleur[u]
-            ui_wagon.setStyleSheet(f"background-image:url({couleur})")
             ui_wagon.setText(f"{joueur.main_wagon[couleur]}")
+            ui_wagon.setStyleSheet(f"background-image:url({self.img_wagons[couleur]})")
 
     def update_main_destination(self, joueur):
         """
@@ -359,7 +372,7 @@ class MonAppli(QtWidgets.QMainWindow):
         self.hide_destinations()
         for d, destination in enumerate(self.les_destinations):
             destination_path = self.img_destinations[joueur.main_destination[d]]
-            destination.setPixmap(QtGui.QPixmap(destination_path))
+            destination.setPixmap(QPixmap(destination_path))
             destination.show()
 
     def hide_destinations(self):
@@ -378,7 +391,7 @@ class MonAppli(QtWidgets.QMainWindow):
         for w, wagon in enumerate(self.pioche_wagons):
             if self.partie.pile_cartes_wagon and w < len(self.partie.pile_cartes_wagon):
                 wagon_path = self.img_wagons[self.partie.pile_cartes_wagon[w]]
-                wagon.setPixmap(QtGui.QPixmap(wagon_path))
+                wagon.setPixmap(QPixmap(wagon_path))
                 wagon.show()
             else:
                 wagon.hide()
@@ -410,44 +423,10 @@ class MonAppli(QtWidgets.QMainWindow):
             self.autres_joueurs[p].setText(plain_text)
             self.autres_joueurs[p].show()
 
-    def create_button_fin_tour(self):
-        """
-        Création du bouton fin de tour pour que le joueur puisse déclarer qu'il a fini son tour.
-        """
-        # Button fin de tour
-        self.ui.button_fin_tour = QtWidgets.QPushButton(self.ui.Joueur)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ui.button_fin_tour.sizePolicy().hasHeightForWidth())
-        self.ui.button_fin_tour.setSizePolicy(sizePolicy)
-        self.ui.button_fin_tour.setMinimumSize(QtCore.QSize(0, 0))
-        self.ui.button_fin_tour.setObjectName("button_fin_tour")
-        _translate = QtCore.QCoreApplication.translate
-        self.ui.button_fin_tour.setText(_translate("MainWindow", "Fin de tour"))
-        self.ui.button_fin_tour.move(QtCore.QPoint(self.x() + 500, self.y()))
-        print(f"button fin tour: {self.x() + 20, self.y(), self.size().height()}")
-
-    def create_button_fin_partie(self):
-        """
-        Creation d'un bouton pour la fin de partie quand la partie est terminée. Permet d'accéder à l'écran de fin de partie.
-        """
-        # Button fin de partie
-        self.ui.button_fin_partie = QtWidgets.QPushButton(self.ui.Joueur)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ui.button_fin_partie.sizePolicy().hasHeightForWidth())
-        self.ui.button_fin_partie.setSizePolicy(sizePolicy)
-        self.ui.button_fin_partie.setMinimumSize(QtCore.QSize(0, 0))
-        self.ui.button_fin_partie.setObjectName("button_fin_partie")
-        _translate = QtCore.QCoreApplication.translate
-        self.ui.button_fin_partie.setText(_translate("MainWindow", "Fin de partie"))
-
     def tour_joueur(self, joueur):
         """
-        Une fois la partie prête, la partie est lancée via la méthode partie(ihm_partie) de la classe Partie() dans le module Partie.py
-        Puis, les tours s'enchaînent jusqu'à la fin de la partie. => cf. dans la méthode partie()
+        Une fois la partie prête, la partie est lancée via la méthode partie(ihm_partie) de la classe Partie() dans
+        le module Partie.py Puis, les tours s'enchaînent jusqu'à la fin de la partie. => cf. dans la méthode partie()
         """
         # On initialise/réinitialise les variables pour l'affichage du joueur actuel.
         self.ui.titre_nom_joueur.setText(joueur.nom_joueur)
@@ -455,9 +434,11 @@ class MonAppli(QtWidgets.QMainWindow):
                                                "border-radius:20;\n"
                                                "border-color:rgb(50,50,50);\n"
                                                "border-width:2;\n"
-                                               "border-style:solid;")
+                                               "border-style:solid;\n"
+                                               "font:18pt;")
         # DONE: définir une fonction pour convertir la couleur du joueur.
         # => déjà pris en charge nativement. Nom de la couleur en anglais.
+        self.ui.label_interaction_joueur.setText("A votre tour !")
         self.ui.score_joueur.setText(str(joueur.nb_points))
         self.update_main_joueur(joueur)
         self.update_main_destination(joueur)
@@ -474,59 +455,11 @@ class MonAppli(QtWidgets.QMainWindow):
         # Change d'affichage pour l'écran Joueur
         self.ui.stackedWidget.setCurrentWidget(self.ui.Joueur)
 
-    def check_fin_tour(self):
+    def fin_partie(self):
         """
-        Return if fin_tour : bool
+        Met à jour l'ihm du joueur actuel pour afficher le bouton de fin de partie.
         """
-        return not self.fin_tour
-
-    def partie(self,idx):
-        """
-        Lance une partie complète.
-        """
-        # Changement de joueur actuel
-        idx += 1
-        idx = idx % len(self.partie.ordre)
-        joueur = self.partie.ordre[idx]
-
-    def start_game(self):
-        """
-        fait tourner une partie complète du jeu. du début à la fin.
-        """
-        print("Préparation de la partie")
-        self.partie.debut_partie(self)
-        self.partie.preparation_partie()
-        self.partie.choix_tour_joueur(self)
-        #
-        # Main boucle for the game
-        i=0
-        nom = self.partie.ordre[self.index_current_player]
-        currentPlayer = self.partie.les_joueurs[nom]
-        # print("premier tour test")
-        # # self.partie.tour(joueur,self)
-        self.tour_joueur(currentPlayer)
-        # print("fin premier tour test")
-        # self.ui.stackedWidget.setCurrentWidget(self.ui.Joueur)
-        # fin_tour = False
-        # while joueur.wagons > 2:
-        #     if not fin_tour:
-        #         print(f"Tour du joueur n°{i}")
-        #         fin_tour = self.partie.tour(joueur, self)
-        #         # time.sleep(10)
-        #     else:
-        #         if i == len(self.partie.ordre) - 1:
-        #             i = 0
-        #         else:
-        #             i += 1
-        #         nom = self.partie.ordre[i]
-        #         joueur = self.partie.les_joueurs[nom]
-        #         fin_tour = False
-        # self.partie.rotation_joueur(i)
-        # print("Dernier tour")
-        # for nom in self.partie.ordre:
-        #     fin_tour=self.partie.tour(self.partie.les_joueurs[nom], self)
-        # self.ui.stackedWidget.setCurrentWidget(self.ui.Fin_partie)
-        # print("Fin de partie\nAffichage du score bientôt disponible")
+        self.ui.button_fin_partie.show()
 
     def ouvrir_regles(self):
         """
@@ -546,7 +479,7 @@ class MonAppli(QtWidgets.QMainWindow):
 
 
 if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     window = MonAppli()
     window.show()
     app.exec_()
@@ -562,10 +495,10 @@ if __name__ == "__main__":
     #
     # import numpy as np
     #
-    # app = QtWidgets.QApplication(sys.argv)
+    # app = QApplication(sys.argv)
     #
-    # scene = QtWidgets.QGraphicsScene()
-    # view = QtWidgets.QGraphicsView(scene)
+    # scene = QGraphicsScene()
+    # view = QGraphicsView(scene)
     #
     # figure = Figure()
     # axes = figure.gca()
@@ -582,7 +515,7 @@ if __name__ == "__main__":
     # canvas = FigureCanvas(figure)
     # proxy_widget = scene.addWidget(canvas)
     # # or
-    # # proxy_widget = QtWidgets.QGraphicsProxyWidget()
+    # # proxy_widget = QGraphicsProxyWidget()
     # # proxy_widget.setWidget(canvas)
     # # scene.addItem(proxy_widget)
     #
