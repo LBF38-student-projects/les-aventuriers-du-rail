@@ -2,8 +2,6 @@
 @authors: Mathis URIEN, Kenza BELAID"""
 
 
-
-
 # TODO: penser à faire les tests unitaires sur les classes et méthodes
 
 class Jeu(object):

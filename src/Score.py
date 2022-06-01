@@ -60,17 +60,18 @@ graphe_villes['Raleigh'] = ['Washington','Pittsburgh','Nashville','Atlanta','Cha
 
 
 def parcours_profondeur(graph, noeud):
+    """ L'algorithme parcours_profondeur renvoie """
     dejaVu = [noeud]
     A_visiter = [noeud]
     while A_visiter:
         noeud = A_visiter.pop()
-        print('En cours de visite :', noeud)
         for voisin in graph[noeud]:
             if voisin not in dejaVu:
                 dejaVu.append(voisin)
                 A_visiter.append(voisin)
+        return dejaVu
 
-parcours_profondeur(graphe_villes, 'Toronto')
+print(parcours_profondeur(graphe_villes,'Toronto'))
 
 
 class EnsembleDisjoint:
@@ -80,8 +81,8 @@ class EnsembleDisjoint:
     """
     parent = {}
 
-    # Création de n ensemble disjoints, état de départ de notre graphe
-    def __init__(self, N):
+    # Création de 36 ensembles disjoints, état de départ de notre graphe
+    def __init__(self, N=36):
         for i in range(N):
             self.parent[i] = i
 
@@ -89,7 +90,6 @@ class EnsembleDisjoint:
     def get_parent(self, k):
         if self.parent[k] == k:
             return k
-
         return self.get_parent(self.parent[k])
 
     # Union de deux ensembles jusque là disjoints
@@ -100,7 +100,8 @@ class EnsembleDisjoint:
         self.parent[x] = y
 
 def Kruskal(liaisons, nombre_villes):
-    """Construction de l'arbre couvrant minimal à l'aide de l'algorithme de Kruskal"""
+    """Construction de l'arbre couvrant minimal à l'aide de l'algorithme de Kruskal.
+    L'algorithme de Kruskal permet d'obtenir le plus court chemin entre deux villes."""
     arbre_minimal =[]
     ed = EnsembleDisjoint(nombre_villes)
     index = 0
@@ -115,6 +116,8 @@ def Kruskal(liaisons, nombre_villes):
             arbre_minimal.append((depart, arrivee, longueur))
             ed.Union(x,y)
         return arbre_minimal
+
+
 
 class Score():
     """Classe qui implémente les différentes méthodes pour calculer les joueur.nb_points du jeu
@@ -148,7 +151,7 @@ class Score():
             if (joueur.main_cartes[1][j][0][0] and joueur.main_cartes[1][j][0][1]) in arbre_min:
                 joueur.nb_points += joueur.main_cartes[1][j][1]
             else:
-                joueur.nb_points += joueur.main_cartes[1][j][1]
+                joueur.nb_points -= joueur.main_cartes[1][j][1]
 
     def calcul_pts_route(self,joueur):
         """
@@ -163,9 +166,39 @@ class Score():
         return joueur.nb_points
 
 
-    def calcul_plus_long_chemin(self,joueur):
-       pass
+    def calcul_plus_long_chemin_joueur(self, joueur):
+        villes_prises = []
+        n = len(joueur.route_prise)
+        for i in range(n):
+            villes_prises.append(joueur.route_prise[i][0], joueur.route_prise[i][1])
+        villes_prises = list(set(villes_prises))
+        graphe_villes_joueur = graphe_villes
+        for ville in graphe_villes:
+            if ville not in villes_prises:
+                del graphe_villes_joueur[ville]
+        for ville in villes_prises:
+            old_chemin = chemin
+            chemin_bis = parcours_profondeur(ville, graphe_villes_joueur)
+            if len(chemin_bis) > len(old_chemin):
+                chemin = chemin_bis
+        return chemin
 
+def trouver_indice_longueur_max(lst):
+    maxList = max(lst, key = lambda i: len(i))
+    index = maxList.index(maxList)
+    return index
+
+    def calcul_plus_long_chemin(self,partie):
+        n = len(partie.les_joueurs)
+        plus_longs_chemins = []
+        les_joueurs=list(partie.les_joueurs)
+        for i in range(n):
+            plus_longs_chemins.append(self.calcul_plus_long_chemin_joueur(les_joueurs[i]))
+        return self.trouver_indice_longueur_max(plus_longs_chemins)
+
+    def attribue_points_plc(self,partie):
+        i = self.calcul_plus_long_chemin(partie)
+        partie.les_joueurs.nb_points[i] += 10
 
 
 if __name__ == '__main__':
