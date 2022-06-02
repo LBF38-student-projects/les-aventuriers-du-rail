@@ -308,7 +308,7 @@ class Ui_MainWindow(object):
         self.spinbox_nb_joueurs_tot.setMinimumSize(QSize(50, 15))
         self.spinbox_nb_joueurs_tot.setAlignment(Qt.AlignLeading | Qt.AlignLeft | Qt.AlignVCenter)
         self.spinbox_nb_joueurs_tot.setButtonSymbols(QAbstractSpinBox.UpDownArrows)
-        self.spinbox_nb_joueurs_tot.setMinimum(1)
+        self.spinbox_nb_joueurs_tot.setMinimum(2)
         self.spinbox_nb_joueurs_tot.setMaximum(5)
 
         self.nb_joueurs.addWidget(self.spinbox_nb_joueurs_tot, 0, 1, 1, 1)
@@ -709,19 +709,18 @@ class Ui_MainWindow(object):
         self.label_interaction_joueur = QLabel(self.Joueur)
         self.label_interaction_joueur.setObjectName(u"label_interaction_joueur")
         self.label_interaction_joueur.setMinimumSize(QSize(146, 0))
-        self.label_interaction_joueur.setMaximumSize(QSize(0, 0))
         self.label_interaction_joueur.setStyleSheet(u"font:8pt;")
         self.label_interaction_joueur.setWordWrap(True)
 
         self.interaction_joueur.addWidget(self.label_interaction_joueur)
 
-        self.comboBox = QComboBox(self.Joueur)
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.setObjectName(u"comboBox")
+        self.choix_interaction_joueur = QComboBox(self.Joueur)
+        self.choix_interaction_joueur.addItem("")
+        self.choix_interaction_joueur.addItem("")
+        self.choix_interaction_joueur.addItem("")
+        self.choix_interaction_joueur.setObjectName(u"choix_interaction_joueur")
 
-        self.interaction_joueur.addWidget(self.comboBox)
+        self.interaction_joueur.addWidget(self.choix_interaction_joueur)
 
         self.gridLayout_19.addLayout(self.interaction_joueur, 7, 0, 1, 1)
 
@@ -797,7 +796,7 @@ class Ui_MainWindow(object):
         self.emplacement_carte = QGraphicsView(self.Joueur)
         self.emplacement_carte.setObjectName(u"emplacement_carte")
         self.emplacement_carte.setMinimumSize(QSize(603, 380))
-        self.emplacement_carte.setStyleSheet(u"background-image:url(img/carte_usa.jpg)")
+        # self.emplacement_carte.setStyleSheet(u"background-image:url(img/carte_usa.jpg)")
 
         self.plateau_jeu.addWidget(self.emplacement_carte)
 
@@ -1407,9 +1406,14 @@ class Ui_MainWindow(object):
         self.main_wagon9.setText("")
         self.label_interaction_joueur.setText(
             QCoreApplication.translate("MainWindow", u"Interaction avec le joueur", None))
-        self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Prendre des cartes wagons", None))
-        self.comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Prendre une route", None))
-        self.comboBox.setItemText(2, QCoreApplication.translate("MainWindow", u"Prendre des cartes destinations", None))
+        self.choix_interaction_joueur.setItemText(0,
+                                                  QCoreApplication.translate("MainWindow", u"Prendre des cartes wagons",
+                                                                             None))
+        self.choix_interaction_joueur.setItemText(1,
+                                                  QCoreApplication.translate("MainWindow", u"Prendre une route", None))
+        self.choix_interaction_joueur.setItemText(2, QCoreApplication.translate("MainWindow",
+                                                                                u"Prendre des cartes destinations",
+                                                                                None))
 
         self.button_fin_partie.setText(QCoreApplication.translate("MainWindow", u"Fin de partie", None))
         self.wagon1.setText("")

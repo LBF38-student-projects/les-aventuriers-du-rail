@@ -16,7 +16,7 @@ Bonne lecture et bon jeu !
 3. Jouer !
 
 # Crédits :
-Jeu réalisé par Kenza BELAÏD et Mathis URIEN, tous deux élèves-ingénieur à l'ENSTA Bretagne. \
+Jeu réalisé par Mathis URIEN et Kenza BELAÏD, tous deux élèves-ingénieur à l'ENSTA Bretagne. \
 Ce projet a été réalisé lors de leur première année.
 
 

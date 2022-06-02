@@ -11,7 +11,7 @@ from PySide2.QtCore import (QCoreApplication, QMetaObject, QSize, Qt, QPoint)
 from PySide2.QtGui import (QFont,
                            QIcon, QPixmap, QMouseEvent)
 from PySide2.QtWidgets import *
-from matplotlib.backends.backend_template import FigureCanvas
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 from menu_principal import *
 from Joueur import *
@@ -70,16 +70,16 @@ class MonAppli(QMainWindow):
             'Seattle to Los Angeles': 'img/seattle_los_angeles.jpg'
         }
         self.img_wagons = {
-            "blanc": "img/wagon_blanc.jpg",
-            "bleu": "img/wagon_bleu.jpg",
-            "jaune": "img/wagon_jaune.jpg",
-            "noir": "img/wagon_noir.jpg",
+            "white": "img/wagon_blanc.jpg",
+            "blue": "img/wagon_bleu.jpg",
+            "yellow": "img/wagon_jaune.jpg",
+            "black": "img/wagon_noir.jpg",
             "orange": "img/wagon_orange.jpg",
-            "rose": "img/wagon_rose.jpg",
-            "rouge": "img/wagon_rouge.jpg",
-            "vert": "img/wagon_vert.jpg",
+            "pink": "img/wagon_rose.jpg",
+            "red": "img/wagon_rouge.jpg",
+            "green": "img/wagon_vert.jpg",
             "locomotive": "img/locomotive.jpg",
-            "dos": "img/dos_wagon.jpg"
+            "back": "img/dos_wagon.jpg"
         }
         self.partie: Partie_qt = None
 
@@ -91,7 +91,7 @@ class MonAppli(QMainWindow):
         self.ui.button_credits.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Credits))
 
         # Buttons de l'écran Nouvelle Partie
-        self.ui.button_commencer.clicked.connect(lambda:self.partie.partie(self))
+        self.ui.button_commencer.clicked.connect(lambda: self.partie.partie(self))
         self.ui.button_retour.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal))
 
         # Buttons de l'écran Joueur
@@ -99,7 +99,7 @@ class MonAppli(QMainWindow):
         # => utile pour la fin de tour et la fin de partie.
         self.ui.button_fin_tour.clicked.connect(lambda: self.partie.change_turn(self))
         # Connexion du button fin_partie avec écran Fin de partie
-        self.ui.button_fin_partie.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Fin_partie))
+        self.ui.button_fin_partie.clicked.connect(lambda: self.fin_partie())
 
         # Buttons de l'écran Fin de Partie
         self.ui.button_menu.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal))
@@ -114,11 +114,13 @@ class MonAppli(QMainWindow):
         # Buttons de l'écran Crédits
         self.ui.button_retour_3.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal))
 
-        # Making QLabels clickable
-        # QLabels = [self.ui.wagon1, self.ui.wagon2, self.ui.wagon3, self.ui.wagon4, self.ui.wagon5, self.ui.pioche_wagon,
-        #            self.ui.destination_1, self.ui.destination_2, self.ui.destination_3, self.ui.pioche_destination]
-        # for label in QLabels:
-        #     label.mouseReleaseEvent = self.print_value
+        # Pour démarrer sur l'écran Menu Principal
+        self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal)
+
+    def allow_prendre_wagons(self):
+        """
+        Autorise la possibilité de clicker sur les cartes de la pioche ou celles visibles.
+        """
         self.ui.wagon1.mouseReleaseEvent = self.prendre_wagon1
         self.ui.wagon2.mouseReleaseEvent = self.prendre_wagon2
         self.ui.wagon3.mouseReleaseEvent = self.prendre_wagon3
@@ -126,7 +128,63 @@ class MonAppli(QMainWindow):
         self.ui.wagon5.mouseReleaseEvent = self.prendre_wagon5
         self.ui.pioche_wagon.mouseReleaseEvent = self.prendre_pioche_wagon
 
-        self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal)
+    def prendre_destinations(self):
+        """
+        Pour prendre des cartes destinations.
+        """
+        print("Action bientôt disponible !!")
+        pass
+
+    def update_choix_route(self):
+        """
+        Update les possibilités de route à prendre.
+        """
+        self.ui.choix_interaction_joueur.clear()
+        self.ui.choix_interaction_joueur.addItem("Choisir une route parmi celles-ci")
+        for route in self.partie.les_routes:
+            ville1, ville2 = route
+            text = f"{ville1}-{ville2}"
+            self.ui.choix_interaction_joueur.addItem(text)
+        self.ui.choix_interaction_joueur.currentTextChanged.connect(lambda: self.partie.prendre_route(self))
+
+    def get_couleur_pour_route(self, couleur, route, nom_route):
+        """
+        Demande pour la couleur à utiliser pour prendre une route grise.
+        """
+        print("choix couleur")
+        self.ui.choix_interaction_joueur.currentTextChanged.disconnect()
+        # self.ui.choix_interaction_joueur.currentTextChanged.connect(
+        #     lambda: self.partie.prendre_route_grise(couleur, route, nom_route, self))
+
+        self.ui.label_interaction_joueur.setText("La route est grise. Quelle couleur voulez-vous utiliser ?")
+        # Affichage des couleurs disponibles
+        self.ui.choix_interaction_joueur.clear()
+        self.ui.choix_interaction_joueur.addItem("")
+        for couleur in list(self.img_wagons.keys())[:-1]:
+            self.ui.choix_interaction_joueur.addItem(couleur)
+        # time.sleep(20)
+        print("Waiting for signal")
+
+    def send_couleur_pour_route(self):
+        """
+        Envoie la couleur choisie pour la route grise.
+        """
+        return self.ui.choix_interaction_joueur.currentText()
+
+    def get_reponse_locomotive(self, couleur, route, nom_route):
+        """
+        Pour savoir si le joueur veut utiliser les locomotives.
+        """
+        self.ui.label_interaction_joueur.setText("Voulez-vous compléter avec des locomotives?")
+        self.ui.choix_interaction_joueur.clear()
+        self.ui.choix_interaction_joueur.addItem("Choisissez votre réponse ci-dessous")
+        self.ui.choix_interaction_joueur.addItem("Compléter avec des locomotives")
+        self.ui.choix_interaction_joueur.addItem("Prendre uniquement avec des locomotives")
+        self.ui.choix_interaction_joueur.addItem("Ne rien faire")
+        self.ui.choix_interaction_joueur.currentTextChanged.disconnect()
+        self.ui.choix_interaction_joueur.currentTextChanged.connect(
+            lambda: self.partie.prendre_route_locomotive(couleur, route, nom_route, self))
+        print("choix locomotive")
 
     def update_route(self):
         """
@@ -134,13 +192,18 @@ class MonAppli(QMainWindow):
         """
         scene = QGraphicsScene(self.ui.emplacement_carte)
         canvas = FigureCanvas(self.partie.show_plateau())
-        scene.addWidget(canvas)
-        self.ui.emplacement_carte(scene)
+        proxy_widget = scene.addWidget(canvas)
+        self.ui.emplacement_carte.setScene(scene)
+        self.ui.emplacement_carte.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.emplacement_carte.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        # self.ui.emplacement_carte.setMinimumSize(640,480)
+        # self.ui.emplacement_carte.setViewportMargins(0,0,0,0)
 
-        # TODO: draw straight lines between each city of the taken road.
+        # DONE: draw straight lines between each city of the taken road.
 
     def prendre_wagon(self, idx, visible):
-        self.partie.prendre_cartes_wagon(idx, visible)
+        indication_carte = self.partie.prendre_cartes_wagon(idx, visible)
+        self.ui.label_interaction_joueur.setText(indication_carte)
         self.update_wagon_stack()
         self.update_main_joueur(self.partie.current_player)
 
@@ -200,6 +263,7 @@ class MonAppli(QMainWindow):
         # Récupération des nbs de joueurs IRLs/IAs
         self.ui.spinbox_nb_joueurs_tot.valueChanged.connect(lambda: self.show_inputs())
         self.ui.spinbox_nb_joueurs_ia.valueChanged.connect(lambda: self.show_inputs())
+        self.ui.spinbox_nb_joueurs_ia.setMaximum(self.ui.spinbox_nb_joueurs_tot.value())
 
         # Récupération des infos pour chaque joueur
         # J1
@@ -334,6 +398,7 @@ class MonAppli(QMainWindow):
     def show_inputs(self):
         self.hide_inputs()
         self.nb_joueurs_tot = self.ui.spinbox_nb_joueurs_tot.value()
+        self.ui.spinbox_nb_joueurs_ia.setMaximum(self.ui.spinbox_nb_joueurs_tot.value())
         nb_joueurs_ia = self.ui.spinbox_nb_joueurs_ia.value()
         # Affichage des inputs en fonction des joueurs IRL/IAs:
         for k, INPUT in enumerate(self.inputs[:self.nb_joueurs_tot - nb_joueurs_ia]):  # joueurs IRLs
@@ -368,7 +433,9 @@ class MonAppli(QMainWindow):
         for u, ui_wagon in enumerate(self.ui_main_wagons):
             couleur = ordre_couleur[u]
             ui_wagon.setText(f"{joueur.main_wagon[couleur]}")
-            ui_wagon.setStyleSheet(f"background-image:url({self.img_wagons[couleur]})")
+            ui_wagon.setStyleSheet(f"background-image:url({self.img_wagons[couleur]});\n"
+                                   f"background-repeat:no-repeat;\n"
+                                   f"background-position:bottom;\n")
 
     def update_main_destination(self, joueur):
         """
@@ -449,7 +516,11 @@ class MonAppli(QMainWindow):
         self.update_main_destination(joueur)
         self.update_wagon_stack()
         self.update_autres_joueurs(joueur)
+        self.update_choix_route()
         self.update_route()
+
+        self.allow_prendre_wagons()
+        # self.ui.label_interaction_joueur.setText(u"bonjour")
 
         # On cache et remplace les interactions avec le joueur par les buttons fin_tour ou fin_partie
         # si le tour ou la partie est fini.
@@ -465,7 +536,17 @@ class MonAppli(QMainWindow):
         """
         Met à jour l'ihm du joueur actuel pour afficher le bouton de fin de partie.
         """
+        self.les_resultats = [self.ui.label_resultat1, self.ui.label_resultat2, self.ui.label_resultat3,
+                              self.ui.label_resultat4, self.ui.label_resultat5]
+        for resultat in self.les_resultats:
+            resultat.hide()
+        tableau_resultats = [[joueur.nb_points, nom] for nom, joueur in self.partie.les_joueurs.items()]
+        tableau_resultats.sort()
+        for n, joueur in enumerate(tableau_resultats):
+            self.les_resultats[n].setText(f"{n + 1}: {joueur[1]} - {joueur[0]} points ")
+            self.les_resultats[n].show()
         self.ui.button_fin_partie.show()
+        self.ui.stackedWidget.setCurrentWidget(self.ui.Fin_partie)
 
     def ouvrir_regles(self):
         """
@@ -485,7 +566,7 @@ class MonAppli(QMainWindow):
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    app = QApplication()
     window = MonAppli()
     window.show()
     app.exec_()
@@ -525,7 +606,7 @@ if __name__ == "__main__":
     # # proxy_widget.setWidget(canvas)
     # # scene.addItem(proxy_widget)
     #
-    # view.resize(640, 480)
+    # # view.resize(640, 480)
     # view.show()
     #
     # sys.exit(app.exec_())

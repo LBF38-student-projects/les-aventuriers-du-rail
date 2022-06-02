@@ -2,10 +2,10 @@
 @authors: Mathis URIEN, Kenza BELAID"""
 
 # Imports :
-from Partie import *
-import matplotlib.pyplot as plt
+from interfaceQt import *
 
 if __name__ == '__main__':
-    p=Partie()
-    p.partie()
-
+    app = QApplication()
+    window = MonAppli()
+    window.show()
+    app.exec_()

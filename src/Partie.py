@@ -1,8 +1,8 @@
 """Projet Informatique
 @authors: Mathis URIEN, Kenza BELAID"""
 
-
 # TODO: penser à faire les tests unitaires sur les classes et méthodes
+import time
 
 
 class Jeu(object):
@@ -23,14 +23,14 @@ class Jeu(object):
         """
         self.dims_carte = (603, 380)  # TODO: à lier avec l'IHM
         self.carte_wagons = {
-            "blanc": 12,
-            "bleu": 12,
-            "jaune": 12,
-            "noir": 12,
+            "white": 12,
+            "blue": 12,
+            "yellow": 12,
+            "black": 12,
             "orange": 12,
-            "rose": 12,
-            "rouge": 12,
-            "vert": 12,
+            "pink": 12,
+            "red": 12,
+            "green": 12,
             "locomotive": 14
         }
         self.carte_destination = {
@@ -350,7 +350,8 @@ class Jeu(object):
         Affiche un point pour chaque ville avec le nom en dessous
         Relie chaque ville par un trait gris quand non occupé
         """
-        fig, ax = plt.subplots()
+        figure = Figure()
+        axes = figure.gca()
         plt.rcParams["figure.figsize"] = [7.00, 3.50]
         plt.rcParams["figure.autolayout"] = True
         im = plt.imread("img/carte_usa.jpg")
@@ -363,20 +364,21 @@ class Jeu(object):
             for nom_lien, value in ville.liens.items():
                 couleur_lien, nb_wagons_lien = value
                 x_liens, y_liens = self.villes[nom_lien].coords
-                plt.plot((x_ville * rx, x_liens * rx), (y_ville * ry, y_liens * ry), color=couleur_lien, linewidth=5)
+                axes.plot((x_ville * rx, x_liens * rx), (y_ville * ry, y_liens * ry), color=couleur_lien, linewidth=5)
                 # Pour les lignes en tirets : linestyle="dashed"
-            plt.plot(x_ville * rx, y_ville * ry, 'ro')
-            plt.text((x_ville - 1) * rx, (y_ville - 1) * ry, nom_ville)
+            axes.plot(x_ville * rx, y_ville * ry, 'ro')
+            axes.text((x_ville - 1) * rx, (y_ville - 1) * ry, nom_ville)
         """Arrière-plan du plateau :"""
-        # ax.imshow(im, extent=[1,36,1,22.7])
-        ax.imshow(im, extent=[0, 603, 0, 380])
-        plt.axis(False)
+        # axes.imshow(im, extent=[1,36,1,22.7])
+        axes.imshow(im, extent=[0, 603, 0, 380])
+        # axes.imshow(im)
+        axes.axis(False)
         # plt.show()
         # im = ax.imshow(im)
         # format image: 603x380
         # Grille pour les points du graphe: 36x22.5
         # Rapport : 1.6
-        return fig
+        return figure
 
 
 class Ville(object):
@@ -400,10 +402,16 @@ class Ville(object):
 
     @coords.setter
     def coords(self, value):
-        self.__coords = (max(min(0, value[0]), self.dims_carte[0]), max(min(0, value[1]), self.dims_carte[1]))
+        self.__coords = (min(max(0, value[0]), self.dims_carte[0]), min(max(0, value[1]), self.dims_carte[1]))
 
     def ajout_liens(self, nom_ville2, couleur, nb_wagons):
         self.liens[nom_ville2] = [couleur, nb_wagons]
+
+    def get_nb_wagon_lien(self, nom_ville2):
+        """
+        Renvoie le nb de wagons nécessaire pour prendre la route.
+        """
+        return self.liens[nom_ville2][1]
 
 
 class Partie(Jeu):
@@ -805,6 +813,7 @@ class Partie_qt(Jeu):
 
     def __init__(self):
         super().__init__()
+        self.les_routes = []
         self.count_wagon_card = 0
         self.idx_current_player = 0
         self.current_player_name = ""
@@ -948,12 +957,15 @@ class Partie_qt(Jeu):
             carte_prise = self.pile_cartes_wagon.pop(idx_carte_prise)
             if "locomotive" in carte_prise and carte_visible:
                 if self.count_wagon_card == 1:
-                    return self.pile_cartes_wagon.insert(idx_carte_prise, "locomotive")
+                    self.pile_cartes_wagon.insert(idx_carte_prise, "locomotive")
+                    return "Vous ne pouvez plus piocher une carte locomotive"
                 self.count_wagon_card += 2
                 self.current_player.main_wagon[carte_prise] += 1
             else:
                 self.count_wagon_card += 1
                 self.current_player.main_wagon[carte_prise] += 1
+            return f"Vous avez pris un wagon {carte_prise}"
+        return "Vous ne pouvez plus piocher"
 
     def update_wagons_stack(self):
         """
@@ -968,7 +980,7 @@ class Partie_qt(Jeu):
                                      + self.melange_americain(self.melange_cartes(self.defausse_wagon))
             self.defausse_wagon.clear()
 
-    def prendre_route(self, joueur):
+    def prendre_route(self, ihm_partie):
         """
         2. Prendre possession d’une route :
         – Le joueur peut s’emparer d’une route sur le plateau en posant autant de cartes Wagon de la couleur
@@ -1005,32 +1017,115 @@ class Partie_qt(Jeu):
         demeurant fermée jusqu’à la fin de la partie.
         """
         # FIXME: lier à la nouvelle IHM.
-        nom_route = [input("Quelle route voulez-vous prendre ? Indiquer le nom de la première ville."),
-                     input("Indiquer le nom de la seconde ville")]
         # TODO: pour l'IHM, faire en fonction des cliques du joueur sur la carte pour relier les 2.
         #  Click sur le lien entre les villes ou clique sur les 2 villes.
-        route = self.liens_villes[nom_route[0]][nom_route[1]]  # contient [couleur,nb_segments]
+
+        nom_route = ihm_partie.ui.choix_interaction_joueur.currentText()
+        print(nom_route)
+        print(nom_route.split("-"))
+        ville1, ville2 = nom_route.split("-")
+        route = self.villes[ville1].liens[ville2]  # contient [couleur,nb_segments]
         # Vérification que le joueur peut prendre une route :
         if route[0] == "grey":
-            couleur = input("La route est grise. Avec quelle couleur voulez-vous la prendre ?")
+            self.prendre_route_grise("grey", route, nom_route, ihm_partie)
         else:
-            couleur = route[1]
-        if joueur.main_wagon[couleur] == route[1]:
+            couleur = route[0]
+            self.check_prendre_route(couleur, route, nom_route, ihm_partie)
+
+    def check_prendre_route(self, couleur, route, nom_route, ihm_partie):
+        print(f"On checke {nom_route} avec couleur {couleur}")
+        if self.current_player.main_wagon[couleur] >= route[1]:
+            print("On a récupéré la route !")
             # défausse des cartes de la main vers la défausse
-            for k in range(route[1]):
-                self.defausse_wagon.append(
-                    couleur)
+            for K in range(route[1]):
+                self.defausse_wagon.append(couleur)
+
             # retrait des wagons de la main du joueur :
-            joueur.main_wagon[couleur] -= route[1]
+            self.current_player.main_wagon[couleur] -= route[1]
             # DONE: faire un accesseur en écriture pour vérifier qu'aucune entrée de wagons soient négatives.
+
             # ajout de la route au joueur :
-            joueur.route_prise.append(nom_route)
-            print("Vous avez pris la route de {} à {}".format(nom_route[0], nom_route[1]))
+            self.current_player.route_prise.append(nom_route.split("-"))
+            ihm_partie.ui.label_interaction_joueur.currentText(
+                f"Vous avez pris la route de {nom_route[0]} à {nom_route[1]}")
+            time.sleep(5)
+
+            # Suppression de la route de la liste des routes disponibles
+            self.les_routes.remove(nom_route)
+
             # calcul des points gagnés :
-            # pts = Score.calcul_pts_route(joueur)
-            # print(f"Vous avez gagné {pts} points")
-            # TODO: implémenter la méthode du calcul du score en fonction du nb de wagons posés. cf. Classe Score.
+            pts = Score(self).calcul_pts_route(self.current_player)
+            print(f"Vous avez gagné {pts} points")
+            ihm_partie.ui.choix_interaction_joueur.setText(f"Vous avez gagné {pts} points !")
+
+            # DONE: implémenter la méthode du calcul du score en fonction du nb de wagons posés. cf. Classe Score.
             # Score.points() => à corriger en fonction de l'implémentation
+
+            # On désactive la combobox pour marquer la fin du tour.
+            return ihm_partie.ui.choix_interaction_joueur.setEnabled(False)
+
+        elif self.current_player.main_wagon[couleur] + self.current_player.main_wagon["locomotive"] >= route[1] \
+                or self.current_player.main_wagon["locomotive"] >= route[1]:
+            self.prendre_route_locomotive(couleur, route, nom_route, ihm_partie)
+        else:
+            print("On ne peut pas prendre la route")
+            ihm_partie.ui.label_interaction_joueur.setText(f"Vous ne pouvez pas prendre la route.")
+
+    def check_prendre_route_locomotive(self, couleur, route, nom_route, ihm_partie):
+        """
+        Valide la route en la prenant avec une couleur et des locomotives.
+        """
+        print("On checke la couleur + locomotive")
+        if self.current_player.main_wagon[couleur] + self.current_player.main_wagon["locomotive"] >= route[1]:
+            # défausse des cartes de la main vers la défausse
+            for k in range(self.current_player.main_wagon[couleur]):
+                self.defausse_wagon.append(couleur)
+            for k in range(route[1] - self.current_player.main_wagon[couleur]):
+                self.defausse_wagon.append("locomotive")
+
+            # retrait des wagons de la main du joueur :
+            self.current_player.main_wagon["locomotive"] -= route[1] - self.current_player.main_wagon[couleur]
+            self.current_player.main_wagon[couleur] = 0
+
+            # ajout de la route au joueur :
+            self.current_player.route_prise.append(nom_route.split("-"))
+            ihm_partie.ui.label_interaction_joueur.currentText(
+                f"Vous avez pris la route de {nom_route[0]} à {nom_route[1]}")
+            time.sleep(5)
+
+            # Suppression de la liste des routes disponibles:
+            self.les_routes.remove(nom_route)
+
+            # calcul des points gagnés :
+            pts = Score(self).calcul_pts_route(self.current_player)
+            print(f"Vous avez gagné {pts} points")
+            ihm_partie.ui.choix_interaction_joueur.setText(f"Vous avez gagné {pts} points !")
+
+    def prendre_route_locomotive(self, couleur, route, nom_route, ihm_partie):
+        """
+        Pour prendre une route en complétant par des locomotives.
+        """
+        ihm_partie.get_reponse_locomotive(couleur, route, nom_route)
+        reponse = ihm_partie.ui.choix_interaction_joueur.currentText()
+        if reponse == "Compléter avec des locomotives":
+            self.check_prendre_route_locomotive(couleur, route, nom_route, ihm_partie)
+        elif reponse == "Prendre uniquement avec des locomotives":
+            self.check_prendre_route("locomotive", route, nom_route, ihm_partie)
+        elif reponse == "Ne rien faire":
+            print("On ne fait rien.")
+
+    def prendre_route_grise(self, couleur, route, nom_route, ihm_partie):
+        """
+        Cas particulier pour prendre une route lorsque celle-ci est grise.
+        """
+        print("On prend une route grise")
+        ihm_partie.get_couleur_pour_route(couleur, route, nom_route)
+        couleur = ihm_partie.ui.choix_interaction_joueur.currentText()
+        ihm_partie.ui.choix_interaction_joueur.currentTextChanged.connect(
+            lambda: self.prendre_route_grise(couleur, route, nom_route, ihm_partie))
+        if couleur in self.current_player.main_wagon:
+            print(f"On va check la route avec la couleur {couleur}")
+            return self.check_prendre_route(couleur, route, nom_route, ihm_partie)
 
     def preparation_partie(self):
         """
@@ -1058,6 +1153,7 @@ class Partie_qt(Jeu):
                 joueur.main_wagon[self.pile_cartes_wagon.pop(0)] += 1
             for i in range(3):
                 joueur.main_destination.append(self.pile_cartes_destination.pop(0))
+        self.init_les_routes()
 
     def change_current_player(self):
         """
@@ -1067,8 +1163,8 @@ class Partie_qt(Jeu):
         # Changement de joueur actuel
         self.idx_current_player += 1
         self.idx_current_player = self.idx_current_player % len(self.ordre)
-        self.current_player_name=self.ordre[self.idx_current_player]
-        self.current_player=self.les_joueurs[self.current_player_name]
+        self.current_player_name = self.ordre[self.idx_current_player]
+        self.current_player = self.les_joueurs[self.current_player_name]
 
     def change_turn(self, ihm_partie):
         """
@@ -1140,20 +1236,90 @@ class Partie_qt(Jeu):
         chaque joueur, en incluant celui-ci, joue encore un tour. À l’issue de ce dernier tour, le jeu s’arrête et 
         chacun compte ses points """
 
+    def draw_plateau(self):
+        """
+        Définit le plateau du jeu
+        => Construit le graphe des villes
+        Affiche un point pour chaque ville avec le nom en dessous
+        Relie chaque ville par un trait gris quand non occupé
+        """
+        figure = Figure()
+        axes = figure.gca()
+        plt.rcParams["figure.figsize"] = [7.00, 3.50]
+        plt.rcParams["figure.autolayout"] = True
+        im = plt.imread("img/carte_usa.jpg")
+
+        """Affichage des liens entre les villes :"""
+        for nom_ville, ville in self.villes.items():
+            x_ville, y_ville = ville.coords
+            rx = 603 / 36
+            ry = 380 / 23
+            for nom_lien, value in ville.liens.items():
+                couleur_lien, nb_wagons_lien = value
+                x_liens, y_liens = self.villes[nom_lien].coords
+                axes.plot((x_ville * rx, x_liens * rx), (y_ville * ry, y_liens * ry), color=couleur_lien, linewidth=5)
+                # Pour les lignes en tirets : linestyle="dashed"
+            axes.plot(x_ville * rx, y_ville * ry, 'ro')
+            axes.text((x_ville - 1) * rx, (y_ville - 1) * ry, nom_ville)
+        """Arrière-plan du plateau :"""
+        # axes.imshow(im, extent=[1,36,1,22.7])
+        # axes.imshow(im, extent=[0, 603, 0, 380])
+        axes.imshow(im)
+        axes.axis(False)
+        # plt.show()
+        # im = ax.imshow(im)
+        # format image: 603x380
+        # Grille pour les points du graphe: 36x22.5
+        # Rapport : 1.6
+        return figure
+
+    def init_les_routes(self):
+        for key in self.villes.keys():
+            for lien in self.villes[key].liens.keys():
+                if [key, lien][::-1] not in self.les_routes and [key, lien] not in self.les_routes:
+                    self.les_routes.append([key, lien])
+
 
 # Imports :
 from Joueur import *
 from Score import Score
 import matplotlib.pyplot as plt
 import random as r
-from interface import IhmJoueur
-import time
+# from interface import IhmJoueur
+from matplotlib.figure import Figure
 
 if __name__ == '__main__':
-    # p = partie()
-    # j = Jeu()
+    p = Partie_qt()
+    j = Jeu()
+    # p.update_choix_route()
     # p.partie()
     print("hello world")
+    # p.show_plateau()
+    # j.show_plateau()
+
+    # # Test
+    # from matplotlib.figure import Figure
+    # from PyQt5 import QtWidgets
+    # from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+    # import sys
+    #
+    # app = QtWidgets.QApplication(sys.argv)
+    #
+    # # scene = QtWidgets.QGraphicsScene()
+    # # view = QtWidgets.QGraphicsView(scene)
+    #
+    # canvas = FigureCanvas(p.show_plateau())
+    # # proxy_widget = scene.addWidget(canvas)
+    # # or
+    # # proxy_widget = QtWidgets.QGraphicsProxyWidget()
+    # # proxy_widget.setWidget(canvas)
+    # # scene.addItem(proxy_widget)
+    #
+    # view=canvas
+    # # view.resize(640, 480)
+    # view.show()
+    #
+    # app.exec_()
 
 # A conserver au cas où, pour plus tard :
 

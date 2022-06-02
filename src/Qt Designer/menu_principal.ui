@@ -81,7 +81,7 @@ font: 6pt &quot;ShangriLaNFSmallCaps&quot;;
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Menu_principal">
        <property name="styleSheet">
