@@ -436,7 +436,7 @@ class IhmPartie:
         self.wagon_vert = pygame.image.load("img/wagon_vert.jpg")
         self.locomotive = pygame.image.load("img/locomotive.jpg")
         self.dos_wagon = pygame.image.load("img/dos_wagon.jpg")
-        self.dos_wagon = pygame.transform.rotate(self.dos_wagon, 90)
+        # self.dos_wagon = pygame.transform.rotate(self.dos_wagon, 90)
 
         # Cartes Destination
         self.los_angeles_new_york = pygame.image.load("img/los_angeles_new_york.jpg")
@@ -908,6 +908,7 @@ class IhmJoueur:
                     self.visible_wagon = self.ihm_partie.partie.pile_cartes_wagon.pop(k)
                     self.interaction_joueur.title = f"Vous avez tiré un wagon {self.visible_wagon}"
                     # print("Carte visible")
+
             # Ajout des cartes à la main du joueur et vérif des cartes selon règle du jeu.
             if self.count_wagon_card < 2 and (self.hide_wagon or self.visible_wagon):
                 locomotive = self.ihm_partie.partie.prendre_cartes_wagon(joueur, self)
@@ -969,13 +970,14 @@ class IhmJoueur:
                 nb_wagon.show(self.ihm_partie.screen)
 
             # screen.blit(dos_wagon, ((screen.get_width() + plateau.get_width()) // 2 + 10, 50))
-
+            # TODO: finaliser la fonctionnalité : prendre_route
             # Bouton pour la fin de tour
-            self.button_fin_tour.draw(self.ihm_partie.screen)
-            if self.button_fin_tour.pressed:
-                self.button_fin_tour.pressed = False
-                fin_tour = False
-                return f"Fin du tour de {joueur.nom_joueur}"
+            if fin_tour:
+                self.button_fin_tour.draw(self.ihm_partie.screen)
+                if self.button_fin_tour.pressed:
+                    self.button_fin_tour.pressed = False
+                    fin_tour = False
+                    return f"Fin du tour de {joueur.nom_joueur}"
 
             # Affichage du compteur de points
             pygame.draw.circle(self.ihm_partie.screen, "lightsteelblue", [self.ihm_partie.screen.get_width(), self.ihm_partie.screen.get_height()],

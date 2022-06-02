@@ -342,7 +342,11 @@ class Jeu():
         Affiche un point pour chaque ville avec le nom en dessous
         Relie chaque ville par un trait gris quand non occupé
         """
-        plateau = plt.figure()
+        figure = Figure()
+        axes = figure.gca()
+        plt.rcParams["figure.figsize"] = [7.00, 3.50]
+        plt.rcParams["figure.autolayout"] = True
+        im = plt.imread("img/carte_usa.jpg")
 
         """Affichage des liens entre les villes :"""
         for ville in self.liens_villes.keys():
@@ -350,16 +354,31 @@ class Jeu():
             for ville2 in self.liens_villes[ville].keys():
                 nom_lien, couleur_lien = ville2, self.liens_villes[ville][ville2][0]
                 x_liens, y_liens = self.villes[nom_lien]
-                plt.plot((x_ville, x_liens), (y_ville, y_liens), couleur_lien, linewidth=5)
+                rx=603/36
+                ry=380/23
+                axes.plot((x_ville * rx, x_liens * rx), (y_ville * ry, y_liens * ry), color=couleur_lien, linewidth=5)
+                # Pour les lignes en tirets : linestyle="dashed"
         """Affichage des points + noms des villes :"""
         for ville in self.villes.keys():
             x, y = self.villes[ville]
-            plt.plot(x, y, 'ro')
-            plt.text(x - 1, y - 1, ville)
+            rx = 603 / 36
+            ry = 380 / 23
+            axes.plot(x * rx, y * ry, 'ro')
+            axes.text((x - 2) * rx, (y - 2) * ry, ville)
         """Arrière-plan du plateau :"""
-        ax = plt.axes()
-        ax.set_facecolor('lightgrey')
-        return plateau
+        # ax = plt.axes()
+        # ax.set_facecolor('lightgrey')
+        # ax.imshow(im, extent=[1,36,1,22.7])
+        axes.imshow(im, extent=[0, 603, 0, 380])
+        axes.axis(False)
+
+        # im = ax.imshow(im)
+        # format image: 603x380
+        # Grille pour les points du graphe: 36x22.5
+        # Rapport : 1.6
+        # plt.show()
+        # return plateau
+        return figure
 
     def melange_cartes(self, cartes):
         """
@@ -380,4 +399,27 @@ class Jeu():
 
 if __name__ == '__main__':
     jeu = Jeu()
-    jeu.plateau()
+
+    # Test
+    from matplotlib.figure import Figure
+    from PyQt5 import QtWidgets
+    from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+
+    # scene = QtWidgets.QGraphicsScene()
+    # view = QtWidgets.QGraphicsView(scene)
+
+    canvas = FigureCanvas(jeu.plateau())
+    # proxy_widget = scene.addWidget(canvas)
+    # or
+    # proxy_widget = QtWidgets.QGraphicsProxyWidget()
+    # proxy_widget.setWidget(canvas)
+    # scene.addItem(proxy_widget)
+
+    view = canvas
+    # view.resize(640, 480)
+    view.show()
+
+    app.exec_()
