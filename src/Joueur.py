@@ -2,7 +2,6 @@
 @authors: Mathis URIEN, Kenza BELAID"""
 
 # Imports :
-import random
 from abc import abstractmethod, ABCMeta, ABC
 import random as rd
 
@@ -222,7 +221,7 @@ class Joueur:
         """
         assert type(nom_couleur) == str
         if "random" in nom_couleur:
-            self.__couleur = self.Couleur_joueur.pop(random.randint(0, len(self.Couleur_joueur) - 1))
+            self.__couleur = self.Couleur_joueur.pop(rd.randint(0, len(self.Couleur_joueur) - 1))
         else:
             if nom_couleur in self.convert_color_id.keys():
                 nom_couleur = self.convert_color_id[nom_couleur]
@@ -235,8 +234,8 @@ class IA_player(Joueur):
 
     def __init__(self, nom_joueur="IA player", nom_couleur="random", IA_level="IA aléatoire", points=0):
         super().__init__(nom_joueur, nom_couleur, points)
-        # Difficulté de l'IA : échelle de 0 à 3. IA novice, IA normal, IA expert.
-        # Pour IA aléatoire : difficulty = -1.
+        # Difficulté de l'IA : échelle de 0 à 4. IA novice, IA normal, IA expert.
+        # Pour IA aléatoire : difficulty = 0.
         self.levels = {
             "IA aléatoire": 0,
             "IA novice": 1,
@@ -253,17 +252,16 @@ class IA_player(Joueur):
     def difficulty(self, value):
         self._difficulty = self.levels[value]
 
-    def prendre_wagon(self):
+    def prendre_wagon(self, partie):
         """
         Fonction pour réaliser l'action "prendre des cartes wagons" pour l'IA de niveau aléatoire.
         """
         if self.difficulty == 0:
             print("prendre_wagon: difficulty 0")
             choix = rd.randint(0, 5)
-            return choix
+            partie.prendre_cartes_wagon(choix, choix != 5)
 
         # A compléter
-        pass
 
     def prendre_route(self):
         """
@@ -283,13 +281,14 @@ class IA_player(Joueur):
         # A compléter
         pass
 
-    def tour(self):
+    def tour(self, partie):
         """
         Réalise le tour de l'IA. Prend en compte le level défini. Les actions sont en fonction.
         """
         if self.difficulty == 0:
             choix = rd.randint(1, 3)
             if choix == 1:
+                partie.count_wagon_card = 0
                 self.prendre_wagon()
             if choix == 2:
                 self.prendre_route()

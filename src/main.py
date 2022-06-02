@@ -1,11 +1,24 @@
 """Projet Informatique
 @authors: Mathis URIEN, Kenza BELAID"""
 
-# Imports :
-from interfaceQt import *
 
 if __name__ == '__main__':
-    app = QApplication()
-    window = MonAppli()
-    window.show()
-    app.exec_()
+    try:
+        from interfaceQt import *
+
+        app = QApplication()
+        window = MonAppli()
+        window.show()
+        app.exec_()
+    except ModuleNotFoundError as module:
+        print(module)
+        from pip._internal import main as pipmain
+
+        pipmain(['install', 'PySide2'])
+
+        from interfaceQt import *
+
+        app = QApplication()
+        window = MonAppli()
+        window.show()
+        app.exec_()
