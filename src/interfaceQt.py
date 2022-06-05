@@ -32,7 +32,6 @@ from Partie import Partie_qt
 class MonAppli(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.init_take_road()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.pioche_wagons = [self.ui.wagon1, self.ui.wagon2, self.ui.wagon3, self.ui.wagon4, self.ui.wagon5]
@@ -118,6 +117,9 @@ class MonAppli(QMainWindow):
         # Buttons de l'écran Crédits
         self.ui.button_retour_3.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal))
 
+        # Connexions de la fenêtre take_road
+        self.init_take_road()
+
         # Pour démarrer sur l'écran Menu Principal
         self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal)
 
@@ -128,12 +130,21 @@ class MonAppli(QMainWindow):
         self.dialog_take_road = QDialog()
         self.ui_take_road = Ui_take_road()
         self.ui_take_road.setupUi(self.dialog_take_road)
-        # self.window_take_road.show()
+        self.ui_take_road.choose_road.currentTextChanged.connect(lambda: self.partie.prendre_route(self))
 
     def open_take_road(self):
-        self.init_take_road()
+        self.update_choix_route()
         self.dialog_take_road.setModal(True)
         self.dialog_take_road.show()
+
+    def update_wagons_road(self):
+        """
+        Update l'affichage de la combobox pour les wagons à utiliser pour prendre la route sélectionnée.
+        """
+        self.ui_take_road.choose_wagons.clear()
+        self.ui_take_road.choose_wagons.addItem("Choisissez le type de wagon")
+        for wagon in self.partie.current_player.main_wagon:
+            self.ui_take_road.choose_wagons.addItem(self.partie.traduction_color[wagon])
 
     def allow_prendre_wagons(self):
         """
@@ -157,13 +168,34 @@ class MonAppli(QMainWindow):
         """
         Update les possibilités de route à prendre.
         """
+        self.init_take_road()
+        self.hide_take_road()
         self.ui_take_road.choose_road.clear()
         self.ui_take_road.choose_road.addItem("Choisir une route parmi celles-ci")
         for route in self.partie.les_routes:
             ville1, ville2 = route
-            text = f"{ville1}-{ville2}"
+            text = f"{ville1} - {ville2}"
             self.ui_take_road.choose_road.addItem(text)
-        self.ui_take_road.choose_road.currentTextChanged.connect(lambda: self.partie.prendre_route(self))
+
+    def hide_take_road(self):
+        """
+        Cache les élts secondaires pour le choix d'une route.
+        """
+        to_hide = [self.ui_take_road.label_wagons, self.ui_take_road.choose_wagons,
+                   self.ui_take_road.label_locomotive, self.ui_take_road.choose_locomotive,
+                   self.ui_take_road.label_nb_locomotive, self.ui_take_road.spinbox_nb_locomotive]
+        for h in to_hide:
+            h.hide()
+
+    def show_take_road(self):
+        """
+        Montre les elts pour choisir une route
+        """
+        to_show = [self.ui_take_road.label_wagons, self.ui_take_road.choose_wagons,
+                   self.ui_take_road.label_locomotive, self.ui_take_road.choose_locomotive,
+                   self.ui_take_road.label_nb_locomotive, self.ui_take_road.spinbox_nb_locomotive]
+        for s in to_show:
+            s.show()
 
     def get_couleur_pour_route(self, couleur, route, nom_route):
         """
@@ -485,6 +517,7 @@ class MonAppli(QMainWindow):
                 wagon.show()
             else:
                 wagon.hide()
+        print(self.partie.pile_cartes_wagon)
 
     def hide_wagons(self):
         """
@@ -546,6 +579,10 @@ class MonAppli(QMainWindow):
         # self.ui.label_interaction_joueur.hide()
         # self.ui.gridLayout_19.addWidget(self.ui.button_fin_partie, 7, 0, 1, 1)
         # self.ui.button_fin_partie.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Fin_partie))
+
+        # self.ui_take_road.choose_wagons.currentTextChanged.connect(lambda:self.partie.prendre_route(self))
+        # self.ui_take_road.choose_locomotive.currentTextChanged.connect(lambda:self.partie.prendre_route(self))
+        # self.ui_take_road.spinbox_nb_locomotive.valueChanged.connect(lambda:self.partie.prendre_route(self))
 
         # Change d'affichage pour l'écran Joueur
         self.ui.stackedWidget.setCurrentWidget(self.ui.Joueur)

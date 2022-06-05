@@ -813,10 +813,23 @@ class Partie(Jeu):
 class Partie_qt(Jeu):
     """Classe qui est utilisé pour lancer une partie du jeu.
     Fait appel à la classe Jeu pour accéder à toutes les cartes et informations sur le plateau de jeu."""
+    traduction_color = {
+        "white": "blanc",
+        "blue": "bleu",
+        "yellow": "jaune",
+        "black": "noir",
+        "orange": "orange",
+        "pink": "rose",
+        "red": "rouge",
+        "green": "vert",
+        "grey": "gris",
+        "locomotive": "locomotive"
+    }
 
     def __init__(self):
         super().__init__()
         self.les_routes = []
+        self.init_les_routes()
         self.count_wagon_card = 0
         self.idx_current_player = 0
         self.current_player_name = ""
@@ -967,7 +980,7 @@ class Partie_qt(Jeu):
             else:
                 self.count_wagon_card += 1
                 self.current_player.main_wagon[carte_prise] += 1
-            return f"Vous avez pris un wagon {carte_prise}"
+            return f"Vous avez pris un wagon {self.traduction_color[carte_prise]}"
         return "Vous ne pouvez plus piocher"
 
     def update_wagons_stack(self):
@@ -1023,45 +1036,58 @@ class Partie_qt(Jeu):
         # TODO: pour l'IHM, faire en fonction des cliques du joueur sur la carte pour relier les 2.
         #  Click sur le lien entre les villes ou clique sur les 2 villes.
 
-        nom_route = ihm_partie.ui.choix_interaction_joueur.currentText()
+        nom_route = ihm_partie.ui_take_road.choose_road.currentText()
         print(nom_route)
-        print(nom_route.split("-"))
         ville1, ville2 = [k.strip() for k in nom_route.strip().split("-")]
-        route = self.villes[ville1].liens[ville2]  # contient [couleur,nb_segments]
+        couleur, nb_segments = self.villes[ville1].liens[ville2]  # contient [couleur,nb_segments]
         # Vérification que le joueur peut prendre une route :
-        if route[0] == "grey":
-            self.prendre_route_grise("grey", route, nom_route, ihm_partie)
+        if couleur == "grey":
+            ihm_partie.ui_take_road.label_wagons.setText(f"La route est {self.traduction_color[couleur]}."
+                                                         f"\nAvec quel wagon voulez-vous la prendre ?")
+            ihm_partie.update_wagons_road()
+            ihm_partie.ui_take_road.label_wagons.show()
+            ihm_partie.ui_take_road.choose_wagons.show()
+            type_wagon = ihm_partie.ui_take_road.choose_wagons.currentText()
+            if "locomotive" not in type_wagon and type_wagon in self.current_player.main_wagon:
+                print(type_wagon)
+                ihm_partie.ui_take_road.label_locomotive.setText("Voulez-vous utiliser des wagons locomotives ?")
+                ihm_partie.ui_take_road.label_locomotive.show()
+                ihm_partie.ui_take_road.choose_locomotive.show()
+                if "Oui" in ihm_partie.ui_take_road.choose_locomotive.currentText():
+                    ihm_partie.ui_take_road.label_nb_locomotive.show()
+                    ihm_partie.ui_take_road.spinbox_nb_locomotive.show()
         else:
-            couleur = route[0]
-            self.check_prendre_route(couleur, route, nom_route, ihm_partie)
+            self.check_prendre_route(couleur, nb_segments, nom_route, ihm_partie)
 
-    def check_prendre_route(self, couleur, route, nom_route, ihm_partie):
+    def check_prendre_route(self, couleur, nb_segments, nom_route, ihm_partie):
         print(f"On checke {nom_route} avec couleur {couleur}")
-        if self.current_player.main_wagon[couleur] >= route[1]:
+        if self.current_player.main_wagon[couleur] >= nb_segments:
             print("On a récupéré la route !")
             # défausse des cartes de la main vers la défausse
-            for K in range(route[1]):
+            for K in range(nb_segments):
                 self.defausse_wagon.append(couleur)
 
             # retrait des wagons de la main du joueur :
-            self.current_player.main_wagon[couleur] -= route[1]
+            self.current_player.main_wagon[couleur] -= nb_segments
             # retrait du nb de wagons à poser sur la route. => condition d'arrêt de la partie.
-            self.current_player.wagons -= route[1]
+            self.current_player.wagons -= nb_segments
             # DONE: faire un accesseur en écriture pour vérifier qu'aucune entrée de wagons soient négatives.
 
             # ajout de la route au joueur :
-            self.current_player.route_prise.append(nom_route.split("-"))
-            ihm_partie.ui.label_interaction_joueur.currentText(
-                f"Vous avez pris la route de {nom_route[0]} à {nom_route[1]}")
+            ville1, ville2 = [k.strip() for k in nom_route.strip().split("-")]
+            self.current_player.route_prise.append([ville1, ville2])
+            ihm_partie.ui.label_interaction_joueur.setText(
+                f"Vous avez pris la route de {ville1} à {ville2}")
             time.sleep(5)
 
             # Suppression de la route de la liste des routes disponibles
-            self.les_routes.remove(nom_route)
+            # self.les_routes.remove(nom_route) # FIXME: x not in list
 
             # calcul des points gagnés :
             pts = Score(self).calcul_pts_route(self.current_player)
+            ihm_partie.ui.score_joueur.setText(str(self.current_player.nb_points))
             print(f"Vous avez gagné {pts} points")
-            ihm_partie.ui.choix_interaction_joueur.setText(f"Vous avez gagné {pts} points !")
+            ihm_partie.ui.label_interaction_joueur.setText(f"Vous avez gagné {pts} points !")
 
             # DONE: implémenter la méthode du calcul du score en fonction du nb de wagons posés. cf. Classe Score.
             # Score.points() => à corriger en fonction de l'implémentation
@@ -1069,9 +1095,9 @@ class Partie_qt(Jeu):
             # On désactive la combobox pour marquer la fin du tour.
             return ihm_partie.ui.choix_interaction_joueur.setEnabled(False)
 
-        elif self.current_player.main_wagon[couleur] + self.current_player.main_wagon["locomotive"] >= route[1] \
-                or self.current_player.main_wagon["locomotive"] >= route[1]:
-            self.prendre_route_locomotive(couleur, route, nom_route, ihm_partie)
+        elif self.current_player.main_wagon[couleur] + self.current_player.main_wagon["locomotive"] >= nb_segments \
+                or self.current_player.main_wagon["locomotive"] >= nb_segments:
+            self.prendre_route_locomotive(couleur, nb_segments, nom_route, ihm_partie)
         else:
             print("On ne peut pas prendre la route")
             ihm_partie.ui.label_interaction_joueur.setText(f"Vous ne pouvez pas prendre la route.")

@@ -165,7 +165,6 @@ class Joueur:
         "jaune": "yellow",
         "orange": "orange",
         "personnalisée": "random"  # TODO: à modifier dans la phase améliorations. => color picker.
-
     }
 
     # DONE: insérer toutes les couleurs possibles => cf. matplotlib.pyplot par exemple ou docs de pygame
@@ -220,11 +219,11 @@ class Joueur:
         :return: None
         """
         assert type(nom_couleur) == str
+        if nom_couleur in self.convert_color_id.keys():
+            nom_couleur = self.convert_color_id[nom_couleur]
         if "random" in nom_couleur:
             self.__couleur = self.Couleur_joueur.pop(rd.randint(0, len(self.Couleur_joueur) - 1))
         else:
-            if nom_couleur in self.convert_color_id.keys():
-                nom_couleur = self.convert_color_id[nom_couleur]
             self.__couleur = nom_couleur
             self.Couleur_joueur.pop(self.Couleur_joueur.index(nom_couleur))
 
@@ -234,7 +233,7 @@ class IA_player(Joueur):
 
     def __init__(self, nom_joueur="IA player", nom_couleur="random", IA_level="IA aléatoire", points=0):
         super().__init__(nom_joueur, nom_couleur, points)
-        # Difficulté de l'IA : échelle de 0 à 4. IA novice, IA normal, IA expert.
+        # Difficulté de l'IA : échelle de 0 à 3. IA novice, IA normal, IA expert.
         # Pour IA aléatoire : difficulty = 0.
         self.levels = {
             "IA aléatoire": 0,
