@@ -1026,7 +1026,7 @@ class Partie_qt(Jeu):
         nom_route = ihm_partie.ui.choix_interaction_joueur.currentText()
         print(nom_route)
         print(nom_route.split("-"))
-        ville1, ville2 = nom_route.split("-")
+        ville1, ville2 = [k.strip() for k in nom_route.strip().split("-")]
         route = self.villes[ville1].liens[ville2]  # contient [couleur,nb_segments]
         # Vérification que le joueur peut prendre une route :
         if route[0] == "grey":
@@ -1045,6 +1045,8 @@ class Partie_qt(Jeu):
 
             # retrait des wagons de la main du joueur :
             self.current_player.main_wagon[couleur] -= route[1]
+            # retrait du nb de wagons à poser sur la route. => condition d'arrêt de la partie.
+            self.current_player.wagons -= route[1]
             # DONE: faire un accesseur en écriture pour vérifier qu'aucune entrée de wagons soient négatives.
 
             # ajout de la route au joueur :

@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>take_road</class>
+    <widget class="QDialog" name="take_road">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>648</width>
+                <height>309</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Les aventuriers du rail - Choix d'une route</string>
+        </property>
+        <property name="styleSheet">
+            <string notr="true">QPushButton{
+                font: 12pt &quot;chippewafallsnf&quot;;
+                background-color:lightgrey;
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                border-color: grey;
+                padding: 1px 3px 1px 3px;
+                }
+                QLabel{
+                font:8pt &quot;ShangriLaNFSmallCaps&quot;;
+                }
+                QComboBox{
+                font: 8pt &quot;ShangriLaNFSmallCaps&quot;;
+                background-color:lightgrey;
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                border-color: grey;
+                }
+                QSpinBox{
+                font: 10pt &quot;ShangriLaNFSmallCaps&quot;;
+                background-color:lightgrey;
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                border-color: grey;
+                }
+            </string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+                <layout class="QHBoxLayout" name="layout_title">
+                    <item>
+                        <spacer name="spacer_left">
+                            <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                            </property>
+                            <property name="sizeHint" stdset="0">
+                                <size>
+                                    <width>40</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </item>
+                    <item>
+                        <widget class="QLabel" name="label_title">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>104</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="styleSheet">
+                                <string notr="true">font: 24pt &quot;chippewafallsnf&quot;;
+                                </string>
+                            </property>
+                            <property name="text">
+                                <string>Prendre une route</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <spacer name="spacer_right">
+                            <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                            </property>
+                            <property name="sizeHint" stdset="0">
+                                <size>
+                                    <width>40</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </item>
+                </layout>
+            </item>
+            <item>
+                <layout class="QHBoxLayout" name="layout_road">
+                    <item>
+                        <widget class="QLabel" name="label_road">
+                            <property name="text">
+                                <string>Quelle route voulez-vous prendre ?</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <spacer name="spacer_road">
+                            <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>QSizePolicy::Preferred</enum>
+                            </property>
+                            <property name="sizeHint" stdset="0">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </item>
+                    <item>
+                        <widget class="QComboBox" name="choose_road">
+                            <property name="sizeAdjustPolicy">
+                                <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+                            </property>
+                            <item>
+                                <property name="text">
+                                    <string>Choisissez votre route</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Los Angeles - New York</string>
+                                </property>
+                            </item>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+            <item>
+                <layout class="QHBoxLayout" name="layout_wagons">
+                    <item>
+                        <widget class="QLabel" name="label_wagons">
+                            <property name="text">
+                                <string>La route est grise.
+                                    Avec quel wagon voulez-vous la prendre ?
+                                </string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <spacer name="spacer_wagons">
+                            <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>QSizePolicy::Preferred</enum>
+                            </property>
+                            <property name="sizeHint" stdset="0">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </item>
+                    <item>
+                        <widget class="QComboBox" name="choose_wagons">
+                            <item>
+                                <property name="text">
+                                    <string>Choisissez le type de wagon</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>bleu</string>
+                                </property>
+                            </item>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+            <item>
+                <layout class="QHBoxLayout" name="layout_locomotive">
+                    <item>
+                        <widget class="QLabel" name="label_locomotive">
+                            <property name="text">
+                                <string>Vous n'avez pas assez de wagons {couleur}.
+                                    Voulez-vous compléter avec des locomotives ?
+                                </string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <spacer name="spacer_locomotive">
+                            <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>QSizePolicy::Preferred</enum>
+                            </property>
+                            <property name="sizeHint" stdset="0">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </item>
+                    <item>
+                        <widget class="QComboBox" name="choose_locomotive">
+                            <item>
+                                <property name="text">
+                                    <string>Choisissez votre réponse</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Oui</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Non</string>
+                                </property>
+                            </item>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+            <item>
+                <layout class="QHBoxLayout" name="layout_nb_locomotive">
+                    <item>
+                        <widget class="QLabel" name="label_nb_locomotive">
+                            <property name="text">
+                                <string>Combien de wagons locomotives voulez-vous utiliser ?</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <spacer name="spacer_locomotive_2">
+                            <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>QSizePolicy::Preferred</enum>
+                            </property>
+                            <property name="sizeHint" stdset="0">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </item>
+                    <item>
+                        <widget class="QSpinBox" name="spinbox_nb_locomotive"/>
+                    </item>
+                </layout>
+            </item>
+            <item>
+                <widget class="QDialogButtonBox" name="dialog_buttons">
+                    <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="standardButtons">
+                        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+                    </property>
+                </widget>
+            </item>
+        </layout>
+    </widget>
+    <resources/>
+    <connections>
+        <connection>
+            <sender>dialog_buttons</sender>
+            <signal>accepted()</signal>
+            <receiver>take_road</receiver>
+            <slot>accept()</slot>
+            <hints>
+                <hint type="sourcelabel">
+                    <x>248</x>
+                    <y>254</y>
+                </hint>
+                <hint type="destinationlabel">
+                    <x>157</x>
+                    <y>274</y>
+                </hint>
+            </hints>
+        </connection>
+        <connection>
+            <sender>dialog_buttons</sender>
+            <signal>rejected()</signal>
+            <receiver>take_road</receiver>
+            <slot>reject()</slot>
+            <hints>
+                <hint type="sourcelabel">
+                    <x>316</x>
+                    <y>260</y>
+                </hint>
+                <hint type="destinationlabel">
+                    <x>286</x>
+                    <y>274</y>
+                </hint>
+            </hints>
+        </connection>
+    </connections>
+</ui>

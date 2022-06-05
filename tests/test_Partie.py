@@ -1,17 +1,28 @@
 #  Copyright (c) 2022. Authors: Mathis URIEN
 
 # Imports :
+import sys
+
+sys.path.insert(0, "../src/")
 import unittest
-import Partie
+from Partie import Partie_qt
 from Joueur import Joueur, IA_player
-from Score import Score
 
 
 class TestPartieQt(unittest.TestCase):
     def setUp(self) -> None:
-        self.partie = Partie.Partie_qt()
+        self.partie = Partie_qt()
         self.joueur_ia = IA_player()
-        self.joueur = Joueur()
+        self.joueur = Joueur("JoueurTest", "bleu")
+
+    def testInstance(self):
+        """
+        Test le setUp.
+        """
+        self.assertIsInstance(self.partie, Partie_qt)
+        self.assertIsInstance(self.joueur_ia, IA_player)
+        self.assertIsInstance(self.joueur_ia, Joueur)
+        self.assertIsInstance(self.joueur, Joueur)
 
     def testJeu(self):
         """

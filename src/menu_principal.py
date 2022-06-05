@@ -15,6 +15,7 @@ from PySide2.QtGui import (QFont,
                            QIcon, QPixmap)
 from PySide2.QtWidgets import *
 
+
 # import resource_rc
 
 
@@ -37,9 +38,7 @@ class Ui_MainWindow(object):
         icon.addFile(u"img/cargo-train.png", QSize(), QIcon.Normal, QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet(u"QMainWindow{\n"
-                                 "background-color: qradialgradient(spread:pad, cx:0.525, cy:0.511227, radius:1, "
-                                 "fx:0.811445, fy:0.920433, stop:0.0895522 rgba(88, 255, 255, 255), stop:1 rgba(40, "
-                                 "152, 127, 255));\n "
+                                 "background-color: qradialgradient(spread:pad, cx:0.525, cy:0.511227, radius:1, fx:0.811445, fy:0.920433, stop:0.0895522 rgba(88, 255, 255, 255), stop:1 rgba(40, 152, 127, 255));\n"
                                  "}\n"
                                  "QPushButton{\n"
                                  "font: 20pt \"chippewafallsnf\";\n"
@@ -53,7 +52,28 @@ class Ui_MainWindow(object):
                                  "font:12pt \"ShangriLaNFSmallCaps\";\n"
                                  "}\n"
                                  "QComboBox{\n"
-                                 "font: 6pt \"ShangriLaNFSmallCaps\";\n"
+                                 "font: 8pt \"ShangriLaNFSmallCaps\";\n"
+                                 "background-color:lightgrey;\n"
+                                 "border-style: outset;\n"
+                                 "border-width: 2px;\n"
+                                 "border-radius: 10px;\n"
+                                 "border-color: grey;\n"
+                                 "}\n"
+                                 "QSpinBox{\n"
+                                 "font: 10pt \"ShangriLaNFSmallCaps\";\n"
+                                 "background-color:lightgrey;\n"
+                                 "border-style: outset;\n"
+                                 "border-width: 2px;\n"
+                                 "border-radius: 10px;\n"
+                                 "border-color: grey;\n"
+                                 "}\n"
+                                 "QLineEdit{\n"
+                                 "font: 8pt \"ShangriLaNFSmallCaps\";\n"
+                                 "background-color:lightgrey;\n"
+                                 "border-style: outset;\n"
+                                 "border-width: 2px;\n"
+                                 "border-radius: 10px;\n"
+                                 "border-color: grey;\n"
                                  "}\n"
                                  "")
         self.actionQuitter = QAction(MainWindow)
@@ -708,19 +728,31 @@ class Ui_MainWindow(object):
         self.interaction_joueur.setObjectName(u"interaction_joueur")
         self.label_interaction_joueur = QLabel(self.Joueur)
         self.label_interaction_joueur.setObjectName(u"label_interaction_joueur")
-        self.label_interaction_joueur.setMinimumSize(QSize(146, 0))
+        sizePolicy7 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy7.setHorizontalStretch(0)
+        sizePolicy7.setVerticalStretch(0)
+        sizePolicy7.setHeightForWidth(self.label_interaction_joueur.sizePolicy().hasHeightForWidth())
+        self.label_interaction_joueur.setSizePolicy(sizePolicy7)
+        self.label_interaction_joueur.setMinimumSize(QSize(135, 34))
         self.label_interaction_joueur.setStyleSheet(u"font:8pt;")
         self.label_interaction_joueur.setWordWrap(True)
 
         self.interaction_joueur.addWidget(self.label_interaction_joueur)
 
-        self.choix_interaction_joueur = QComboBox(self.Joueur)
-        self.choix_interaction_joueur.addItem("")
-        self.choix_interaction_joueur.addItem("")
-        self.choix_interaction_joueur.addItem("")
-        self.choix_interaction_joueur.setObjectName(u"choix_interaction_joueur")
+        self.button_take_road = QPushButton(self.Joueur)
+        self.button_take_road.setObjectName(u"button_take_road")
+        font4 = QFont()
+        font4.setFamily(u"chippewafallsnf")
+        font4.setPointSize(8)
+        font4.setBold(False)
+        font4.setItalic(False)
+        font4.setWeight(50)
+        self.button_take_road.setFont(font4)
+        self.button_take_road.setStyleSheet(u"font:8pt;\n"
+                                            "")
+        self.button_take_road.setCheckable(False)
 
-        self.interaction_joueur.addWidget(self.choix_interaction_joueur)
+        self.interaction_joueur.addWidget(self.button_take_road)
 
         self.gridLayout_19.addLayout(self.interaction_joueur, 7, 0, 1, 1)
 
@@ -797,6 +829,10 @@ class Ui_MainWindow(object):
         self.emplacement_carte.setObjectName(u"emplacement_carte")
         self.emplacement_carte.setMinimumSize(QSize(603, 380))
         # self.emplacement_carte.setStyleSheet(u"background-image:url(img/carte_usa.jpg)")
+        self.emplacement_carte.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.emplacement_carte.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.emplacement_carte.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        self.emplacement_carte.setResizeAnchor(QGraphicsView.AnchorViewCenter)
 
         self.plateau_jeu.addWidget(self.emplacement_carte)
 
@@ -961,13 +997,13 @@ class Ui_MainWindow(object):
 
         self.label_titre = QLabel(self.Fin_partie)
         self.label_titre.setObjectName(u"label_titre")
-        font4 = QFont()
-        font4.setFamily(u"chippewafallsnf")
-        font4.setPointSize(28)
-        font4.setBold(False)
-        font4.setItalic(False)
-        font4.setWeight(50)
-        self.label_titre.setFont(font4)
+        font5 = QFont()
+        font5.setFamily(u"chippewafallsnf")
+        font5.setPointSize(28)
+        font5.setBold(False)
+        font5.setItalic(False)
+        font5.setWeight(50)
+        self.label_titre.setFont(font5)
         self.label_titre.setStyleSheet(u"font:28pt \"chippewafallsnf\";\n"
                                        "")
         self.label_titre.setAlignment(Qt.AlignCenter)
@@ -995,37 +1031,37 @@ class Ui_MainWindow(object):
         self.position_joueur.setObjectName(u"position_joueur")
         self.label_resultat1 = QLabel(self.Fin_partie)
         self.label_resultat1.setObjectName(u"label_resultat1")
-        font5 = QFont()
-        font5.setFamily(u"ShangriLaNFSmallCaps")
-        font5.setPointSize(12)
-        font5.setBold(False)
-        font5.setItalic(False)
-        font5.setWeight(50)
-        self.label_resultat1.setFont(font5)
+        font6 = QFont()
+        font6.setFamily(u"ShangriLaNFSmallCaps")
+        font6.setPointSize(12)
+        font6.setBold(False)
+        font6.setItalic(False)
+        font6.setWeight(50)
+        self.label_resultat1.setFont(font6)
 
         self.position_joueur.addWidget(self.label_resultat1)
 
         self.label_resultat2 = QLabel(self.Fin_partie)
         self.label_resultat2.setObjectName(u"label_resultat2")
-        self.label_resultat2.setFont(font5)
+        self.label_resultat2.setFont(font6)
 
         self.position_joueur.addWidget(self.label_resultat2)
 
         self.label_resultat3 = QLabel(self.Fin_partie)
         self.label_resultat3.setObjectName(u"label_resultat3")
-        self.label_resultat3.setFont(font5)
+        self.label_resultat3.setFont(font6)
 
         self.position_joueur.addWidget(self.label_resultat3)
 
         self.label_resultat4 = QLabel(self.Fin_partie)
         self.label_resultat4.setObjectName(u"label_resultat4")
-        self.label_resultat4.setFont(font5)
+        self.label_resultat4.setFont(font6)
 
         self.position_joueur.addWidget(self.label_resultat4)
 
         self.label_resultat5 = QLabel(self.Fin_partie)
         self.label_resultat5.setObjectName(u"label_resultat5")
-        self.label_resultat5.setFont(font5)
+        self.label_resultat5.setFont(font6)
 
         self.position_joueur.addWidget(self.label_resultat5)
 
@@ -1077,7 +1113,7 @@ class Ui_MainWindow(object):
 
         self.label_titre_stats = QLabel(self.Statistiques)
         self.label_titre_stats.setObjectName(u"label_titre_stats")
-        self.label_titre_stats.setFont(font4)
+        self.label_titre_stats.setFont(font5)
         self.label_titre_stats.setStyleSheet(u"font: 28pt \"chippewafallsnf\";")
         self.label_titre_stats.setAlignment(Qt.AlignCenter)
 
@@ -1144,7 +1180,7 @@ class Ui_MainWindow(object):
 
         self.label_titre_options = QLabel(self.Options)
         self.label_titre_options.setObjectName(u"label_titre_options")
-        self.label_titre_options.setFont(font4)
+        self.label_titre_options.setFont(font5)
         self.label_titre_options.setStyleSheet(u"font: 28pt \"chippewafallsnf\";")
         self.label_titre_options.setAlignment(Qt.AlignCenter)
 
@@ -1165,7 +1201,7 @@ class Ui_MainWindow(object):
         self.layout_options.setContentsMargins(60, -1, 60, -1)
         self.label_idee_options = QLabel(self.Options)
         self.label_idee_options.setObjectName(u"label_idee_options")
-        self.label_idee_options.setFont(font5)
+        self.label_idee_options.setFont(font6)
         self.label_idee_options.setWordWrap(True)
 
         self.layout_options.addWidget(self.label_idee_options)
@@ -1218,7 +1254,7 @@ class Ui_MainWindow(object):
 
         self.label_titre_credits = QLabel(self.Credits)
         self.label_titre_credits.setObjectName(u"label_titre_credits")
-        self.label_titre_credits.setFont(font4)
+        self.label_titre_credits.setFont(font5)
         self.label_titre_credits.setStyleSheet(u"font:28pt \"chippewafallsnf\";")
         self.label_titre_credits.setAlignment(Qt.AlignCenter)
 
@@ -1239,7 +1275,7 @@ class Ui_MainWindow(object):
         self.layout_credits.setContentsMargins(60, -1, 60, -1)
         self.label_credits = QLabel(self.Credits)
         self.label_credits.setObjectName(u"label_credits")
-        self.label_credits.setFont(font5)
+        self.label_credits.setFont(font6)
         self.label_credits.setStyleSheet(u"font:12pt \"ShangriLaNFSmallCaps\";")
         self.label_credits.setWordWrap(True)
 
@@ -1277,7 +1313,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.actionQuitter.triggered.connect(MainWindow.close)
 
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(MainWindow)
 
@@ -1405,16 +1441,8 @@ class Ui_MainWindow(object):
         self.main_wagon8.setText("")
         self.main_wagon9.setText("")
         self.label_interaction_joueur.setText(
-            QCoreApplication.translate("MainWindow", u"Interaction avec le joueur", None))
-        self.choix_interaction_joueur.setItemText(0,
-                                                  QCoreApplication.translate("MainWindow", u"Prendre des cartes wagons",
-                                                                             None))
-        self.choix_interaction_joueur.setItemText(1,
-                                                  QCoreApplication.translate("MainWindow", u"Prendre une route", None))
-        self.choix_interaction_joueur.setItemText(2, QCoreApplication.translate("MainWindow",
-                                                                                u"Prendre des cartes destinations",
-                                                                                None))
-
+                QCoreApplication.translate("MainWindow", u"Interaction avec le joueur", None))
+        self.button_take_road.setText(QCoreApplication.translate("MainWindow", u"Prendre une route", None))
         self.button_fin_partie.setText(QCoreApplication.translate("MainWindow", u"Fin de partie", None))
         self.wagon1.setText("")
         self.wagon2.setText("")

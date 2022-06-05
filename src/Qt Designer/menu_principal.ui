@@ -40,22 +40,44 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow{
-background-color: qradialgradient(spread:pad, cx:0.525, cy:0.511227, radius:1, fx:0.811445, fy:0.920433, stop:0.0895522 rgba(88, 255, 255, 255), stop:1 rgba(40, 152, 127, 255));
-}
-QPushButton{
-font: 20pt &quot;chippewafallsnf&quot;;
-background-color:lightgrey;
-border-style: outset;
-border-width: 2px;
-border-radius: 20px;
-border-color: grey;
-}
-QLabel{
-font:12pt &quot;ShangriLaNFSmallCaps&quot;;
-}
-QComboBox{
-font: 6pt &quot;ShangriLaNFSmallCaps&quot;;
-}
+    background-color: qradialgradient(spread:pad, cx:0.525, cy:0.511227, radius:1, fx:0.811445, fy:0.920433,
+    stop:0.0895522 rgba(88, 255, 255, 255), stop:1 rgba(40, 152, 127, 255));
+    }
+    QPushButton{
+    font: 20pt &quot;chippewafallsnf&quot;;
+    background-color:lightgrey;
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 20px;
+    border-color: grey;
+    }
+    QLabel{
+    font:12pt &quot;ShangriLaNFSmallCaps&quot;;
+    }
+    QComboBox{
+    font: 8pt &quot;ShangriLaNFSmallCaps&quot;;
+    background-color:lightgrey;
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: grey;
+    }
+    QSpinBox{
+    font: 10pt &quot;ShangriLaNFSmallCaps&quot;;
+    background-color:lightgrey;
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: grey;
+    }
+    QLineEdit{
+    font: 8pt &quot;ShangriLaNFSmallCaps&quot;;
+    background-color:lightgrey;
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: grey;
+    }
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -1400,16 +1422,16 @@ border-color:rgb(120,120,120);</string>
          <layout class="QVBoxLayout" name="interaction_joueur">
           <item>
            <widget class="QLabel" name="label_interaction_joueur">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
-              <width>146</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
+              <width>135</width>
+              <height>34</height>
              </size>
             </property>
             <property name="styleSheet">
@@ -1424,28 +1446,32 @@ border-color:rgb(120,120,120);</string>
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBox">
-            <item>
-             <property name="text">
-              <string>Prendre des cartes wagons</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Prendre une route</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Prendre des cartes destinations</string>
-             </property>
-            </item>
+           <widget class="QPushButton" name="button_take_road">
+            <property name="font">
+             <font>
+              <family>chippewafallsnf</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font:8pt;
+             </string>
+            </property>
+            <property name="text">
+             <string>Prendre une route</string>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
          </layout>
         </item>
         <item row="1" column="0">
-         <widget class="QPushButton" name="button_fin_tour">
+         <widget class="QPushButton" name="button_fin_partie">
           <property name="text">
            <string>Fin de partie</string>
           </property>
@@ -1622,7 +1648,21 @@ border-color:rgb(120,120,120);</string>
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-image:url(:/images/img/carte_usa.jpg)</string>
+             <string notr="true">background-image:url(:/images/img/carte_usa.jpg);
+              background-repeat:no-repeat;
+             </string>
+            </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustToContents</enum>
+            </property>
+            <property name="resizeAnchor">
+             <enum>QGraphicsView::AnchorViewCenter</enum>
             </property>
            </widget>
           </item>
@@ -1915,7 +1955,7 @@ border-style:solid;</string>
          </layout>
         </item>
         <item row="1" column="6">
-         <widget class="QPushButton" name="button_fin_partie">
+         <widget class="QPushButton" name="button_fin_tour">
           <property name="text">
            <string>Fin du tour</string>
           </property>
@@ -1948,8 +1988,8 @@ border-style:solid;</string>
        <zorder>pioche_destination</zorder>
        <zorder>titre_nom_joueur</zorder>
        <zorder>score_joueur</zorder>
-       <zorder>button_fin_tour</zorder>
        <zorder>button_fin_partie</zorder>
+       <zorder>button_fin_tour</zorder>
       </widget>
       <widget class="QWidget" name="Fin_partie">
        <property name="styleSheet">

@@ -1,7 +1,11 @@
 """Projet Informatique
 @authors: Mathis URIEN, Kenza BELAID"""
 
+from pip._internal import main as pipmain
 
+# pipmain()
+
+# TODO: installer les fonts si celles-ci ne le sont pas sur le PC actuel.
 if __name__ == '__main__':
     try:
         from interfaceQt import *
@@ -12,7 +16,6 @@ if __name__ == '__main__':
         app.exec_()
     except ModuleNotFoundError as module:
         print(module)
-        from pip._internal import main as pipmain
 
         pipmain(['install', 'PySide2'])
 

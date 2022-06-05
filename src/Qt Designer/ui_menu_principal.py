@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-#  Copyright (c) 2022. Author(s): Mathis URIEN
-
 ################################################################################
-## Form generated from reading UI file 'menu_principal.ui'
+## Form generated from reading UI file 'menu_principalFLMRUX.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.14.1
 ##
@@ -17,8 +15,7 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
                            QRadialGradient)
 from PySide2.QtWidgets import *
 
-# import resource_rc
-
+import resource_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -36,7 +33,7 @@ class Ui_MainWindow(object):
         font.setPointSize(20)
         MainWindow.setFont(font)
         icon = QIcon()
-        icon.addFile(u"img/cargo-train.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u":/images/img/cargo-train.png", QSize(), QIcon.Normal, QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet(u"QMainWindow{\n"
                                  "background-color: qradialgradient(spread:pad, cx:0.525, cy:0.511227, radius:1, fx:0.811445, fy:0.920433, stop:0.0895522 rgba(88, 255, 255, 255), stop:1 rgba(40, 152, 127, 255));\n"
@@ -53,7 +50,28 @@ class Ui_MainWindow(object):
                                  "font:12pt \"ShangriLaNFSmallCaps\";\n"
                                  "}\n"
                                  "QComboBox{\n"
-                                 "font: 6pt \"ShangriLaNFSmallCaps\";\n"
+                                 "font: 8pt \"ShangriLaNFSmallCaps\";\n"
+                                 "background-color:lightgrey;\n"
+                                 "border-style: outset;\n"
+                                 "border-width: 2px;\n"
+                                 "border-radius: 10px;\n"
+                                 "border-color: grey;\n"
+                                 "}\n"
+                                 "QSpinBox{\n"
+                                 "font: 10pt \"ShangriLaNFSmallCaps\";\n"
+                                 "background-color:lightgrey;\n"
+                                 "border-style: outset;\n"
+                                 "border-width: 2px;\n"
+                                 "border-radius: 10px;\n"
+                                 "border-color: grey;\n"
+                                 "}\n"
+                                 "QLineEdit{\n"
+                                 "font: 8pt \"ShangriLaNFSmallCaps\";\n"
+                                 "background-color:lightgrey;\n"
+                                 "border-style: outset;\n"
+                                 "border-width: 2px;\n"
+                                 "border-radius: 10px;\n"
+                                 "border-color: grey;\n"
                                  "}\n"
                                  "")
         self.actionQuitter = QAction(MainWindow)
@@ -75,7 +93,7 @@ class Ui_MainWindow(object):
         self.Menu_principal = QWidget()
         self.Menu_principal.setObjectName(u"Menu_principal")
         self.Menu_principal.setStyleSheet(u"QWidget#Menu_principal{\n"
-                                          "border-image: url(img/menu_principal.png);\n"
+                                          "border-image: url(:/images/img/menu_principal.png);\n"
                                           "background-repeat:no-repeat;\n"
                                           "background-position:center;\n"
                                           "}")
@@ -108,7 +126,7 @@ class Ui_MainWindow(object):
         self.Nouvelle_partie.setObjectName(u"Nouvelle_partie")
         self.Nouvelle_partie.setAutoFillBackground(False)
         self.Nouvelle_partie.setStyleSheet(u"QWidget#Nouvelle_partie{\n"
-                                           "border-image:url(img/background_ticket_to_ride.jpg);\n"
+                                           "border-image:url(:/images/img/background_ticket_to_ride.jpg);\n"
                                            "background-repeat:no-repeat;\n"
                                            "background-position:center;\n"
                                            "}\n"
@@ -224,6 +242,7 @@ class Ui_MainWindow(object):
 
         self.input_j1.addWidget(self.separation1, 2, 0, 1, 2)
 
+
         self.gridLayout_2.addLayout(self.input_j1, 5, 0, 2, 1)
 
         self.input_j2 = QGridLayout()
@@ -267,6 +286,7 @@ class Ui_MainWindow(object):
         self.separation2.setFrameShadow(QFrame.Sunken)
 
         self.input_j2.addWidget(self.separation2, 2, 0, 1, 2)
+
 
         self.gridLayout_2.addLayout(self.input_j2, 7, 0, 1, 1)
 
@@ -330,6 +350,7 @@ class Ui_MainWindow(object):
 
         self.nb_joueurs.addWidget(self.spinbox_nb_joueurs_ia, 1, 1, 1, 1)
 
+
         self.gridLayout_2.addLayout(self.nb_joueurs, 2, 0, 1, 1)
 
         self.choix_IA5 = QComboBox(self.Nouvelle_partie)
@@ -382,6 +403,7 @@ class Ui_MainWindow(object):
         self.separation3.setFrameShadow(QFrame.Sunken)
 
         self.input_j3.addWidget(self.separation3, 2, 0, 1, 2)
+
 
         self.gridLayout_2.addLayout(self.input_j3, 8, 0, 1, 1)
 
@@ -464,6 +486,7 @@ class Ui_MainWindow(object):
 
         self.input_j5.addWidget(self.separation5, 2, 0, 1, 2)
 
+
         self.gridLayout_2.addLayout(self.input_j5, 10, 0, 1, 1)
 
         self.input_j4 = QGridLayout()
@@ -507,6 +530,7 @@ class Ui_MainWindow(object):
         self.separation4.setFrameShadow(QFrame.Sunken)
 
         self.input_j4.addWidget(self.separation4, 2, 0, 1, 2)
+
 
         self.gridLayout_2.addLayout(self.input_j4, 9, 0, 1, 1)
 
@@ -574,6 +598,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.selection_voyageur)
 
+
         self.gridLayout_2.addLayout(self.horizontalLayout, 3, 0, 1, 5)
 
         self.stackedWidget.addWidget(self.Nouvelle_partie)
@@ -613,7 +638,7 @@ class Ui_MainWindow(object):
         self.main_wagon1.setObjectName(u"main_wagon1")
         self.main_wagon1.setMinimumSize(QSize(100, 64))
         self.main_wagon1.setFont(font2)
-        self.main_wagon1.setStyleSheet("background-image:url(img/wagon_vert.jpg)")
+        self.main_wagon1.setPixmap(QPixmap(u":/images/img/wagon_vert.jpg"))
         self.main_wagon1.setScaledContents(False)
         self.main_wagon1.setAlignment(Qt.AlignBottom | Qt.AlignLeading | Qt.AlignLeft)
 
@@ -622,7 +647,7 @@ class Ui_MainWindow(object):
         self.main_wagon2 = QLabel(self.Joueur)
         self.main_wagon2.setObjectName(u"main_wagon2")
         self.main_wagon2.setMinimumSize(QSize(100, 64))
-        self.main_wagon2.setStyleSheet("background-image:url(img/wagon_rouge.jpg)")
+        self.main_wagon2.setPixmap(QPixmap(u":/images/img/wagon_rouge.jpg"))
         self.main_wagon2.setScaledContents(False)
         self.main_wagon2.setAlignment(Qt.AlignBottom | Qt.AlignLeading | Qt.AlignLeft)
 
@@ -631,7 +656,7 @@ class Ui_MainWindow(object):
         self.main_wagon3 = QLabel(self.Joueur)
         self.main_wagon3.setObjectName(u"main_wagon3")
         self.main_wagon3.setMinimumSize(QSize(100, 64))
-        self.main_wagon3.setStyleSheet("background-image:url(img/wagon_rose.jpg)")
+        self.main_wagon3.setPixmap(QPixmap(u":/images/img/wagon_rose.jpg"))
         self.main_wagon3.setScaledContents(False)
         self.main_wagon3.setAlignment(Qt.AlignBottom | Qt.AlignLeading | Qt.AlignLeft)
 
@@ -640,7 +665,7 @@ class Ui_MainWindow(object):
         self.main_wagon4 = QLabel(self.Joueur)
         self.main_wagon4.setObjectName(u"main_wagon4")
         self.main_wagon4.setMinimumSize(QSize(100, 64))
-        self.main_wagon4.setStyleSheet("background-image:url(img/wagon_orange.jpg)")
+        self.main_wagon4.setPixmap(QPixmap(u":/images/img/wagon_orange.jpg"))
         self.main_wagon4.setScaledContents(False)
         self.main_wagon4.setAlignment(Qt.AlignBottom | Qt.AlignLeading | Qt.AlignLeft)
 
@@ -649,7 +674,7 @@ class Ui_MainWindow(object):
         self.main_wagon5 = QLabel(self.Joueur)
         self.main_wagon5.setObjectName(u"main_wagon5")
         self.main_wagon5.setMinimumSize(QSize(100, 64))
-        self.main_wagon5.setStyleSheet("background-image:url(img/wagon_noir.jpg)")
+        self.main_wagon5.setPixmap(QPixmap(u":/images/img/wagon_noir.jpg"))
         self.main_wagon5.setScaledContents(False)
         self.main_wagon5.setAlignment(Qt.AlignBottom | Qt.AlignLeading | Qt.AlignLeft)
 
@@ -658,7 +683,7 @@ class Ui_MainWindow(object):
         self.main_wagon6 = QLabel(self.Joueur)
         self.main_wagon6.setObjectName(u"main_wagon6")
         self.main_wagon6.setMinimumSize(QSize(100, 64))
-        self.main_wagon6.setStyleSheet("background-image:url(img/wagon_jaune.jpg)")
+        self.main_wagon6.setPixmap(QPixmap(u":/images/img/wagon_jaune.jpg"))
         self.main_wagon6.setScaledContents(False)
         self.main_wagon6.setAlignment(Qt.AlignBottom | Qt.AlignLeading | Qt.AlignLeft)
 
@@ -667,7 +692,7 @@ class Ui_MainWindow(object):
         self.main_wagon7 = QLabel(self.Joueur)
         self.main_wagon7.setObjectName(u"main_wagon7")
         self.main_wagon7.setMinimumSize(QSize(100, 64))
-        self.main_wagon7.setStyleSheet("background-image:url(img/wagon_bleu.jpg)")
+        self.main_wagon7.setPixmap(QPixmap(u":/images/img/wagon_bleu.jpg"))
         self.main_wagon7.setScaledContents(False)
         self.main_wagon7.setAlignment(Qt.AlignBottom | Qt.AlignLeading | Qt.AlignLeft)
 
@@ -676,7 +701,7 @@ class Ui_MainWindow(object):
         self.main_wagon8 = QLabel(self.Joueur)
         self.main_wagon8.setObjectName(u"main_wagon8")
         self.main_wagon8.setMinimumSize(QSize(100, 64))
-        self.main_wagon8.setStyleSheet("background-image:url(img/wagon_blanc.jpg)")
+        self.main_wagon8.setPixmap(QPixmap(u":/images/img/wagon_blanc.jpg"))
         self.main_wagon8.setScaledContents(False)
         self.main_wagon8.setAlignment(Qt.AlignBottom | Qt.AlignLeading | Qt.AlignLeft)
 
@@ -685,7 +710,7 @@ class Ui_MainWindow(object):
         self.main_wagon9 = QLabel(self.Joueur)
         self.main_wagon9.setObjectName(u"main_wagon9")
         self.main_wagon9.setMinimumSize(QSize(100, 64))
-        self.main_wagon9.setStyleSheet("background-image:url(img/locomotive.jpg")
+        self.main_wagon9.setPixmap(QPixmap(u":/images/img/locomotive.jpg"))
         self.main_wagon9.setScaledContents(False)
         self.main_wagon9.setAlignment(Qt.AlignBottom | Qt.AlignLeading | Qt.AlignLeft)
 
@@ -706,27 +731,38 @@ class Ui_MainWindow(object):
         self.interaction_joueur.setObjectName(u"interaction_joueur")
         self.label_interaction_joueur = QLabel(self.Joueur)
         self.label_interaction_joueur.setObjectName(u"label_interaction_joueur")
-        self.label_interaction_joueur.setMinimumSize(QSize(146, 0))
-        self.label_interaction_joueur.setMaximumSize(QSize(0, 0))
+        sizePolicy7 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy7.setHorizontalStretch(0)
+        sizePolicy7.setVerticalStretch(0)
+        sizePolicy7.setHeightForWidth(self.label_interaction_joueur.sizePolicy().hasHeightForWidth())
+        self.label_interaction_joueur.setSizePolicy(sizePolicy7)
+        self.label_interaction_joueur.setMinimumSize(QSize(135, 34))
         self.label_interaction_joueur.setStyleSheet(u"font:8pt;")
         self.label_interaction_joueur.setWordWrap(True)
 
         self.interaction_joueur.addWidget(self.label_interaction_joueur)
 
-        self.comboBox = QComboBox(self.Joueur)
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.setObjectName(u"comboBox")
+        self.button_take_road = QPushButton(self.Joueur)
+        self.button_take_road.setObjectName(u"button_take_road")
+        font4 = QFont()
+        font4.setFamily(u"chippewafallsnf")
+        font4.setPointSize(8)
+        font4.setBold(False)
+        font4.setItalic(False)
+        font4.setWeight(50)
+        self.button_take_road.setFont(font4)
+        self.button_take_road.setStyleSheet(u"font:8pt;\n"
+                                            "")
+        self.button_take_road.setCheckable(False)
 
-        self.interaction_joueur.addWidget(self.comboBox)
+        self.interaction_joueur.addWidget(self.button_take_road)
 
         self.gridLayout_19.addLayout(self.interaction_joueur, 7, 0, 1, 1)
 
-        self.button_fin_tour = QPushButton(self.Joueur)
-        self.button_fin_tour.setObjectName(u"button_fin_tour")
+        self.button_fin_partie = QPushButton(self.Joueur)
+        self.button_fin_partie.setObjectName(u"button_fin_partie")
 
-        self.gridLayout_19.addWidget(self.button_fin_tour, 1, 0, 1, 1)
+        self.gridLayout_19.addWidget(self.button_fin_partie, 1, 0, 1, 1)
 
         self.plateau_jeu = QHBoxLayout()
         self.plateau_jeu.setObjectName(u"plateau_jeu")
@@ -745,7 +781,7 @@ class Ui_MainWindow(object):
         self.wagon1 = QLabel(self.Joueur)
         self.wagon1.setObjectName(u"wagon1")
         self.wagon1.setMinimumSize(QSize(100, 64))
-        self.wagon1.setPixmap(QPixmap(u"img/wagon_jaune.jpg"))
+        self.wagon1.setPixmap(QPixmap(u":/images/img/wagon_jaune.jpg"))
         self.wagon1.setScaledContents(False)
 
         self.wagons_visibles.addWidget(self.wagon1)
@@ -753,7 +789,7 @@ class Ui_MainWindow(object):
         self.wagon2 = QLabel(self.Joueur)
         self.wagon2.setObjectName(u"wagon2")
         self.wagon2.setMinimumSize(QSize(100, 64))
-        self.wagon2.setPixmap(QPixmap(u"img/wagon_noir.jpg"))
+        self.wagon2.setPixmap(QPixmap(u":/images/img/wagon_noir.jpg"))
         self.wagon2.setScaledContents(False)
 
         self.wagons_visibles.addWidget(self.wagon2)
@@ -761,7 +797,7 @@ class Ui_MainWindow(object):
         self.wagon3 = QLabel(self.Joueur)
         self.wagon3.setObjectName(u"wagon3")
         self.wagon3.setMinimumSize(QSize(100, 64))
-        self.wagon3.setPixmap(QPixmap(u"img/wagon_orange.jpg"))
+        self.wagon3.setPixmap(QPixmap(u":/images/img/wagon_orange.jpg"))
         self.wagon3.setScaledContents(False)
 
         self.wagons_visibles.addWidget(self.wagon3)
@@ -769,7 +805,7 @@ class Ui_MainWindow(object):
         self.wagon4 = QLabel(self.Joueur)
         self.wagon4.setObjectName(u"wagon4")
         self.wagon4.setMinimumSize(QSize(100, 64))
-        self.wagon4.setPixmap(QPixmap(u"img/wagon_rose.jpg"))
+        self.wagon4.setPixmap(QPixmap(u":/images/img/wagon_rose.jpg"))
         self.wagon4.setScaledContents(False)
 
         self.wagons_visibles.addWidget(self.wagon4)
@@ -777,7 +813,7 @@ class Ui_MainWindow(object):
         self.wagon5 = QLabel(self.Joueur)
         self.wagon5.setObjectName(u"wagon5")
         self.wagon5.setMinimumSize(QSize(100, 64))
-        self.wagon5.setPixmap(QPixmap(u"img/wagon_bleu.jpg"))
+        self.wagon5.setPixmap(QPixmap(u":/images/img/wagon_bleu.jpg"))
         self.wagon5.setScaledContents(False)
 
         self.wagons_visibles.addWidget(self.wagon5)
@@ -795,7 +831,12 @@ class Ui_MainWindow(object):
         self.emplacement_carte = QGraphicsView(self.Joueur)
         self.emplacement_carte.setObjectName(u"emplacement_carte")
         self.emplacement_carte.setMinimumSize(QSize(603, 380))
-        self.emplacement_carte.setStyleSheet(u"background-image:url(img/carte_usa.jpg)")
+        self.emplacement_carte.setStyleSheet(u"background-image:url(:/images/img/carte_usa.jpg);\n"
+                                             "background-repeat:no-repeat;")
+        self.emplacement_carte.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.emplacement_carte.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.emplacement_carte.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        self.emplacement_carte.setResizeAnchor(QGraphicsView.AnchorViewCenter)
 
         self.plateau_jeu.addWidget(self.emplacement_carte)
 
@@ -818,7 +859,7 @@ class Ui_MainWindow(object):
         self.destination_1.setSizePolicy(sizePolicy4)
         self.destination_1.setMinimumSize(QSize(100, 64))
         self.destination_1.setMaximumSize(QSize(100, 64))
-        self.destination_1.setPixmap(QPixmap(u"img/boston_miami.jpg"))
+        self.destination_1.setPixmap(QPixmap(u":/images/img/boston_miami.jpg"))
         self.destination_1.setScaledContents(True)
 
         self.main_destination.addWidget(self.destination_1)
@@ -829,7 +870,7 @@ class Ui_MainWindow(object):
         self.destination_2.setSizePolicy(sizePolicy6)
         self.destination_2.setMinimumSize(QSize(100, 64))
         self.destination_2.setMaximumSize(QSize(100, 64))
-        self.destination_2.setPixmap(QPixmap(u"img/calgary_phoenix.jpg"))
+        self.destination_2.setPixmap(QPixmap(u":/images/img/calgary_phoenix.jpg"))
         self.destination_2.setScaledContents(True)
 
         self.main_destination.addWidget(self.destination_2)
@@ -840,7 +881,7 @@ class Ui_MainWindow(object):
         self.destination_3.setSizePolicy(sizePolicy6)
         self.destination_3.setMinimumSize(QSize(100, 64))
         self.destination_3.setMaximumSize(QSize(100, 64))
-        self.destination_3.setPixmap(QPixmap(u"img/denver_el_paso.jpg"))
+        self.destination_3.setPixmap(QPixmap(u":/images/img/denver_el_paso.jpg"))
         self.destination_3.setScaledContents(True)
 
         self.main_destination.addWidget(self.destination_3)
@@ -849,18 +890,20 @@ class Ui_MainWindow(object):
 
         self.main_destination.addItem(self.destination_spacer_bas)
 
+
         self.plateau_jeu.addLayout(self.main_destination)
 
         self.spacer_droit = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.plateau_jeu.addItem(self.spacer_droit)
 
+
         self.gridLayout_19.addLayout(self.plateau_jeu, 4, 0, 3, 7)
 
         self.pioche_wagon = QLabel(self.Joueur)
         self.pioche_wagon.setObjectName(u"pioche_wagon")
         self.pioche_wagon.setMinimumSize(QSize(100, 64))
-        self.pioche_wagon.setPixmap(QPixmap(u"img/dos_wagon.jpg"))
+        self.pioche_wagon.setPixmap(QPixmap(u":/images/img/dos_wagon.jpg"))
         self.pioche_wagon.setScaledContents(False)
         self.pioche_wagon.setAlignment(Qt.AlignLeading | Qt.AlignLeft | Qt.AlignVCenter)
 
@@ -917,15 +960,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout_19.addLayout(self.score_autre_joueurs, 2, 1, 1, 5)
 
-        self.button_fin_partie = QPushButton(self.Joueur)
-        self.button_fin_partie.setObjectName(u"button_fin_partie")
+        self.button_fin_tour = QPushButton(self.Joueur)
+        self.button_fin_tour.setObjectName(u"button_fin_tour")
 
-        self.gridLayout_19.addWidget(self.button_fin_partie, 1, 6, 1, 1)
+        self.gridLayout_19.addWidget(self.button_fin_tour, 1, 6, 1, 1)
 
         self.pioche_destination = QLabel(self.Joueur)
         self.pioche_destination.setObjectName(u"pioche_destination")
         self.pioche_destination.setMinimumSize(QSize(100, 64))
-        self.pioche_destination.setPixmap(QPixmap(u"img/dos_destination.jpg"))
+        self.pioche_destination.setPixmap(QPixmap(u":/images/img/dos_destination.jpg"))
         self.pioche_destination.setScaledContents(False)
         self.pioche_destination.setAlignment(Qt.AlignRight | Qt.AlignTrailing | Qt.AlignVCenter)
 
@@ -936,12 +979,12 @@ class Ui_MainWindow(object):
         self.pioche_destination.raise_()
         self.titre_nom_joueur.raise_()
         self.score_joueur.raise_()
-        self.button_fin_tour.raise_()
         self.button_fin_partie.raise_()
+        self.button_fin_tour.raise_()
         self.Fin_partie = QWidget()
         self.Fin_partie.setObjectName(u"Fin_partie")
         self.Fin_partie.setStyleSheet(u"QWidget#Fin_partie{\n"
-                                      "border-image:url(img/background_ticket_to_ride.jpg);\n"
+                                      "border-image:url(:/images/img/background_ticket_to_ride.jpg);\n"
                                       "background-repeat:no-repeat;\n"
                                       "background-position:center;\n"
                                       "}\n"
@@ -960,13 +1003,13 @@ class Ui_MainWindow(object):
 
         self.label_titre = QLabel(self.Fin_partie)
         self.label_titre.setObjectName(u"label_titre")
-        font4 = QFont()
-        font4.setFamily(u"chippewafallsnf")
-        font4.setPointSize(28)
-        font4.setBold(False)
-        font4.setItalic(False)
-        font4.setWeight(50)
-        self.label_titre.setFont(font4)
+        font5 = QFont()
+        font5.setFamily(u"chippewafallsnf")
+        font5.setPointSize(28)
+        font5.setBold(False)
+        font5.setItalic(False)
+        font5.setWeight(50)
+        self.label_titre.setFont(font5)
         self.label_titre.setStyleSheet(u"font:28pt \"chippewafallsnf\";\n"
                                        "")
         self.label_titre.setAlignment(Qt.AlignCenter)
@@ -976,6 +1019,7 @@ class Ui_MainWindow(object):
         self.titre_spacer_droit = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.titre_fin_partie.addItem(self.titre_spacer_droit)
+
 
         self.verticalLayout_9.addLayout(self.titre_fin_partie)
 
@@ -994,45 +1038,47 @@ class Ui_MainWindow(object):
         self.position_joueur.setObjectName(u"position_joueur")
         self.label_resultat1 = QLabel(self.Fin_partie)
         self.label_resultat1.setObjectName(u"label_resultat1")
-        font5 = QFont()
-        font5.setFamily(u"ShangriLaNFSmallCaps")
-        font5.setPointSize(12)
-        font5.setBold(False)
-        font5.setItalic(False)
-        font5.setWeight(50)
-        self.label_resultat1.setFont(font5)
+        font6 = QFont()
+        font6.setFamily(u"ShangriLaNFSmallCaps")
+        font6.setPointSize(12)
+        font6.setBold(False)
+        font6.setItalic(False)
+        font6.setWeight(50)
+        self.label_resultat1.setFont(font6)
 
         self.position_joueur.addWidget(self.label_resultat1)
 
         self.label_resultat2 = QLabel(self.Fin_partie)
         self.label_resultat2.setObjectName(u"label_resultat2")
-        self.label_resultat2.setFont(font5)
+        self.label_resultat2.setFont(font6)
 
         self.position_joueur.addWidget(self.label_resultat2)
 
         self.label_resultat3 = QLabel(self.Fin_partie)
         self.label_resultat3.setObjectName(u"label_resultat3")
-        self.label_resultat3.setFont(font5)
+        self.label_resultat3.setFont(font6)
 
         self.position_joueur.addWidget(self.label_resultat3)
 
         self.label_resultat4 = QLabel(self.Fin_partie)
         self.label_resultat4.setObjectName(u"label_resultat4")
-        self.label_resultat4.setFont(font5)
+        self.label_resultat4.setFont(font6)
 
         self.position_joueur.addWidget(self.label_resultat4)
 
         self.label_resultat5 = QLabel(self.Fin_partie)
         self.label_resultat5.setObjectName(u"label_resultat5")
-        self.label_resultat5.setFont(font5)
+        self.label_resultat5.setFont(font6)
 
         self.position_joueur.addWidget(self.label_resultat5)
+
 
         self.score_final.addLayout(self.position_joueur)
 
         self.score_spacer_droit = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.score_final.addItem(self.score_spacer_droit)
+
 
         self.verticalLayout_9.addLayout(self.score_final)
 
@@ -1061,6 +1107,7 @@ class Ui_MainWindow(object):
 
         self.buttons_fin_partie.addWidget(self.button_menu)
 
+
         self.verticalLayout_9.addLayout(self.buttons_fin_partie)
 
         self.stackedWidget.addWidget(self.Fin_partie)
@@ -1076,7 +1123,7 @@ class Ui_MainWindow(object):
 
         self.label_titre_stats = QLabel(self.Statistiques)
         self.label_titre_stats.setObjectName(u"label_titre_stats")
-        self.label_titre_stats.setFont(font4)
+        self.label_titre_stats.setFont(font5)
         self.label_titre_stats.setStyleSheet(u"font: 28pt \"chippewafallsnf\";")
         self.label_titre_stats.setAlignment(Qt.AlignCenter)
 
@@ -1085,6 +1132,7 @@ class Ui_MainWindow(object):
         self.titre_stats_spacer_droit = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.titre_statistiques.addItem(self.titre_stats_spacer_droit)
+
 
         self.verticalLayout_4.addLayout(self.titre_statistiques)
 
@@ -1122,13 +1170,14 @@ class Ui_MainWindow(object):
 
         self.layout_buttons_stats.addWidget(self.button_retour_4)
 
+
         self.verticalLayout_4.addLayout(self.layout_buttons_stats)
 
         self.stackedWidget.addWidget(self.Statistiques)
         self.Options = QWidget()
         self.Options.setObjectName(u"Options")
         self.Options.setStyleSheet(u"QWidget#Options{\n"
-                                   "border-image:url(img/background_ticket_to_ride.jpg);\n"
+                                   "border-image:url(:/images/img/background_ticket_to_ride.jpg);\n"
                                    "background-repeat:no-repeat;\n"
                                    "background-position:center;\n"
                                    "}")
@@ -1143,7 +1192,7 @@ class Ui_MainWindow(object):
 
         self.label_titre_options = QLabel(self.Options)
         self.label_titre_options.setObjectName(u"label_titre_options")
-        self.label_titre_options.setFont(font4)
+        self.label_titre_options.setFont(font5)
         self.label_titre_options.setStyleSheet(u"font: 28pt \"chippewafallsnf\";")
         self.label_titre_options.setAlignment(Qt.AlignCenter)
 
@@ -1164,7 +1213,7 @@ class Ui_MainWindow(object):
         self.layout_options.setContentsMargins(60, -1, 60, -1)
         self.label_idee_options = QLabel(self.Options)
         self.label_idee_options.setObjectName(u"label_idee_options")
-        self.label_idee_options.setFont(font5)
+        self.label_idee_options.setFont(font6)
         self.label_idee_options.setWordWrap(True)
 
         self.layout_options.addWidget(self.label_idee_options)
@@ -1202,7 +1251,7 @@ class Ui_MainWindow(object):
         self.Credits = QWidget()
         self.Credits.setObjectName(u"Credits")
         self.Credits.setStyleSheet(u"QWidget#Credits{\n"
-                                   "border-image:url(img/background_ticket_to_ride.jpg);\n"
+                                   "border-image:url(:/images/img/background_ticket_to_ride.jpg);\n"
                                    "background-repeat:no-repeat;\n"
                                    "background-position:center;\n"
                                    "}")
@@ -1217,7 +1266,7 @@ class Ui_MainWindow(object):
 
         self.label_titre_credits = QLabel(self.Credits)
         self.label_titre_credits.setObjectName(u"label_titre_credits")
-        self.label_titre_credits.setFont(font4)
+        self.label_titre_credits.setFont(font5)
         self.label_titre_credits.setStyleSheet(u"font:28pt \"chippewafallsnf\";")
         self.label_titre_credits.setAlignment(Qt.AlignCenter)
 
@@ -1238,7 +1287,7 @@ class Ui_MainWindow(object):
         self.layout_credits.setContentsMargins(60, -1, 60, -1)
         self.label_credits = QLabel(self.Credits)
         self.label_credits.setObjectName(u"label_credits")
-        self.label_credits.setFont(font5)
+        self.label_credits.setFont(font6)
         self.label_credits.setStyleSheet(u"font:12pt \"ShangriLaNFSmallCaps\";")
         self.label_credits.setWordWrap(True)
 
@@ -1276,10 +1325,9 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.actionQuitter.triggered.connect(MainWindow.close)
 
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(MainWindow)
-
     # setupUi
 
     def retranslateUi(self, MainWindow):
@@ -1287,15 +1335,15 @@ class Ui_MainWindow(object):
         self.actionQuitter.setText(QCoreApplication.translate("MainWindow", u"Quitter", None))
         # if QT_CONFIG(shortcut)
         self.actionQuitter.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Q", None))
-        # endif // QT_CONFIG(shortcut)
+        #endif // QT_CONFIG(shortcut)
         self.actionRegles_du_jeu.setText(QCoreApplication.translate("MainWindow", u"R\u00e8gles du jeu", None))
-        # if QT_CONFIG(shortcut)
+        #if QT_CONFIG(shortcut)
         self.actionRegles_du_jeu.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+H", None))
-        # endif // QT_CONFIG(shortcut)
+        #endif // QT_CONFIG(shortcut)
         self.actionOptions.setText(QCoreApplication.translate("MainWindow", u"Options", None))
-        # if QT_CONFIG(shortcut)
+        #if QT_CONFIG(shortcut)
         self.actionOptions.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+O", None))
-        # endif // QT_CONFIG(shortcut)
+        #endif // QT_CONFIG(shortcut)
         self.button_options.setText(QCoreApplication.translate("MainWindow", u"Options", None))
         self.button_credits.setText(QCoreApplication.translate("MainWindow", u"Credits", None))
         self.button_regles_jeu.setText(QCoreApplication.translate("MainWindow", u"Regles du jeu", None))
@@ -1405,11 +1453,8 @@ class Ui_MainWindow(object):
         self.main_wagon9.setText("")
         self.label_interaction_joueur.setText(
             QCoreApplication.translate("MainWindow", u"Interaction avec le joueur", None))
-        self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Prendre des cartes wagons", None))
-        self.comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Prendre une route", None))
-        self.comboBox.setItemText(2, QCoreApplication.translate("MainWindow", u"Prendre des cartes destinations", None))
-
-        self.button_fin_tour.setText(QCoreApplication.translate("MainWindow", u"Fin de partie", None))
+        self.button_take_road.setText(QCoreApplication.translate("MainWindow", u"Prendre une route", None))
+        self.button_fin_partie.setText(QCoreApplication.translate("MainWindow", u"Fin de partie", None))
         self.wagon1.setText("")
         self.wagon2.setText("")
         self.wagon3.setText("")
@@ -1424,7 +1469,7 @@ class Ui_MainWindow(object):
         self.autre_j2.setText(QCoreApplication.translate("MainWindow", u"Nom_joueur : X pts", None))
         self.autre_j3.setText(QCoreApplication.translate("MainWindow", u"Nom_joueur : X pts", None))
         self.autre_j4.setText(QCoreApplication.translate("MainWindow", u"Nom_joueur : X pts", None))
-        self.button_fin_partie.setText(QCoreApplication.translate("MainWindow", u"Fin du tour", None))
+        self.button_fin_tour.setText(QCoreApplication.translate("MainWindow", u"Fin du tour", None))
         self.pioche_destination.setText("")
         self.label_titre.setText(QCoreApplication.translate("MainWindow", u"Fin de partie - R\u00e9sultats", None))
         self.label_resultat1.setText(
@@ -1463,13 +1508,3 @@ class Ui_MainWindow(object):
         self.button_retour_3.setText(QCoreApplication.translate("MainWindow", u"Retour", None))
     # retranslateUi
 
-
-if __name__ == '__main__':
-    import sys
-
-    app = QApplication(sys.argv)
-    MainWindow = QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())

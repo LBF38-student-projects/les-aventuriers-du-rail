@@ -13,7 +13,8 @@ from PySide2.QtGui import (QFont,
 from PySide2.QtWidgets import *
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
-from menu_principal import *
+from ui_menu_principal import *
+from ui_choix_route import *
 from Joueur import *
 from Partie import Partie_qt
 
@@ -31,6 +32,7 @@ from Partie import Partie_qt
 class MonAppli(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.init_take_road()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.pioche_wagons = [self.ui.wagon1, self.ui.wagon2, self.ui.wagon3, self.ui.wagon4, self.ui.wagon5]
@@ -100,6 +102,8 @@ class MonAppli(QMainWindow):
         self.ui.button_fin_tour.clicked.connect(lambda: self.partie.change_turn(self))
         # Connexion du button fin_partie avec écran Fin de partie
         self.ui.button_fin_partie.clicked.connect(lambda: self.fin_partie())
+        # Connexion pour le button take_road
+        self.ui.button_take_road.clicked.connect(lambda: self.open_take_road())
 
         # Buttons de l'écran Fin de Partie
         self.ui.button_menu.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal))
@@ -116,6 +120,20 @@ class MonAppli(QMainWindow):
 
         # Pour démarrer sur l'écran Menu Principal
         self.ui.stackedWidget.setCurrentWidget(self.ui.Menu_principal)
+
+    def init_take_road(self):
+        """
+        Ouvrir une nouvelle fenêtre.
+        """
+        self.dialog_take_road = QDialog()
+        self.ui_take_road = Ui_take_road()
+        self.ui_take_road.setupUi(self.dialog_take_road)
+        # self.window_take_road.show()
+
+    def open_take_road(self):
+        self.init_take_road()
+        self.dialog_take_road.setModal(True)
+        self.dialog_take_road.show()
 
     def allow_prendre_wagons(self):
         """
@@ -139,29 +157,29 @@ class MonAppli(QMainWindow):
         """
         Update les possibilités de route à prendre.
         """
-        self.ui.choix_interaction_joueur.clear()
-        self.ui.choix_interaction_joueur.addItem("Choisir une route parmi celles-ci")
+        self.ui_take_road.choose_road.clear()
+        self.ui_take_road.choose_road.addItem("Choisir une route parmi celles-ci")
         for route in self.partie.les_routes:
             ville1, ville2 = route
             text = f"{ville1}-{ville2}"
-            self.ui.choix_interaction_joueur.addItem(text)
-        self.ui.choix_interaction_joueur.currentTextChanged.connect(lambda: self.partie.prendre_route(self))
+            self.ui_take_road.choose_road.addItem(text)
+        self.ui_take_road.choose_road.currentTextChanged.connect(lambda: self.partie.prendre_route(self))
 
     def get_couleur_pour_route(self, couleur, route, nom_route):
         """
         Demande pour la couleur à utiliser pour prendre une route grise.
         """
         print("choix couleur")
-        self.ui.choix_interaction_joueur.currentTextChanged.disconnect()
+        self.ui_take_road.choose_road.currentTextChanged.disconnect()
         # self.ui.choix_interaction_joueur.currentTextChanged.connect(
         #     lambda: self.partie.prendre_route_grise(couleur, route, nom_route, self))
 
         self.ui.label_interaction_joueur.setText("La route est grise. Quelle couleur voulez-vous utiliser ?")
         # Affichage des couleurs disponibles
-        self.ui.choix_interaction_joueur.clear()
-        self.ui.choix_interaction_joueur.addItem("")
+        self.ui_take_road.choose_wagons.clear()
+        self.ui_take_road.choose_wagons.addItem("")
         for couleur in list(self.img_wagons.keys())[:-1]:
-            self.ui.choix_interaction_joueur.addItem(couleur)
+            self.ui_take_road.choose_wagons.addItem(couleur)
         # time.sleep(20)
         print("Waiting for signal")
 
@@ -169,20 +187,20 @@ class MonAppli(QMainWindow):
         """
         Envoie la couleur choisie pour la route grise.
         """
-        return self.ui.choix_interaction_joueur.currentText()
+        return self.ui_take_road.choose_road.currentText()
 
     def get_reponse_locomotive(self, couleur, route, nom_route):
         """
         Pour savoir si le joueur veut utiliser les locomotives.
         """
         self.ui.label_interaction_joueur.setText("Voulez-vous compléter avec des locomotives?")
-        self.ui.choix_interaction_joueur.clear()
-        self.ui.choix_interaction_joueur.addItem("Choisissez votre réponse ci-dessous")
-        self.ui.choix_interaction_joueur.addItem("Compléter avec des locomotives")
-        self.ui.choix_interaction_joueur.addItem("Prendre uniquement avec des locomotives")
-        self.ui.choix_interaction_joueur.addItem("Ne rien faire")
-        self.ui.choix_interaction_joueur.currentTextChanged.disconnect()
-        self.ui.choix_interaction_joueur.currentTextChanged.connect(
+        self.ui_take_road.choose_locomotive.clear()
+        self.ui_take_road.choose_locomotive.addItem("Choisissez votre réponse ci-dessous")
+        self.ui_take_road.choose_locomotive.addItem("Compléter avec des locomotives")
+        self.ui_take_road.choose_locomotive.addItem("Prendre uniquement avec des locomotives")
+        self.ui_take_road.choose_locomotive.addItem("Ne rien faire")
+        self.ui_take_road.choose_locomotive.currentTextChanged.disconnect()
+        self.ui_take_road.choose_locomotive.currentTextChanged.connect(
             lambda: self.partie.prendre_route_locomotive(couleur, route, nom_route, self))
         print("choix locomotive")
 
