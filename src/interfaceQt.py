@@ -6,17 +6,13 @@ Modified on Sun May 30 03:22:00 2022
 @author: Mathis URIEN
 """
 import os
-# import sys
-from PySide2.QtCore import (QCoreApplication, QMetaObject, QSize, Qt, QPoint)
-from PySide2.QtGui import (QFont,
-                           QIcon, QPixmap, QMouseEvent)
-from PySide2.QtWidgets import *
+from PySide2.QtGui import (QMouseEvent)
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
-from ui_menu_principal import *
-from ui_choix_route import *
 from Joueur import *
 from Partie import Partie_qt
+from ui_choix_route import *
+from ui_menu_principal import *
 
 
 # import numpy as np
@@ -26,7 +22,7 @@ from Partie import Partie_qt
 # créée avec QT Designer. Nous configurons après l'interface utilisateur
 # dans le constructeur (la méthode init()) de notre classe
 
-# TODO: maj de menu_principal.py en fonction des nouvelles modifs du fichier éponyme du dossier Qt Designer.
+# DONE: maj de menu_principal.py en fonction des nouvelles modifs du fichier éponyme du dossier Qt Designer.
 #  => comparer les fichiers.
 
 class MonAppli(QMainWindow):
@@ -130,7 +126,7 @@ class MonAppli(QMainWindow):
         self.dialog_take_road = QDialog()
         self.ui_take_road = Ui_take_road()
         self.ui_take_road.setupUi(self.dialog_take_road)
-
+        self.dialog_take_road.setWindowIcon(self.windowIcon())
 
     def open_take_road(self):
         self.update_choix_route()
@@ -183,6 +179,7 @@ class MonAppli(QMainWindow):
         self.hide_take_road()
         self.ui_take_road.choose_road.clear()
         self.ui_take_road.choose_road.addItem("Choisir une route parmi celles-ci")
+        self.partie.les_routes.sort()  # sorting by alphabetic order
         for route in self.partie.les_routes:
             ville1, ville2 = route
             text = f"{ville1} - {ville2}"
@@ -260,59 +257,18 @@ class MonAppli(QMainWindow):
         for s in to_show:
             s.show()
 
-    def get_couleur_pour_route(self, couleur, route, nom_route):
-        """
-        Demande pour la couleur à utiliser pour prendre une route grise.
-        """
-        print("choix couleur")
-        self.ui_take_road.choose_road.currentTextChanged.disconnect()
-        # self.ui.choix_interaction_joueur.currentTextChanged.connect(
-        #     lambda: self.partie.prendre_route_grise(couleur, route, nom_route, self))
-
-        self.ui.label_interaction_joueur.setText("La route est grise. Quelle couleur voulez-vous utiliser ?")
-        # Affichage des couleurs disponibles
-        self.ui_take_road.choose_wagons.clear()
-        self.ui_take_road.choose_wagons.addItem("")
-        for couleur in list(self.img_wagons.keys())[:-1]:
-            self.ui_take_road.choose_wagons.addItem(couleur)
-        # time.sleep(20)
-        print("Waiting for signal")
-
-    def send_couleur_pour_route(self):
-        """
-        Envoie la couleur choisie pour la route grise.
-        """
-        return self.ui_take_road.choose_road.currentText()
-
-    def get_reponse_locomotive(self, couleur, route, nom_route):
-        """
-        Pour savoir si le joueur veut utiliser les locomotives.
-        """
-        self.ui.label_interaction_joueur.setText("Voulez-vous compléter avec des locomotives?")
-        self.ui_take_road.choose_locomotive.clear()
-        self.ui_take_road.choose_locomotive.addItem("Choisissez votre réponse ci-dessous")
-        self.ui_take_road.choose_locomotive.addItem("Compléter avec des locomotives")
-        self.ui_take_road.choose_locomotive.addItem("Prendre uniquement avec des locomotives")
-        self.ui_take_road.choose_locomotive.addItem("Ne rien faire")
-        self.ui_take_road.choose_locomotive.currentTextChanged.disconnect()
-        self.ui_take_road.choose_locomotive.currentTextChanged.connect(
-            lambda: self.partie.prendre_route_locomotive(couleur, route, nom_route, self))
-        print("choix locomotive")
-
-    def update_route(self):
+    def update_route_prise(self):
         """
         Affiche le plateau et les routes.
         """
         scene = QGraphicsScene(self.ui.emplacement_carte)
-        canvas = FigureCanvas(self.partie.show_plateau())
+        canvas = FigureCanvas(self.partie.show_route_prise())
         proxy_widget = scene.addWidget(canvas)
         self.ui.emplacement_carte.setScene(scene)
         self.ui.emplacement_carte.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.ui.emplacement_carte.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         # self.ui.emplacement_carte.setMinimumSize(640,480)
         # self.ui.emplacement_carte.setViewportMargins(0,0,0,0)
-
-        # DONE: draw straight lines between each city of the taken road.
 
     def prendre_wagon(self, idx, visible):
         indication_carte = self.partie.prendre_cartes_wagon(idx, visible)
@@ -322,6 +278,9 @@ class MonAppli(QMainWindow):
         if self.partie.count_wagon_card >= 2:
             print(self.partie.count_wagon_card)
             self.fin_tour()
+        elif self.partie.count_wagon_card == 1:
+            self.ui.button_take_road.setEnabled(False)
+            self.ui.pioche_destination.setEnabled(False)
 
     def prendre_wagon1(self, event):
         self.prendre_wagon(0, True)
@@ -583,7 +542,7 @@ class MonAppli(QMainWindow):
                 wagon.show()
             else:
                 wagon.hide()
-        print(self.partie.pile_cartes_wagon)
+        # print(self.partie.pile_cartes_wagon)
 
     def hide_wagons(self):
         """
@@ -608,7 +567,7 @@ class MonAppli(QMainWindow):
         other_players.pop(other_players.index(joueur.nom_joueur))
         for p, player in enumerate(other_players):
             player = self.partie.les_joueurs[player]
-            plain_text = f"{player.nom_joueur}: {player.nb_points}"
+            plain_text = f"{player.nom_joueur} : {player.nb_points} pts"
             self.autres_joueurs[p].setText(plain_text)
             self.autres_joueurs[p].show()
 
@@ -626,7 +585,7 @@ class MonAppli(QMainWindow):
                                                "border-style:solid;\n"
                                                "font:18pt;")
         self.ui.button_fin_tour.hide()
-        self.ui.button_fin_partie.hide()
+        # self.ui.button_fin_partie.hide()
         self.ui.label_interaction_joueur.setText("A votre tour !")
         self.ui.score_joueur.setText(str(joueur.nb_points))
         self.update_main_joueur(joueur)
@@ -634,7 +593,7 @@ class MonAppli(QMainWindow):
         self.update_wagon_stack()
         self.update_autres_joueurs(joueur)
         self.update_choix_route()
-        self.update_route()
+        self.update_route_prise()
 
         # On active les actions possibles pour le joueur au cours de son tour
         self.ui.button_take_road.setEnabled(True)
@@ -664,6 +623,7 @@ class MonAppli(QMainWindow):
                               self.ui.label_resultat4, self.ui.label_resultat5]
         for resultat in self.les_resultats:
             resultat.hide()
+        self.partie.end_game(self)
         tableau_resultats = [[joueur.nb_points, nom] for nom, joueur in self.partie.les_joueurs.items()]
         tableau_resultats.sort(reverse=True)
         for n, joueur in enumerate(tableau_resultats):

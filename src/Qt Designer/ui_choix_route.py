@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'choix_routeWCYGHh.ui'
+## Form generated from reading UI file 'choix_route.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.14.1
 ##
@@ -18,19 +18,20 @@ from PySide2.QtWidgets import *
 
 class Ui_take_road(object):
     def setupUi(self, take_road):
-        if take_road.objectName():
-            take_road.setObjectName(u"take_road")
-        take_road.resize(648, 309)
-        take_road.setStyleSheet(u"QPushButton{\n"
-                                "font: 12pt \"chippewafallsnf\";\n"
-                                "background-color:lightgrey;\n"
-                                "border-style: outset;\n"
-                                "border-width: 2px;\n"
-                                "border-radius: 10px;\n"
-                                "border-color: grey;\n"
-                                "padding: 1px 3px 1px 3px;\n"
-                                "}\n"
-                                "QLabel{\n"
+            if take_road.objectName():
+                    take_road.setObjectName(u"take_road")
+            take_road.resize(600, 300)
+            take_road.setMinimumSize(QSize(600, 300))
+            take_road.setStyleSheet(u"QPushButton{\n"
+                                    "font: 12pt \"chippewafallsnf\";\n"
+                                    "background-color:lightgrey;\n"
+                                    "border-style: outset;\n"
+                                    "border-width: 2px;\n"
+                                    "border-radius: 10px;\n"
+                                    "border-color: grey;\n"
+                                    "padding: 1px 3px 1px 3px;\n"
+                                    "}\n"
+                                    "QLabel{\n"
                                 "font:8pt \"ShangriLaNFSmallCaps\";\n"
                                 "}\n"
                                 "QComboBox{\n"
@@ -74,7 +75,7 @@ class Ui_take_road(object):
 
         self.layout_title.addItem(self.spacer_right)
 
-        self.verticalLayout.addLayout(self.layout_title)
+            self.verticalLayout.addLayout(self.layout_title)
 
         self.layout_road = QHBoxLayout()
         self.layout_road.setObjectName(u"layout_road")
@@ -95,7 +96,7 @@ class Ui_take_road(object):
 
         self.layout_road.addWidget(self.choose_road)
 
-        self.verticalLayout.addLayout(self.layout_road)
+            self.verticalLayout.addLayout(self.layout_road)
 
         self.layout_wagons = QHBoxLayout()
         self.layout_wagons.setObjectName(u"layout_wagons")
@@ -115,7 +116,7 @@ class Ui_take_road(object):
 
         self.layout_wagons.addWidget(self.choose_wagons)
 
-        self.verticalLayout.addLayout(self.layout_wagons)
+            self.verticalLayout.addLayout(self.layout_wagons)
 
         self.layout_locomotive = QHBoxLayout()
         self.layout_locomotive.setObjectName(u"layout_locomotive")
@@ -136,7 +137,7 @@ class Ui_take_road(object):
 
         self.layout_locomotive.addWidget(self.choose_locomotive)
 
-        self.verticalLayout.addLayout(self.layout_locomotive)
+            self.verticalLayout.addLayout(self.layout_locomotive)
 
         self.layout_nb_locomotive = QHBoxLayout()
         self.layout_nb_locomotive.setObjectName(u"layout_nb_locomotive")
@@ -154,7 +155,7 @@ class Ui_take_road(object):
 
         self.layout_nb_locomotive.addWidget(self.spinbox_nb_locomotive)
 
-        self.verticalLayout.addLayout(self.layout_nb_locomotive)
+            self.verticalLayout.addLayout(self.layout_nb_locomotive)
 
         self.dialog_buttons = QDialogButtonBox(take_road)
         self.dialog_buttons.setObjectName(u"dialog_buttons")
@@ -163,7 +164,7 @@ class Ui_take_road(object):
 
         self.verticalLayout.addWidget(self.dialog_buttons)
 
-        self.retranslateUi(take_road)
+            self.retranslateUi(take_road)
         self.dialog_buttons.accepted.connect(take_road.accept)
         self.dialog_buttons.rejected.connect(take_road.reject)
 
@@ -196,3 +197,4 @@ class Ui_take_road(object):
         self.label_nb_locomotive.setText(
             QCoreApplication.translate("take_road", u"Combien de wagons locomotives voulez-vous utiliser ?", None))
     # retranslateUi
+

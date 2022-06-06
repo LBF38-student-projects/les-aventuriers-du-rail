@@ -1029,11 +1029,6 @@ class Partie_qt(Jeu):
         possession de l’une des 2 routes disponibles, la route restante
         demeurant fermée jusqu’à la fin de la partie.
         """
-        # FIXED: lier à la nouvelle IHM.
-        # DONE: pour l'IHM, faire en fonction des cliques du joueur sur la carte pour relier les 2.
-        #  Click sur le lien entre les villes ou clique sur les 2 villes.
-        #  => SOLUTION : créer une fenêtre dialogue pour récupérer les infos.
-
         # Récupération des infos de la dialog_take_road
         nom_route = ihm_partie.ui_take_road.choose_road.currentText()
         type_wagon = self.current_player.convert_color_id[ihm_partie.ui_take_road.choose_wagons.currentText()]
@@ -1054,10 +1049,10 @@ class Partie_qt(Jeu):
 
             # défausse des cartes de la main vers la défausse
             for K in range(nb_segments):
-                self.defausse_wagon.append(couleur)
+                self.defausse_wagon.append(type_wagon)
 
             # retrait des wagons de la main du joueur :
-            self.current_player.main_wagon[couleur] -= nb_segments
+            self.current_player.main_wagon[type_wagon] -= nb_segments
 
             # retrait du nb de wagons à poser sur la route. => condition d'arrêt de la partie.
             self.current_player.wagons -= nb_segments
@@ -1077,6 +1072,9 @@ class Partie_qt(Jeu):
             ihm_partie.ui.score_joueur.setText(str(self.current_player.nb_points))
             print(f"Vous avez gagné {pts} points")
             ihm_partie.ui.label_interaction_joueur.setText(f"Vous avez gagné {pts} points !")
+
+            # Affichage de la route gagnée:
+            ihm_partie.update_route_prise()
 
             # On désactive les autres fonctionnalités du tour pour signaler la fin de tour
             return ihm_partie.fin_tour()
@@ -1109,6 +1107,9 @@ class Partie_qt(Jeu):
             ihm_partie.ui.score_joueur.setText(str(self.current_player.nb_points))
             print(f"Vous avez gagné {pts} points")
             ihm_partie.ui.label_interaction_joueur.setText(f"Vous avez gagné {pts} points !")
+
+            # Affichage de la route gagnée:
+            ihm_partie.update_route_prise()
 
             # On désactive les autres fonctionnalités du tour pour signaler la fin de tour
             return ihm_partie.fin_tour()
@@ -1238,7 +1239,7 @@ class Partie_qt(Jeu):
             self.LAST_TURN = True
             return self.last_turn(ihm_partie)
         if self.LAST_TURN and self.idx_current_player == len(self.ordre):
-            return self.end_game(ihm_partie)
+            return ihm_partie.fin_partie()
         self.change_current_player()
         self.turn(ihm_partie)
 
@@ -1256,9 +1257,9 @@ class Partie_qt(Jeu):
         Cache le bouton de fin de tour.
         """
         # Calcul des points finaux:
-        for joueur in self.les_joueurs:
+        for joueur in self.les_joueurs.values():
             Score(self).calcul_pts_destinations(joueur)
-        ihm_partie.fin_partie()
+        # ihm_partie.fin_partie()
         # Affichage du bouton Fin de Partie pour indiquer que la partie est finie.
         print("This is the endgame.")
 
@@ -1342,7 +1343,42 @@ class Partie_qt(Jeu):
         for key in self.villes.keys():
             for lien in self.villes[key].liens.keys():
                 if [key, lien][::-1] not in self.les_routes and [key, lien] not in self.les_routes:
-                    self.les_routes.append([key, lien])
+                    self.les_routes.append([key, lien])  # format : [[ville1,ville2],...,[villeN,villeN+1]] en str
+
+    def show_route_prise(self):
+        """
+        Définit le plateau du jeu
+        => Construit le graphe des villes
+        Affiche un point pour chaque ville avec le nom en dessous
+        Relie chaque ville par un trait gris quand non occupé
+        """
+        figure = Figure()
+        axes = figure.gca()
+        plt.rcParams["figure.figsize"] = [7.00, 3.50]
+        plt.rcParams["figure.autolayout"] = True
+        im = plt.imread("img/carte_usa.jpg")
+
+        """Affichage des liens entre les villes :"""
+        for joueur in self.les_joueurs.values():
+            for route in joueur.route_prise:
+                ville1, ville2 = route
+                ville1, ville2 = self.villes[ville1], self.villes[ville2]
+                x_ville, y_ville = ville1.coords
+                x_lien, y_lien = ville2.coords
+                rx = 603 / 36
+                ry = 380 / 23
+                axes.plot((x_ville * rx, x_lien * rx), (y_ville * ry, y_lien * ry), color=joueur.couleur, linewidth=5)
+                axes.plot(x_ville * rx, y_ville * ry, 'ro')
+                axes.text((x_ville - 1) * rx, (y_ville - 1) * ry, ville1.nom)
+
+        """Arrière-plan du plateau :"""
+        axes.imshow(im, extent=[0, 603, 0, 380])
+        axes.axis(False)
+
+        # format image: 603x380
+        # Grille pour les points du graphe: 36x22.5
+        # Rapport : 1.6
+        return figure
 
 
 # Imports :

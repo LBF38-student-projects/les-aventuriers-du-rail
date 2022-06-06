@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'choix_routeWCYGHh.ui'
+## Form generated from reading UI file 'choix_route.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.14.1
 ##
@@ -20,7 +20,8 @@ class Ui_take_road(object):
     def setupUi(self, take_road):
         if take_road.objectName():
             take_road.setObjectName(u"take_road")
-        take_road.resize(648, 309)
+        take_road.resize(600, 300)
+        take_road.setMinimumSize(QSize(600, 300))
         take_road.setStyleSheet(u"QPushButton{\n"
                                 "font: 12pt \"chippewafallsnf\";\n"
                                 "background-color:lightgrey;\n"
@@ -196,3 +197,4 @@ class Ui_take_road(object):
         self.label_nb_locomotive.setText(
             QCoreApplication.translate("take_road", u"Combien de wagons locomotives voulez-vous utiliser ?", None))
     # retranslateUi
+
