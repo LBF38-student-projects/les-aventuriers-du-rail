@@ -159,11 +159,14 @@ class Joueur:
                       'yellow',
                       'yellowgreen']
     convert_color_id = {
+        "blanc": "white",
         "bleu": "blue",
         "rouge": "red",
         "vert": "green",
         "jaune": "yellow",
         "orange": "orange",
+        "noir": "black",
+        "rose": "pink",
         "personnalisée": "random"  # TODO: à modifier dans la phase améliorations. => color picker.
     }
 

@@ -146,7 +146,7 @@ class Score():
         return self.get_id_ville(nom_ville1), self.get_id_ville(nom_ville2), self.get_lien_villes(nom_ville1, nom_ville2)
 
     def calcul_pts_destinations(self,joueur):
-        joueur.nb_points = 0
+        # joueur.nb_points = 0
         for j in range(3):
             if (joueur.main_cartes[1][j][0][0] and joueur.main_cartes[1][j][0][1]) in arbre_min:
                 joueur.nb_points += joueur.main_cartes[1][j][1]
@@ -183,20 +183,20 @@ class Score():
                 chemin = chemin_bis
         return chemin
 
-def trouver_indice_longueur_max(lst):
-    maxList = max(lst, key = lambda i: len(i))
-    index = maxList.index(maxList)
-    return index
+    def trouver_indice_longueur_max(lst):
+        maxList = max(lst, key=lambda i: len(i))
+        index = maxList.index(maxList)
+        return index
 
-    def calcul_plus_long_chemin(self,partie):
+    def calcul_plus_long_chemin(self, partie):
         n = len(partie.les_joueurs)
         plus_longs_chemins = []
-        les_joueurs=list(partie.les_joueurs)
+        les_joueurs = list(partie.les_joueurs)
         for i in range(n):
             plus_longs_chemins.append(self.calcul_plus_long_chemin_joueur(les_joueurs[i]))
         return self.trouver_indice_longueur_max(plus_longs_chemins)
 
-    def attribue_points_plc(self,partie):
+    def attribue_points_plc(self, partie):
         i = self.calcul_plus_long_chemin(partie)
         partie.les_joueurs.nb_points[i] += 10
 

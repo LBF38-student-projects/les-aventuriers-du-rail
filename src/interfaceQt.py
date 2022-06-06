@@ -130,7 +130,7 @@ class MonAppli(QMainWindow):
         self.dialog_take_road = QDialog()
         self.ui_take_road = Ui_take_road()
         self.ui_take_road.setupUi(self.dialog_take_road)
-        self.ui_take_road.choose_road.currentTextChanged.connect(lambda: self.partie.prendre_route(self))
+
 
     def open_take_road(self):
         self.update_choix_route()
@@ -146,7 +146,7 @@ class MonAppli(QMainWindow):
         for wagon in self.partie.current_player.main_wagon:
             self.ui_take_road.choose_wagons.addItem(self.partie.traduction_color[wagon])
 
-    def allow_prendre_wagons(self):
+    def enable_prendre_wagons(self):
         """
         Autorise la possibilité de clicker sur les cartes de la pioche ou celles visibles.
         """
@@ -156,6 +156,17 @@ class MonAppli(QMainWindow):
         self.ui.wagon4.mouseReleaseEvent = self.prendre_wagon4
         self.ui.wagon5.mouseReleaseEvent = self.prendre_wagon5
         self.ui.pioche_wagon.mouseReleaseEvent = self.prendre_pioche_wagon
+
+    def disable_prendre_wagons(self):
+        """
+        Autorise la possibilité de clicker sur les cartes de la pioche ou celles visibles.
+        """
+        self.ui.wagon1.mouseReleaseEvent = None
+        self.ui.wagon2.mouseReleaseEvent = None
+        self.ui.wagon3.mouseReleaseEvent = None
+        self.ui.wagon4.mouseReleaseEvent = None
+        self.ui.wagon5.mouseReleaseEvent = None
+        self.ui.pioche_wagon.mouseReleaseEvent = None
 
     def prendre_destinations(self):
         """
@@ -176,6 +187,58 @@ class MonAppli(QMainWindow):
             ville1, ville2 = route
             text = f"{ville1} - {ville2}"
             self.ui_take_road.choose_road.addItem(text)
+        self.ui_take_road.choose_road.currentTextChanged.connect(lambda: self.changed_choose_road())
+
+    def changed_choose_road(self):
+        print("choix route")
+        nom_route = self.ui_take_road.choose_road.currentText()
+        print(nom_route)
+        ville1, ville2 = [k.strip() for k in nom_route.strip().split("-")]
+        couleur, nb_segments = self.partie.villes[ville1].liens[ville2]  # contient [couleur,nb_segments]
+        # Vérification que le joueur peut prendre une route :
+        self.ui_take_road.label_wagons.hide()
+        self.ui_take_road.choose_wagons.hide()
+        if couleur == "grey":
+            self.ui_take_road.label_wagons.setText(f"La route est grise. Il y a {nb_segments} segments."
+                                                   f"\nAvec quel wagon voulez-vous la prendre ?")
+            self.update_wagons_road()
+            self.ui_take_road.label_wagons.show()
+            self.ui_take_road.choose_wagons.show()
+            self.ui_take_road.choose_wagons.setEnabled(True)
+            self.ui_take_road.choose_wagons.currentTextChanged.connect(lambda: self.changed_choose_wagons())
+        else:
+            self.ui_take_road.label_wagons.setText(f"La route est {self.partie.traduction_color[couleur]}. "
+                                                   f"Il y a {nb_segments} segments.")
+            self.ui_take_road.choose_wagons.clear()
+            self.ui_take_road.choose_wagons.addItem(f"{self.partie.traduction_color[couleur]}")
+            self.ui_take_road.choose_wagons.setEnabled(False)
+            self.ui_take_road.label_wagons.show()
+            self.ui_take_road.choose_wagons.show()
+            self.changed_choose_wagons()
+
+    def changed_choose_wagons(self):
+        print("choix type wagons")
+        self.ui_take_road.label_locomotive.hide()
+        self.ui_take_road.choose_locomotive.hide()
+        type_wagon = self.ui_take_road.choose_wagons.currentText()
+        if type_wagon in self.partie.current_player.convert_color_id:
+            type_wagon = self.partie.current_player.convert_color_id[type_wagon]
+        if "locomotive" not in type_wagon and type_wagon in self.partie.current_player.main_wagon.keys():
+            print(type_wagon)
+            self.ui_take_road.label_locomotive.setText("Voulez-vous utiliser des wagons locomotives ?")
+            self.ui_take_road.label_locomotive.show()
+            self.ui_take_road.choose_locomotive.show()
+            self.ui_take_road.choose_locomotive.currentTextChanged.connect(self.changed_choose_locomotive)
+
+    def changed_choose_locomotive(self):
+        print("choix locomotive")
+        self.ui_take_road.label_nb_locomotive.hide()
+        self.ui_take_road.spinbox_nb_locomotive.hide()
+        if "Oui" in self.ui_take_road.choose_locomotive.currentText():
+            self.ui_take_road.spinbox_nb_locomotive.setMaximum(self.partie.current_player.main_wagon["locomotive"])
+            self.ui_take_road.label_nb_locomotive.show()
+            self.ui_take_road.spinbox_nb_locomotive.show()
+        self.dialog_take_road.accepted.connect(lambda: self.partie.prendre_route(self))
 
     def hide_take_road(self):
         """
@@ -256,6 +319,9 @@ class MonAppli(QMainWindow):
         self.ui.label_interaction_joueur.setText(indication_carte)
         self.update_wagon_stack()
         self.update_main_joueur(self.partie.current_player)
+        if self.partie.count_wagon_card >= 2:
+            print(self.partie.count_wagon_card)
+            self.fin_tour()
 
     def prendre_wagon1(self, event):
         self.prendre_wagon(0, True)
@@ -559,8 +625,8 @@ class MonAppli(QMainWindow):
                                                "border-width:2;\n"
                                                "border-style:solid;\n"
                                                "font:18pt;")
-        # DONE: définir une fonction pour convertir la couleur du joueur.
-        # => déjà pris en charge nativement. Nom de la couleur en anglais.
+        self.ui.button_fin_tour.hide()
+        self.ui.button_fin_partie.hide()
         self.ui.label_interaction_joueur.setText("A votre tour !")
         self.ui.score_joueur.setText(str(joueur.nb_points))
         self.update_main_joueur(joueur)
@@ -570,22 +636,25 @@ class MonAppli(QMainWindow):
         self.update_choix_route()
         self.update_route()
 
-        self.allow_prendre_wagons()
-        # self.ui.label_interaction_joueur.setText(u"bonjour")
+        # On active les actions possibles pour le joueur au cours de son tour
+        self.ui.button_take_road.setEnabled(True)
+        self.enable_prendre_wagons()
+        self.ui.pioche_destination.setEnabled(True)
 
-        # On cache et remplace les interactions avec le joueur par les buttons fin_tour ou fin_partie
-        # si le tour ou la partie est fini.
-        # self.ui.input_interaction.hide()
-        # self.ui.label_interaction_joueur.hide()
-        # self.ui.gridLayout_19.addWidget(self.ui.button_fin_partie, 7, 0, 1, 1)
-        # self.ui.button_fin_partie.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.Fin_partie))
-
-        # self.ui_take_road.choose_wagons.currentTextChanged.connect(lambda:self.partie.prendre_route(self))
-        # self.ui_take_road.choose_locomotive.currentTextChanged.connect(lambda:self.partie.prendre_route(self))
-        # self.ui_take_road.spinbox_nb_locomotive.valueChanged.connect(lambda:self.partie.prendre_route(self))
+        if self.partie.LAST_TURN:
+            self.ui.button_fin_partie.show()
 
         # Change d'affichage pour l'écran Joueur
         self.ui.stackedWidget.setCurrentWidget(self.ui.Joueur)
+
+    def fin_tour(self):
+        """
+        Bloque toutes les options du joueur pour signaler la fin de tour.
+        """
+        self.ui.button_take_road.setEnabled(False)
+        self.disable_prendre_wagons()
+        self.ui.pioche_destination.setEnabled(False)
+        self.ui.button_fin_tour.show()
 
     def fin_partie(self):
         """
@@ -596,11 +665,10 @@ class MonAppli(QMainWindow):
         for resultat in self.les_resultats:
             resultat.hide()
         tableau_resultats = [[joueur.nb_points, nom] for nom, joueur in self.partie.les_joueurs.items()]
-        tableau_resultats.sort()
+        tableau_resultats.sort(reverse=True)
         for n, joueur in enumerate(tableau_resultats):
             self.les_resultats[n].setText(f"{n + 1}: {joueur[1]} - {joueur[0]} points ")
             self.les_resultats[n].show()
-        self.ui.button_fin_partie.show()
         self.ui.stackedWidget.setCurrentWidget(self.ui.Fin_partie)
 
     def ouvrir_regles(self):
