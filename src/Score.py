@@ -150,10 +150,10 @@ class Score():
 
     def calcul_pts_destinations(self, joueur):
         # joueur.nb_points = 0
-        liaisons = []
-        for destination in joueur.main_destination:
-            ville1, ville2 = [ville.strip() for ville in destination.strip().split("to")]
-            liaisons.append(self.get_infos_liaison(ville1, ville2))
+        # liaisons = []
+        # for destination in joueur.main_destination:
+        #     ville1, ville2 = [ville.strip() for ville in destination.strip().split("to")]
+        #     liaisons.append(self.get_infos_liaison(ville1, ville2))
         nb_villes = 36
         arbre_min = Kruskal(liaisons, nb_villes)
         for destination in joueur.main_destination:

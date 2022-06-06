@@ -1076,6 +1076,9 @@ class Partie_qt(Jeu):
             # Affichage de la route gagnée:
             ihm_partie.update_route_prise()
 
+            # Update de la main des cartes du joueur
+            ihm_partie.ui.update_main_joueur()
+
             # On désactive les autres fonctionnalités du tour pour signaler la fin de tour
             return ihm_partie.fin_tour()
 
@@ -1111,84 +1114,14 @@ class Partie_qt(Jeu):
             # Affichage de la route gagnée:
             ihm_partie.update_route_prise()
 
+            # Update de la main des cartes du joueur
+            ihm_partie.ui.update_main_joueur()
+
             # On désactive les autres fonctionnalités du tour pour signaler la fin de tour
             return ihm_partie.fin_tour()
         else:
             print("On ne peut pas prendre la route")
             ihm_partie.ui.label_interaction_joueur.setText(f"Vous ne pouvez pas prendre la route.")
-
-    # def check_prendre_route(self, couleur, nb_segments, nom_route, ihm_partie):
-    #     print(f"On checke {nom_route} avec couleur {couleur}")
-    #     if self.current_player.main_wagon[couleur] >= nb_segments:
-    #         print("On a récupéré la route !")
-    #         # défausse des cartes de la main vers la défausse
-    #         for K in range(nb_segments):
-    #             self.defausse_wagon.append(couleur)
-    #
-    #         # retrait des wagons de la main du joueur :
-    #         self.current_player.main_wagon[couleur] -= nb_segments
-    #         # retrait du nb de wagons à poser sur la route. => condition d'arrêt de la partie.
-    #         self.current_player.wagons -= nb_segments
-    #         # DONE: faire un accesseur en écriture pour vérifier qu'aucune entrée de wagons soient négatives.
-    #
-    #         # ajout de la route au joueur :
-    #         ville1, ville2 = [k.strip() for k in nom_route.strip().split("-")]
-    #         self.current_player.route_prise.append([ville1, ville2])
-    #         ihm_partie.ui.label_interaction_joueur.setText(
-    #             f"Vous avez pris la route de {ville1} à {ville2}")
-    #         time.sleep(5)
-    #
-    #         # Suppression de la route de la liste des routes disponibles
-    #         # self.les_routes.remove(nom_route)
-    #
-    #         # calcul des points gagnés :
-    #         pts = Score(self).calcul_pts_route(self.current_player)
-    #         ihm_partie.ui.score_joueur.setText(str(self.current_player.nb_points))
-    #         print(f"Vous avez gagné {pts} points")
-    #         ihm_partie.ui.label_interaction_joueur.setText(f"Vous avez gagné {pts} points !")
-    #
-    #         # DONE: implémenter la méthode du calcul du score en fonction du nb de wagons posés. cf. Classe Score.
-    #         # Score.points() => à corriger en fonction de l'implémentation
-    #
-    #         # On désactive la combobox pour marquer la fin du tour.
-    #         return ihm_partie.ui.choix_interaction_joueur.setEnabled(False)
-    #
-    #     elif self.current_player.main_wagon[couleur] + self.current_player.main_wagon["locomotive"] >= nb_segments \
-    #             or self.current_player.main_wagon["locomotive"] >= nb_segments:
-    #         self.prendre_route_locomotive(couleur, nb_segments, nom_route, ihm_partie)
-    #     else:
-    #         print("On ne peut pas prendre la route")
-    #         ihm_partie.ui.label_interaction_joueur.setText(f"Vous ne pouvez pas prendre la route.")
-
-    # def check_prendre_route_locomotive(self, couleur, route, nom_route, ihm_partie):
-    #     """
-    #     Valide la route en la prenant avec une couleur et des locomotives.
-    #     """
-    #     print("On checke la couleur + locomotive")
-    #     if self.current_player.main_wagon[couleur] + self.current_player.main_wagon["locomotive"] >= route[1]:
-    #         # défausse des cartes de la main vers la défausse
-    #         for k in range(self.current_player.main_wagon[couleur]):
-    #             self.defausse_wagon.append(couleur)
-    #         for k in range(route[1] - self.current_player.main_wagon[couleur]):
-    #             self.defausse_wagon.append("locomotive")
-    #
-    #         # retrait des wagons de la main du joueur :
-    #         self.current_player.main_wagon["locomotive"] -= route[1] - self.current_player.main_wagon[couleur]
-    #         self.current_player.main_wagon[couleur] = 0
-    #
-    #         # ajout de la route au joueur :
-    #         self.current_player.route_prise.append(nom_route.split("-"))
-    #         ihm_partie.ui.label_interaction_joueur.currentText(
-    #             f"Vous avez pris la route de {nom_route[0]} à {nom_route[1]}")
-    #         time.sleep(5)
-    #
-    #         # Suppression de la liste des routes disponibles:
-    #         self.les_routes.remove(nom_route)
-    #
-    #         # calcul des points gagnés :
-    #         pts = Score(self).calcul_pts_route(self.current_player)
-    #         print(f"Vous avez gagné {pts} points")
-    #         ihm_partie.ui.choix_interaction_joueur.setText(f"Vous avez gagné {pts} points !")
 
     def preparation_partie(self):
         """
@@ -1257,8 +1190,8 @@ class Partie_qt(Jeu):
         Cache le bouton de fin de tour.
         """
         # Calcul des points finaux:
-        for joueur in self.les_joueurs.values():
-            Score(self).calcul_pts_destinations(joueur)
+        # for joueur in self.les_joueurs.values():
+        #     Score(self).calcul_pts_destinations(joueur)
         # ihm_partie.fin_partie()
         # Affichage du bouton Fin de Partie pour indiquer que la partie est finie.
         print("This is the endgame.")

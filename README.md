@@ -10,8 +10,8 @@ Ainsi, nous vous présentons brièvement le jeu et son interface grâce à plusi
 Bonne lecture et bon jeu !
 
 # Installation :
-1. Télécharger le dossier contenant les codes sources :\
-```les-aventuriers-du-rail/src```
+1. Télécharger le dossier contenant tout le projet :\
+   ```les-aventuriers-du-rail```
 2. Ouvrer et lancer le fichier ```main.py```
 3. Jouer !
 
