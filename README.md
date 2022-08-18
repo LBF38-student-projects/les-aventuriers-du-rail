@@ -17,6 +17,7 @@ Bonne lecture et bon jeu !
 
 # Crédits :
 Jeu réalisé par Mathis URIEN et Kenza BELAÏD, tous deux élèves-ingénieur à l'ENSTA Bretagne. \
-Ce projet a été réalisé lors de leur première année.
+Ce projet a été réalisé lors de leur première année. \
+Il se peut que le code ne soit pas fonctionnel ni abouti comme voulu pour des raisons de contraintes de temps.
 
 
